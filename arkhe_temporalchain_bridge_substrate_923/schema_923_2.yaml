@@ -1,0 +1,21 @@
+substrato:
+  id: 923.2
+  nome: Vulnerability TemporalChain
+  status: CANONIZED_PROVISIONAL
+  parent: 923 (TemporalChain)
+  description: >
+    Registo imutável de vulnerabilidades descobertas pelo ARKHE‑GLASSWING‑SENTINEL.
+    Cada CVE é ancorada na EVM com provas ZK opcionais.
+  components:
+    - VulnerabilityRegistry.sol  (Solidity, MIT)
+    - vuln_bridge.py             (Python, Web3.py)
+    - schema_923_2.yaml          (Este ficheiro)
+  deploy_networks:
+    - Base (Coinbase L2)
+    - Arbitrum One
+    - Ethereum Sepolia (testnet)
+  cross_links:
+    - 944  (ARKHE‑GLASSWING‑SENTINEL)
+    - 255  (Hermes Trismegistus — ZK proofs)
+    - 260.2 (ARKHE‑JAX — circuitos ZK)
+    - 923  (TemporalChain original)
