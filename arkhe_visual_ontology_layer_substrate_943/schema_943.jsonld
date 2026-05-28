@@ -1,0 +1,119 @@
+{
+  "@context": {
+    "arkhe": "https://arkhe.cathedral/ontology/",
+    "claude": "https://anthropic.com/design/",
+    "schema": "http://schema.org/",
+    "rdf": "http://www.w3.org/1999/02/22-rdf-syntax-ns#",
+    "rdfs": "http://www.w3.org/2000/01/rdf-schema#",
+    "owl": "http://www.w3.org/2002/07/owl#",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@graph": [
+    {
+      "@id": "arkhe:VisualOntology",
+      "@type": "owl:Ontology",
+      "rdfs:label": "ARKHE Visual Ontology Layer",
+      "rdfs:comment": "Ontologia de design systems para geração de UI grounded no World Model",
+      "owl:versionInfo": "1.0",
+      "arkhe:substrateId": "943",
+      "arkhe:status": "CANONIZED_PROVISIONAL"
+    },
+    {
+      "@id": "arkhe:DesignSystem",
+      "@type": "owl:Class",
+      "rdfs:label": "Design System",
+      "rdfs:comment": "Coleção canónica de tokens, componentes e padrões visuais",
+      "arkhe:mapsTo": "claude:DesignIngestion"
+    },
+    {
+      "@id": "arkhe:DesignToken",
+      "@type": "owl:Class",
+      "rdfs:label": "Design Token",
+      "rdfs:comment": "Valor semântico reutilizável (cor, tipografia, spacing, shadow)",
+      "arkhe:hasProperty": [
+        "arkhe:tokenName",
+        "arkhe:tokenValue",
+        "arkhe:tokenType",
+        "arkhe:tokenCategory"
+      ]
+    },
+    {
+      "@id": "arkhe:ColorToken",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": "arkhe:DesignToken",
+      "rdfs:label": "Color Token",
+      "arkhe:tokenType": "color",
+      "arkhe:formats": ["hex", "rgb", "hsl", "oklch", "p3"]
+    },
+    {
+      "@id": "arkhe:TypographyToken",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": "arkhe:DesignToken",
+      "rdfs:label": "Typography Token",
+      "arkhe:tokenType": "typography",
+      "arkhe:properties": ["fontFamily", "fontSize", "fontWeight", "lineHeight", "letterSpacing"]
+    },
+    {
+      "@id": "arkhe:SpacingToken",
+      "@type": "owl:Class",
+      "rdfs:subClassOf": "arkhe:DesignToken",
+      "rdfs:label": "Spacing Token",
+      "arkhe:tokenType": "spacing",
+      "arkhe:scale": "4px base (0.25rem)",
+      "arkhe:values": [0, 1, 2, 3, 4, 5, 6, 8, 10, 12, 16, 20, 24, 32, 40, 48, 64, 80, 96]
+    },
+    {
+      "@id": "arkhe:UIComponent",
+      "@type": "owl:Class",
+      "rdfs:label": "UI Component",
+      "rdfs:comment": "Componente visual instanciável com slots e variantes",
+      "arkhe:hasSlot": "arkhe:ComponentSlot",
+      "arkhe:hasVariant": "arkhe:ComponentVariant",
+      "arkhe:platforms": ["winui3", "android", "web", "ios"]
+    },
+    {
+      "@id": "arkhe:ComponentVariant",
+      "@type": "owl:Class",
+      "rdfs:label": "Component Variant",
+      "arkhe:variantStates": ["default", "hover", "active", "disabled", "focused", "error"]
+    },
+    {
+      "@id": "arkhe:VisualExport",
+      "@type": "owl:Class",
+      "rdfs:label": "Visual Export",
+      "rdfs:comment": "Formato de exportação para plataformas de design",
+      "arkhe:exportFormats": ["json", "xml", "pdf", "png", "svg", "pptx", "canva"],
+      "arkhe:targetPlatforms": ["winui3", "android_compose", "react", "figma", "canva", "powerpoint"]
+    },
+    {
+      "@id": "arkhe:WorldModelBinding",
+      "@type": "owl:ObjectProperty",
+      "rdfs:label": "World Model Binding",
+      "rdfs:comment": "Liga token visual a conceito no World Model (913/924)",
+      "arkhe:source": "arkhe:DesignToken",
+      "arkhe:target": "arkhe:WorldModelConcept"
+    },
+    {
+      "@id": "arkhe:StainedGlassTheme",
+      "@type": "arkhe:DesignSystem",
+      "rdfs:label": "Catedral Stained Glass Theme",
+      "arkhe:colors": {
+        "sacred_gold": "#D4AF37",
+        "divine_blue": "#1E3A8A",
+        "altar_crimson": "#8B0000",
+        "mnemosine_teal": "#008080",
+        "parchment": "#F5F5DC"
+      },
+      "arkhe:typography": {
+        "serif_sacred": "Cinzel, serif",
+        "sans_messenger": "Inter, sans-serif",
+        "mono_oracle": "Fira Code, monospace"
+      },
+      "arkhe:worldModelLinks": {
+        "sacred_gold": "arkhe:concept/DivineLight",
+        "divine_blue": "arkhe:concept/InfiniteDepth",
+        "altar_crimson": "arkhe:concept/SacrificialTruth"
+      }
+    }
+  ]
+}

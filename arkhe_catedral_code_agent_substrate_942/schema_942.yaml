@@ -1,0 +1,37 @@
+substrato:
+  id: 942
+  nome: Catedral Code Agent
+  status: CANONIZED_PROVISIONAL
+  parent: 940 (Claude Harness) + 939 (Runtime)
+  description: >
+    Integração de Claude Code com ecossistema ARKHE via CLI `arkhe code`.
+    Agent autônomo de desenvolvimento com acesso a 8 substratos:
+    audit (923.2), scan (944), search (917), sign (255.1), anchor (255.2),
+    memory (912), zk (255), prove (260.2).
+    Suporta epistemic signing de commits e blockchain anchoring.
+  components:
+    - catedral_code_agent.py   (Python, CLI com argparse)
+    - schema_942.yaml          (Este ficheiro)
+    - tests/test_code_agent.py (pytest, mock git + substrates)
+  cli_commands:
+    - arkhe code init <repo> [--lang] [--depth]
+    - arkhe code audit --session <id> [--target]
+    - arkhe code commit --session <id> -m <msg> [--no-sign] [--no-anchor]
+    - arkhe code report --session <id>
+  languages_supported:
+    - python, rust, solidity, kotlin, javascript, typescript, go, java, cpp
+  audit_depths:
+    - surface: lint + basic scan
+    - deep: full Glasswing (944) + ZK proof (260.2)
+    - formal: theorem proving via 911 (AlphaProof)
+  cross_links:
+    - 940  (Claude Harness — tool routing)
+    - 939  (Runtime Unificado)
+    - 923.2 (Vulnerability TemporalChain)
+    - 944  (Glasswing Sentinel)
+    - 917  (Google Web Grounding)
+    - 255.1 (Epistemic Signature UI)
+    - 255.2 (Ethereum Mainnet Bridge)
+    - 912  (Explicit State Persistence)
+    - 255  (Hermes ZK)
+    - 260.2 (ARKHE-JAX ZK circuits)

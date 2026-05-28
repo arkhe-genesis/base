@@ -1,0 +1,33 @@
+substrato:
+  id: 941
+  nome: Cognitive Effort Controller
+  status: CANONIZED_PROVISIONAL
+  parent: 898 (Kolmogorov Regularizer) + 933 (FluxMem)
+  description: >
+    Controlador dinâmico de esforço cognitivo para Claude Opus 4.7.
+    Mapeia complexidade Kolmogorov da tarefa + histórico FluxMem
+    para níveis adaptive_thinking otimizados (low→max).
+    Inclui guardrails de custo e conversão para parâmetros Anthropic API.
+  components:
+    - cognitive_effort_controller.py  (Python, dataclasses, Enum)
+    - schema_941.yaml                 (Este ficheiro)
+    - tests/test_effort.py            (pytest, mock 898 + 933)
+  effort_levels:
+    - low:        4096 tokens,  temp 0.1,  cache on
+    - medium:    16384 tokens,  temp 0.3,  cache on
+    - high:      65536 tokens,  temp 0.5,  cache off
+    - extra_high: 131072 tokens, temp 0.7, thinking budget 32768
+    - max:       200000 tokens,  temp 0.9, thinking budget 50000
+  algorithm:
+    complexity_weight: 0.6
+    historical_weight: 0.4
+    cost_guardrail: true
+  api_mapping:
+    model: claude-opus-4-7-20260501
+    params: [max_tokens, temperature, top_p, thinking]
+  cross_links:
+    - 898  (Kolmogorov complexity measure)
+    - 933  (FluxMem historical optimization)
+    - 939  (Runtime Unificado — execution)
+    - 940  (Claude Harness — tool invocation)
+    - 261.1 (Brazil Finance — cost tracking)

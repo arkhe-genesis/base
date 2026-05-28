@@ -1,0 +1,37 @@
+substrato:
+  id: 943
+  nome: Visual Ontology Layer
+  status: CANONIZED_PROVISIONAL
+  parent: 913 (World Model v2.0) + 924 (World Model Trainer)
+  description: >
+    Ontologia RDF/JSON-LD de design systems ligada ao World Model ARKHE.
+    Ingestão de tokens visuais (cores, tipografia, spacing) e componentes
+    UI com binding semântico a conceitos do World Model (913/924).
+    Exporta para WinUI 3, Android Compose, React, Figma, Canva, PowerPoint.
+  components:
+    - schema_943.jsonld          (JSON-LD ontology, 200+ triples)
+    - visual_ontology_engine.py  (Python, dataclasses, exporters)
+    - schema_943.yaml            (Este ficheiro)
+    - tests/test_ontology.py     (pytest, mock 913/924)
+  ontology:
+    classes: [DesignSystem, DesignToken, ColorToken, TypographyToken, SpacingToken, UIComponent, ComponentVariant, VisualExport]
+    properties: [hasSlot, hasVariant, worldModelBinding, tokenValue, tokenType]
+    instances: [StainedGlassTheme]
+  export_targets:
+    - winui3 / xaml
+    - android_compose / kotlin
+    - web / tsx
+    - powerpoint / pptx
+    - canva / json
+    - figma / json
+  world_model_binding:
+    enabled: true
+    source: 913/924
+    mapping: semantic_concept → visual_token
+  cross_links:
+    - 913  (World Model v2.0)
+    - 924  (World Model v3 Trainer)
+    - 936  (ARKHE-Catedral-Windows11)
+    - 929  (ARKHE-as-Android-OS)
+    - 921.2 (FastAPI Gateway — export endpoints)
+    - 943  (Self)
