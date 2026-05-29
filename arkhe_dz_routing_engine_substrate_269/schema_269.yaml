@@ -1,0 +1,49 @@
+substrato:
+  id: 269
+  nome: DZ Routing Engine (Optimized Pathfinding)
+  status: CANONIZED_PROVISIONAL
+  parent: 267 (DoubleZero Bridge) + 268 (Edge Filter)
+  description: >
+    Motor de routing otimizado para a rede DoubleZero que minimiza
+    jitter e maximiza throughput para mensagens de substratos ARKHE
+    distribuídos. Implementa Dijkstra modificado com múltiplas métricas
+    (latency, jitter, throughput, reliability, cost) e priorização
+    por tipo de substrato blockchain.
+  source: https://docs.malbeclabs.com/
+  protocol: DoubleZero Routing
+  company: Malbec Labs
+  components:
+    - dz_routing_engine.py       (Python, heapq, Dijkstra)
+    - schema_269.yaml            (Este ficheiro)
+    - tests/test_routing.py      (pytest, mock topology)
+  metrics:
+    - LATENCY: Minimize RTT (default for most substrates)
+    - JITTER: Minimize variation (critical for consensus)
+    - THROUGHPUT: Maximize bandwidth (bulk data transfer)
+    - RELIABILITY: Maximize uptime (production workloads)
+    - COST: Minimize token cost (background tasks)
+  substrate_priorities:
+    0_CRITICAL: [923, 923.1, 255.2]   # Consensus, anchors
+    1_HIGH: [255, 255.1, 944, 931]   # Security, proofs, FHE
+    2_MEDIUM: [917, 930, 940-943]   # Tools, queries, agents
+    3_LOW: [912, 933, 927]           # Memory, sync, permaweb
+  topology_features:
+    - Node registry by datacenter region
+    - Capacity-aware routing (bottleneck avoidance)
+    - Reliability-weighted path selection
+    - Contributor stake-based cost model
+    - Route caching for hot paths
+  integration:
+    runtime: 939 (ARKHE Runtime — gRPC service)
+    bridge: 267 (DoubleZero Bridge — packet injection)
+    filter: 268 (Edge Filter — ingress filtering)
+  cross_links:
+    - 267  (DoubleZero Bridge)
+    - 268  (Edge Filter Controller)
+    - 262.2 (TCP Integration — QUIC channels)
+    - 923  (TemporalChain — routes prioritárias)
+    - 255  (Hermes ZK — low-latency proofs)
+    - 944  (Glasswing Sentinel — alert routing)
+    - 931  (Interfold FHE — secure paths)
+    - 917  (Web Grounding — geo-distributed queries)
+    - 930  (Atom-Chip — quantum sync)

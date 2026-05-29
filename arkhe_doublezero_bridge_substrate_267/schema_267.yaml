@@ -1,0 +1,60 @@
+substrato:
+  id: 267
+  nome: DoubleZero Network Bridge
+  status: CANONIZED_PROVISIONAL
+  parent: 262 (ARKHE-TCP) + 262.2 (TCP Integration)
+  description: >
+    Bridge que integra ARKHE-OS com a rede DoubleZero (Malbec Labs)
+    para transmissão de alta performance de dados entre substratos
+    distribuídos. Aproveita edge-filtering em FPGA, routing otimizado
+    com redução de jitter, e priorização de mensagens por tipo de
+    conteúdo blockchain.
+  source: https://docs.malbeclabs.com/
+  protocol: DoubleZero (DZ)
+  company: Malbec Labs
+  components:
+    - doublezero_bridge.py     (Python, asyncio, aiohttp)
+    - schema_267.yaml          (Este ficheiro)
+    - tests/test_dz_bridge.py  (pytest, mock DZ API)
+  node_types:
+    - contributor: Fornece fiber links + FPGA underutilizados
+    - user: Blockchain / RPC / MEV infrastructure
+    - relay: Nó de routing intermediário
+  packet_structure:
+    - packet_id: Identificador único
+    - source_substrate: Substrato ARKHE de origem
+    - target_substrate: Substrato ARKHE de destino (opcional)
+    - payload: Dados serializados
+    - priority: CRITICAL / HIGH / MEDIUM / LOW / BACKGROUND
+    - timestamp_ns: Timestamp em nanosegundos
+    - ttl_ms: Time-to-live
+    - edge_filter_applied: Boolean (spam/duplicate filtering)
+    - seal: SHA3-256 do payload
+  auto_prioritization:
+    CRITICAL: [923, 923.1, 255.2]  # Consensus, block proposals
+    HIGH: [923.2, 255, 255.1, 944, 931]  # Security, proofs, alerts
+    MEDIUM: [917, 930, 940, 941, 942, 943]  # Tools, queries
+    LOW: [912, 933, 927]  # Memory, sync, permaweb
+  benefits_vs_internet:
+    - Edge-filtering não-discricionário no hardware (FPGA)
+    - Routing otimizado com redução de jitter
+    - Priorização de mensagens por conteúdo
+    - Shared filtration resources (vs. cada validator individual)
+  admission_control:
+    method: Public key verification on respective ledger
+    arkhe_identity: PQC key from Substrato 255
+    protocols: [ARKHE-OS v2.0, Ethereum, Solana, Sui]
+  cross_links:
+    - 262   (ARKHE-TCP — runtime canónico)
+    - 262.2 (TCP Integration — canais QUIC temáticos)
+    - 255   (Hermes ZK — identidade PQC)
+    - 255.1 (Epistemic Signature — assinatura de pacotes)
+    - 923   (TemporalChain — mensagens de consensus)
+    - 923.2 (Vulnerability Registry — alertas de segurança)
+    - 944   (Glasswing Sentinel — detecção de anomalias)
+    - 931   (Interfold FHE — computação confidencial)
+    - 917   (Web Grounding — queries distribuídas)
+    - 930   (Atom-Chip — randomness quântica)
+    - 912   (Memory — sincronização de estado)
+    - 933   (FluxMem — grafo de memória distribuído)
+    - 927   (Permaweb — armazenamento eterno)
