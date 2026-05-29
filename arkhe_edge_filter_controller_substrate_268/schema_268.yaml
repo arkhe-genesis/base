@@ -1,0 +1,47 @@
+substrato:
+  id: 268
+  nome: Edge Filter Controller (FPGA Hardware Layer)
+  status: CANONIZED_PROVISIONAL
+  parent: 267 (DoubleZero Bridge)
+  description: >
+    Camada de filtragem não-discricionária executada em hardware FPGA
+    na rede DoubleZero. Remove spam, duplicados, pacotes malformados
+    e TTL-expirados antes de entregar mensagens aos substratos ARKHE.
+    Stateless para alta performance (milhões de packets por segundo).
+  source: https://docs.malbeclabs.com/
+  protocol: DoubleZero Edge Filtering
+  company: Malbec Labs
+  components:
+    - edge_filter_controller.py  (Python, hashlib, re)
+    - schema_268.yaml              (Este ficheiro)
+    - fpga/hal.py                  (Abstração FPGA — Vitis HLS/OpenCL)
+    - tests/test_filter.py         (pytest, mock packets)
+  filter_stages:
+    - malformed_check: Verifica estrutura mínima do pacote
+    - ttl_check: Valida time-to-live dentro de bounds
+    - seal_check: Verifica integridade SHA3-256 do payload
+    - duplicate_check: Bloom filter para detecção de duplicados
+    - spam_check: Regex patterns para conteúdo malicioso
+    - rate_limit: Token bucket por substrate
+  actions:
+    - PASS: Pacote aprovado para entrega
+    - DROP_SPAM: Conteúdo malicioso detectado
+    - DROP_DUPLICATE: Pacote já processado
+    - DROP_TTL_EXPIRED: Time-to-live excedido
+    - DROP_MALFORMED: Estrutura inválida ou seal falhou
+    - QUARANTINE: Rate limit excedido (revisão manual)
+  performance_targets:
+    throughput: "10M+ packets/second"
+    latency: "< 1 microsecond per packet"
+    state: "stateless (Bloom filter only)"
+  hardware:
+    platform: FPGA (Xilinx Alveo / Intel Stratix)
+    abstraction: Vitis HLS / OpenCL
+    offload: DMA batch processing
+  cross_links:
+    - 267  (DoubleZero Bridge — pacotes de entrada)
+    - 255  (Hermes ZK — verificação de seals)
+    - 255.1 (Epistemic Signature — assinatura de pacotes)
+    - 944  (Glasswing Sentinel — regras de segurança)
+    - 262.2 (TCP Integration — canais de entrada)
+    - 923  (TemporalChain — proteção de mensagens consensus)
