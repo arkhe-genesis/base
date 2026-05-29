@@ -1,3 +1,4 @@
+# openapi/mcpgateway-openapi.yaml
 openapi: 3.1.0
 info:
   title: ARKHE MCP Gateway API
@@ -137,3 +138,20 @@ components:
           nullable: true
         execution_ms:
           type: integer
+
+    Notification:
+      type: object
+      properties:
+        notification_id:
+          type: string
+        notification_type:
+          type: string
+          enum: [MEMORY_UPDATE, ALERT, DECISION_REQUIRED, STATUS]
+        payload_json:
+          type: string
+          format: byte
+        timestamp_ns:
+          type: integer
+          format: int64
+        source_substrate:
+          type: string

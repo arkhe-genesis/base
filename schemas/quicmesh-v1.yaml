@@ -1,3 +1,4 @@
+# schemas/quicmesh-v1.yaml
 apiVersion: arkhe.schemas/v1
 kind: SchemaBundle
 metadata:
@@ -13,7 +14,7 @@ spec:
         header: ArkheHeader
         channel_id:
           type: string
-          pattern: "^[a-z]+/[0-9]+(\\.[0-9]+)*$"
+          pattern: "^[a-z]+/[0-9]+(\.[0-9]+)*$"
           examples: ["tensor/260", "pix/261", "zk/255"]
         channel_type:
           type: string

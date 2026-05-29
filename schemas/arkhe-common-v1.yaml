@@ -1,3 +1,4 @@
+# schemas/arkhe-common-v1.yaml
 apiVersion: arkhe.schemas/v1
 kind: SchemaBundle
 metadata:
@@ -22,7 +23,7 @@ spec:
           required: true
         substrate_id:
           type: string
-          pattern: "^[0-9]+(\\.[0-9]+)*$"
+          pattern: "^[0-9]+(\.[0-9]+)*$"
           description: "Identificador canônico (ex: 255, 923, 262.2)"
           required: true
         timestamp_ns:

@@ -1,0 +1,23 @@
+substrato:
+  id: 275
+  nome: ARKHE OS — Arquitetura Completa
+  deidades: [Hécate, Nyx]
+  status: CANONIZED_PROVISIONAL
+  componentes:
+    - { nome: arkhe.sys, tipo: driver_windows, linguagem: Rust, funcao: "Interceptar IRPs de I/O" }
+    - { nome: arkhe.ko, tipo: lkm_linux, linguagem: Rust, funcao: "Interceptar syscalls via kprobe/LSM" }
+    - { nome: arkhed, tipo: daemon, linguagem: Go, funcao: "Batch, assinar e ancorar na L2" }
+    - { nome: libarkhe.so, tipo: shared_lib, linguagem: C, funcao: "API para processos userspace" }
+    - { nome: arkhe, tipo: cli, linguagem: Rust, funcao: "Administração e auditoria" }
+  eventos_interceptados:
+    windows: [IRP_MJ_CREATE, IRP_MJ_WRITE, IRP_MJ_SET_INFORMATION]
+    linux: [sys_open, sys_read, sys_write, sys_execve, sys_connect, sys_sendto, sys_mmap, sys_clone]
+  ancoragem:
+    batch_size: 1000
+    batch_interval_ms: 100
+    l2_endpoint: "grpc://temporalchain.arkhe.cathedral:9230"
+  cross_links:
+    - 923 (TemporalChain)
+    - 255 (Hermes ZK)
+    - 912 (Epistemic Commit)
+    - 944 (Glasswing Sentinel)

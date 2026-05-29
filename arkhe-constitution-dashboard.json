@@ -1,0 +1,249 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "arkhe-constitution",
+    "title": "ARKHE Cathedral — Constituicao P1-P7",
+    "tags": ["arkhe", "constitution", "governance"],
+    "timezone": "UTC",
+    "schemaVersion": 36,
+    "refresh": "10s",
+
+    "panels": [
+      {
+        "id": 1,
+        "title": "P1 — Transparencia",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 0}
+      },
+      {
+        "id": 2,
+        "title": "Header Validation Rate",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 1},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_header_validation_total{status=\"valid\"}[5m])) / sum(rate(arkhe_header_validation_total[5m]))",
+            "legendFormat": "Valid %"
+          }
+        ]
+      },
+      {
+        "id": 3,
+        "title": "Epistemic Commit Coverage",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 1},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_epistemic_commits_total[5m])) / sum(rate(arkhe_actions_a2_plus_total[5m]))",
+            "legendFormat": "Coverage"
+          }
+        ]
+      },
+      {
+        "id": 4,
+        "title": "Chain Anchor Latency",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 12, "x": 12, "y": 1},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(arkhe_chain_anchor_latency_bucket[5m])) by (le))",
+            "legendFormat": "p99"
+          }
+        ]
+      },
+      {
+        "id": 5,
+        "title": "P2 — Privacidade",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 5}
+      },
+      {
+        "id": 6,
+        "title": "Consent Coverage",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 6},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_data_collection_total{consent=\"true\"}[5m])) / sum(rate(arkhe_data_collection_total[5m]))",
+            "legendFormat": "Consent %"
+          }
+        ]
+      },
+      {
+        "id": 7,
+        "title": "ZK Pix Coverage",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 6},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_pix_initiated_total{use_zk=\"true\",amount_brl=\">1000\"}[5m])) / sum(rate(arkhe_pix_initiated_total{amount_brl=\">1000\"}[5m]))",
+            "legendFormat": "ZK %"
+          }
+        ]
+      },
+      {
+        "id": 8,
+        "title": "DP Epsilon Distribution",
+        "type": "heatmap",
+        "gridPos": {"h": 4, "w": 12, "x": 12, "y": 6},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_dp_epsilon_bucket[5m])) by (le)",
+            "format": "heatmap"
+          }
+        ]
+      },
+      {
+        "id": 9,
+        "title": "P3 — Soberania",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 10}
+      },
+      {
+        "id": 10,
+        "title": "Edge Nodes Online",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 11},
+        "targets": [
+          {
+            "expr": "count(arkhe_edge_node_health == 1)",
+            "legendFormat": "Healthy"
+          }
+        ]
+      },
+      {
+        "id": 11,
+        "title": "Federated Updates",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 18, "x": 6, "y": 11},
+        "targets": [
+          {
+            "expr": "rate(arkhe_federated_updates_total[5m])",
+            "legendFormat": "{{ node_id }}"
+          }
+        ]
+      },
+      {
+        "id": 12,
+        "title": "P4 — Verificabilidade",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 15}
+      },
+      {
+        "id": 13,
+        "title": "Grounding Coverage",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_claims_with_source_total[5m])) / sum(rate(arkhe_claims_total[5m]))",
+            "legendFormat": "Grounded %"
+          }
+        ]
+      },
+      {
+        "id": 14,
+        "title": "Trust Score Distribution",
+        "type": "histogram",
+        "gridPos": {"h": 4, "w": 18, "x": 6, "y": 16},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_source_trust_score_bucket[5m])) by (le)",
+            "format": "heatmap"
+          }
+        ]
+      },
+      {
+        "id": 15,
+        "title": "P5 — Continuidade",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 20}
+      },
+      {
+        "id": 16,
+        "title": "Chain Growth",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 12, "x": 0, "y": 21},
+        "targets": [
+          {
+            "expr": "arkhe_chain_total_events",
+            "legendFormat": "Total Events"
+          }
+        ]
+      },
+      {
+        "id": 17,
+        "title": "Reconstructibility Status",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 12, "x": 12, "y": 21},
+        "targets": [
+          {
+            "expr": "count(arkhe_projection_reconstructible == 1) / count(arkhe_projection_reconstructible)",
+            "legendFormat": "Reconstructible %"
+          }
+        ]
+      },
+      {
+        "id": 18,
+        "title": "P6 — Seguranca",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 25}
+      },
+      {
+        "id": 19,
+        "title": "mTLS Handshake Success",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 26},
+        "targets": [
+          {
+            "expr": "sum(rate(quicmesh_handshake_success_total[5m])) / sum(rate(quicmesh_handshake_total[5m]))",
+            "legendFormat": "Success %"
+          }
+        ]
+      },
+      {
+        "id": 20,
+        "title": "Glasswing Scan Results",
+        "type": "table",
+        "gridPos": {"h": 4, "w": 18, "x": 6, "y": 26},
+        "targets": [
+          {
+            "expr": "topk(10, glasswing_findings_by_severity)",
+            "format": "table",
+            "instant": true
+          }
+        ]
+      },
+      {
+        "id": 21,
+        "title": "P7 — Alinhamento",
+        "type": "row",
+        "gridPos": {"h": 1, "w": 24, "x": 0, "y": 30}
+      },
+      {
+        "id": 22,
+        "title": "HITL Approval Rate",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 31},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_hitl_approved_total[5m])) / sum(rate(arkhe_hitl_required_total[5m]))",
+            "legendFormat": "Approved %"
+          }
+        ]
+      },
+      {
+        "id": 23,
+        "title": "Human Welfare Impact",
+        "type": "timeseries",
+        "gridPos": {"h": 4, "w": 18, "x": 6, "y": 31},
+        "targets": [
+          {
+            "expr": "avg(arkhe_welfare_impact_score)",
+            "legendFormat": "Welfare Score"
+          }
+        ]
+      }
+    ]
+  }
+}

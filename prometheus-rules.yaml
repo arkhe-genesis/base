@@ -1,0 +1,50 @@
+  - name: p7-alignment
+    interval: 30s
+    rules:
+    - alert: P7_HitlMissing
+      expr: |
+        (
+          sum(rate(arkhe_a4_a5_executed_total{hitl_approved="false"}[5m]))
+          /
+          sum(rate(arkhe_a4_a5_executed_total[5m]))
+        ) > 0
+      for: 0s
+      labels:
+        severity: critical
+        principle: P7
+      annotations:
+        summary: "P7: A4/A5 executado sem HITL"
+        description: "Acao {{ $labels.action_id }} violou P7"
+
+    - alert: P7_EmergencyOverride
+      expr: |
+        sum(rate(arkhe_emergency_override_total[5m])) > 0
+      for: 0s
+      labels:
+        severity: warning
+        principle: P7
+      annotations:
+        summary: "P7: Emergency override ativado"
+        description: "Override por {{ $labels.senior_count }}/{{ $labels.required }} seniors"
+
+    - alert: P7_ConstitutionAttack
+      expr: |
+        sum(rate(arkhe_constitution_modification_attempt_total[5m])) > 0
+      for: 0s
+      labels:
+        severity: critical
+        principle: P7
+      annotations:
+        summary: "P7: Tentativa de modificacao da Constituicao"
+        description: "Tentativa nao autorizada de alterar P1-P7"
+
+    - alert: P7_WelfareNegative
+      expr: |
+        sum(rate(arkhe_optimization_executed_total{welfare_impact="<0"}[5m])) > 0
+      for: 0s
+      labels:
+        severity: critical
+        principle: P7
+      annotations:
+        summary: "P7: Otimizacao com welfare negativo executada"
+        description: "Impacto no bem-estar humano: {{ $labels.welfare_score }}"

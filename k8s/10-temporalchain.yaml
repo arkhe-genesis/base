@@ -1,3 +1,4 @@
+# k8s/10-temporalchain.yaml
 apiVersion: apps/v1
 kind: StatefulSet
 metadata:
@@ -49,7 +50,6 @@ spec:
             configMapKeyRef:
               name: arkhe-schemas
               key: l2-contract-address
-              optional: true
         - name: L2_RPC_URL
           valueFrom:
             secretKeyRef:

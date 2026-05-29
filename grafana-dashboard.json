@@ -1,0 +1,233 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "arkhe-overview",
+    "title": "ARKHE Cathedral — Overview",
+    "tags": ["arkhe", "overview", "constitutional"],
+    "timezone": "UTC",
+    "schemaVersion": 36,
+    "refresh": "5s",
+
+    "panels": [
+      {
+        "id": 1,
+        "title": "Status Constitucional",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 12, "x": 0, "y": 0},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_constitutional_violation_total[5m]))",
+            "legendFormat": "Violacoes/min"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "steps": [
+                {"color": "green", "value": null},
+                {"color": "yellow", "value": 1},
+                {"color": "red", "value": 5}
+              ]
+            },
+            "unit": "short"
+          }
+        },
+        "options": {
+          "graphMode": "area",
+          "colorMode": "background"
+        }
+      },
+      {
+        "id": 2,
+        "title": "Eventos/seg (TemporalChain)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 0},
+        "targets": [
+          {
+            "expr": "rate(arkhe_events_committed_total[1m])",
+            "legendFormat": "{{ substrate_id }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ops",
+            "custom": {
+              "drawStyle": "line",
+              "lineInterpolation": "smooth"
+            }
+          }
+        }
+      },
+      {
+        "id": 3,
+        "title": "Latencia gRPC (p99)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 4},
+        "targets": [
+          {
+            "expr": "histogram_quantile(0.99, sum(rate(arkhe_grpc_request_duration_bucket[5m])) by (le, service))",
+            "legendFormat": "{{ service }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "ms"
+          }
+        }
+      },
+      {
+        "id": 4,
+        "title": "Taxa de Aprovacao Agency",
+        "type": "gauge",
+        "gridPos": {"h": 4, "w": 6, "x": 0, "y": 12},
+        "targets": [
+          {
+            "expr": "sum(rate(arkhe_agency_approved_total[5m])) / sum(rate(arkhe_agency_deliberations_total[5m]))",
+            "legendFormat": "Aprovacao"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 1,
+            "unit": "percentunit",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 0.5},
+                {"color": "green", "value": 0.8}
+              ]
+            }
+          }
+        }
+      },
+      {
+        "id": 5,
+        "title": "ZK Proofs/hora",
+        "type": "stat",
+        "gridPos": {"h": 4, "w": 6, "x": 6, "y": 12},
+        "targets": [
+          {
+            "expr": "sum(rate(hermeszk_proofs_generated_total[1h]))",
+            "legendFormat": "Proofs/h"
+          }
+        ]
+      },
+      {
+        "id": 6,
+        "title": "Pix Volume (R$)",
+        "type": "timeseries",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 12},
+        "targets": [
+          {
+            "expr": "sum(rate(brasilfinance_pix_amount_total[5m]))",
+            "legendFormat": "Volume/min"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "unit": "currencyBRL"
+          }
+        }
+      },
+      {
+        "id": 7,
+        "title": "Glasswing Findings",
+        "type": "table",
+        "gridPos": {"h": 8, "w": 12, "x": 0, "y": 16},
+        "targets": [
+          {
+            "expr": "topk(10, glasswing_findings_by_severity)",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "overrides": [
+            {
+              "matcher": {"id": "byName", "options": "severity"},
+              "properties": [
+                {
+                  "id": "mappings",
+                  "value": [
+                    {"options": {"CRITICAL": {"color": "red", "text": "CRITICAL"}}},
+                    {"options": {"HIGH": {"color": "orange", "text": "HIGH"}}},
+                    {"options": {"MEDIUM": {"color": "yellow", "text": "MEDIUM"}}}
+                  ]
+                }
+              ]
+            }
+          ]
+        }
+      },
+      {
+        "id": 8,
+        "title": "Nos do Mesh",
+        "type": "geomap",
+        "gridPos": {"h": 8, "w": 12, "x": 12, "y": 16},
+        "targets": [
+          {
+            "expr": "quicmesh_node_health",
+            "format": "table",
+            "instant": true
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "mode": "markers"
+            }
+          }
+        }
+      },
+      {
+        "id": 9,
+        "title": "P1-P7 Compliance Score",
+        "type": "bargauge",
+        "gridPos": {"h": 4, "w": 24, "x": 0, "y": 24},
+        "targets": [
+          {
+            "expr": "arkhe_principle_compliance_score",
+            "legendFormat": "{{ principle }}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "min": 0,
+            "max": 1,
+            "unit": "percentunit",
+            "thresholds": {
+              "steps": [
+                {"color": "red", "value": 0},
+                {"color": "yellow", "value": 0.9},
+                {"color": "green", "value": 0.99}
+              ]
+            }
+          }
+        },
+        "options": {
+          "orientation": "horizontal",
+          "displayMode": "gradient"
+        }
+      }
+    ],
+
+    "templating": {
+      "list": [
+        {
+          "name": "environment",
+          "type": "custom",
+          "query": "dev,staging,prod",
+          "current": {"text": "prod", "value": "prod"}
+        },
+        {
+          "name": "substrate",
+          "type": "query",
+          "query": "label_values(arkhe_events_committed_total, substrate_id)",
+          "multi": true,
+          "includeAll": true
+        }
+      ]
+    }
+  }
+}

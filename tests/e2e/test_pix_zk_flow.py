@@ -6,7 +6,7 @@ import uuid
 @pytest.fixture
 def arkhe_header():
     return {
-        "trace_id": str(uuid.uuid7()) if hasattr(uuid, 'uuid7') else str(uuid.uuid4()),
+        "trace_id": str(uuid.uuid4()),
         "session_id": "ed25519:abc123...",
         "substrate_id": "261.1",
         "timestamp_ns": int(datetime.now().timestamp() * 1e9),
@@ -71,6 +71,7 @@ class MockFluxMemClient:
     async def write_shard(self, req):
         return {"node_id": "node-123", "temporal_event_id": "evt-789"}
 
+@pytest.mark.asyncio
 class TestPixZKFlow:
     @pytest.mark.asyncio
     async def test_01_android_hal_detects_payment(self, arkhe_header):
@@ -275,5 +276,6 @@ class TestPixZKFlowInfrastructure(TestPixZKFlow):
 @pytest.mark.e2e
 @pytest.mark.fast
 @pytest.mark.mocked
+@pytest.mark.asyncio
 class TestPixZKFlowMocked(TestPixZKFlow):
     pass

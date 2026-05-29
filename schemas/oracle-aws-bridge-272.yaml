@@ -1,0 +1,83 @@
+# schemas/oracle-aws-bridge-272.yaml
+apiVersion: arkhe.schemas/v1
+kind: SchemaBundle
+metadata:
+  name: oracle-aws-bridge-272
+  version: "1.0.0"
+  substrate: "272"
+  seal: "sha3-256:seshat-janus-272"
+  deities: ["Seshat", "Janus"]
+spec:
+  service: OracleAWSBridgeService
+  description: "Bridge entre Oracle Cloud (Seshat/bancos) e AWS (Janus/portais)"
+
+  rpcs:
+    SyncData:
+      description: "Sincroniza dados entre Oracle DB e AWS S3/DynamoDB"
+      request:
+        header: ArkheHeader
+        source:
+          type: string
+          enum: [ORACLE_DB, AWS_S3, AWS_DYNAMODB, OCI_OBJECT_STORAGE]
+        target:
+          type: string
+          enum: [ORACLE_DB, AWS_S3, AWS_DYNAMODB, OCI_OBJECT_STORAGE]
+        sync_type:
+          type: string
+          enum: [FULL, INCREMENTAL, CDC]
+        table_or_bucket: {type: string}
+        filter: {type: string, nullable: true}
+      response:
+        sync_id: {type: string}
+        records_synced: {type: integer}
+        bytes_transferred: {type: integer}
+        latency_ms: {type: integer}
+        seal: ArkheSeal
+
+    ReplicateState:
+      description: "Replica estado da Catedral entre nuvens"
+      request:
+        header: ArkheHeader
+        source_region: {type: string}
+        target_region: {type: string}
+        state_type:
+          type: string
+          enum: [TEMPORAL_CHAIN, FLUXMEM, EPISTEMIC_STATE, CONFIG]
+      response:
+        replication_id: {type: string}
+        consistency_check: {type: boolean}
+        lag_ms: {type: integer}
+
+    Failover:
+      description: "Failover automatico entre nuvens"
+      request:
+        header: ArkheHeader
+        from_cloud:
+          type: string
+          enum: [AWS, OCI]
+        to_cloud:
+          type: string
+          enum: [AWS, OCI]
+        trigger:
+          type: string
+          enum: [MANUAL, HEALTH_CHECK, CAPACITY, COST]
+      response:
+        failover_id: {type: string}
+        status:
+          type: string
+          enum: [IN_PROGRESS, COMPLETED, FAILED, ROLLING_BACK]
+        estimated_completion_ms: {type: integer}
+
+  config:
+    oracle:
+      db_connection_string: "oracle://[REDACTED]"
+      object_storage_namespace: "arkhe-cathedral"
+      region: "us-ashburn-1"
+    aws:
+      s3_bucket: "arkhe-cathedral-artifacts"
+      dynamodb_table: "arkhe-state"
+      region: "us-east-1"
+    sync:
+      interval_sec: 60
+      conflict_resolution: "TEMPORAL_WINS"  # Timestamp mais recente vence
+      encryption: "AES-256-GCM"

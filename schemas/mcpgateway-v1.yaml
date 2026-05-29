@@ -1,3 +1,4 @@
+# schemas/mcpgateway-v1.yaml
 apiVersion: arkhe.schemas/v1
 kind: SchemaBundle
 metadata:

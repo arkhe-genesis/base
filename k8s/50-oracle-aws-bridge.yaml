@@ -1,0 +1,88 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: oracle-aws-bridge
+  namespace: arkhe-cathedral
+  labels:
+    app: oracle-aws-bridge
+    substrate: "272"
+    deity: "Seshat-Janus"
+spec:
+  replicas: 2
+  selector:
+    matchLabels:
+      app: oracle-aws-bridge
+  template:
+    metadata:
+      labels:
+        app: oracle-aws-bridge
+        substrate: "272"
+      annotations:
+        prometheus.io/scrape: "true"
+        prometheus.io/port: "9090"
+    spec:
+      serviceAccountName: arkhe-cathedral-sa
+      containers:
+      - name: bridge
+        image: arkhe-os/oracle-aws-bridge:v1.0.0
+        imagePullPolicy: IfNotPresent
+        ports:
+        - name: grpc
+          containerPort: 50051
+        - name: metrics
+          containerPort: 9090
+        env:
+        - name: ORACLE_DB_CONNECTION
+          valueFrom:
+            secretKeyRef:
+              name: arkhe-oracle-secrets
+              key: db-connection
+        - name: AWS_ACCESS_KEY_ID
+          valueFrom:
+            secretKeyRef:
+              name: arkhe-aws-secrets
+              key: access-key-id
+        - name: AWS_SECRET_ACCESS_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arkhe-aws-secrets
+              key: secret-access-key
+        - name: OCI_PRIVATE_KEY
+          valueFrom:
+            secretKeyRef:
+              name: arkhe-oci-secrets
+              key: private-key
+        - name: SYNC_INTERVAL_SEC
+          value: "60"
+        resources:
+          requests:
+            memory: "1Gi"
+            cpu: "500m"
+          limits:
+            memory: "4Gi"
+            cpu: "2000m"
+        volumeMounts:
+        - name: schemas
+          mountPath: /etc/arkhe/schemas
+          readOnly: true
+      volumes:
+      - name: schemas
+        configMap:
+          name: arkhe-schemas
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: oracle-aws-bridge
+  namespace: arkhe-cathedral
+spec:
+  selector:
+    app: oracle-aws-bridge
+  ports:
+  - name: grpc
+    port: 50051
+    targetPort: 50051
+  - name: metrics
+    port: 9090
+    targetPort: 9090
+  type: ClusterIP
