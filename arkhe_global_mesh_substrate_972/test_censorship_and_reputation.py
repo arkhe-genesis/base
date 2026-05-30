@@ -7,6 +7,9 @@ import asyncio
 from bridge_nostr_tor_ipfs import NostrTorIpfsBridge
 from consensus.hamiltonian_consensus import HamiltonianConsensus, Vote
 
+import pytest
+
+@pytest.mark.asyncio
 async def test_censorship_failover():
     print("=== Testing Total Censorship Scenario (Tor Failover) ===")
     bridge = NostrTorIpfsBridge(
