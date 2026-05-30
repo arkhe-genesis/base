@@ -1,0 +1,7 @@
+error: Erro canónico: a função 'my_intervention' está marcada como #[intervention] mas não recebe o parâmetro 'layers: &[LayerId]'. Uma função de intervenção deve receber explicitamente as camadas onde atuar. A localização é responsabilidade do diagnóstico, não da intervenção.
+ --> tests/ui/intervention_no_layers.rs:5:1
+  |
+5 | #[intervention]
+  | ^^^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `intervention` (in Nightly builds, run with -Z macro-backtrace for more info)

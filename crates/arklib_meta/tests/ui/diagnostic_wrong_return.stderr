@@ -1,0 +1,7 @@
+error: Erro canónico: a função 'my_diag' está marcada como #[diagnostic] mas retorna um tipo de intervenção (TaskVector). Uma função de diagnóstico não pode produzir modificações.
+ --> tests/ui/diagnostic_wrong_return.rs:5:1
+  |
+5 | #[diagnostic]
+  | ^^^^^^^^^^^^^
+  |
+  = note: this error originates in the attribute macro `diagnostic` (in Nightly builds, run with -Z macro-backtrace for more info)
