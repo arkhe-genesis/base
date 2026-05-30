@@ -58,6 +58,7 @@ members = [
   "crates/infra/*",
   "crates/common/*",
   "crates/execution/*",
+  "crates/arklib_meta",
   "etc/tools/*",
   "devnet",
   "actions/*",

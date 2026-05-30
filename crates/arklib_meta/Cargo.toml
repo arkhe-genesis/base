@@ -1,0 +1,15 @@
+[package]
+name = "arklib_meta"
+version = "0.1.0"
+edition = "2024"
+
+[lib]
+proc-macro = true
+
+[dependencies]
+quote = "1"
+syn = { version = "2", features = ["full", "extra-traits"] }
+proc-macro2 = "1"
+
+[dev-dependencies]
+trybuild = "1.0"
