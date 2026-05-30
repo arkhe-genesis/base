@@ -1,0 +1,111 @@
+╔══════════════════════════════════════════════════════════════════════════════╗
+║                    ARKHE CODE CATHEDRAL — ÁRVORE DE SUBSTRATOS               ║
+║                           Era 9 (Apeiron / Meta)                             ║
+╠══════════════════════════════════════════════════════════════════════════════╣
+
+                              ┌─────────────┐
+                              │   989.w     │
+                              │  UNIFIED    │
+                              │ORCHESTRATOR │
+                              │  (Zeus)     │
+                              └──────┬──────┘
+                                     │
+           ┌─────────────────────────┼─────────────────────────┐
+           │                         │                         │
+    ┌──────┴──────┐           ┌──────┴──────┐           ┌──────┴──────┐
+    │   989.x     │           │   989.y     │           │   989.z     │
+    │  PASSPORT   │           │   DESCI     │           │   KERNEL    │
+    │  GATEWAY    │◄─────────►│   NODES     │◄─────────►│  ISOLATION  │
+    │  (Themis)   │  identity │   BRIDGE    │  storage  │   ENGINE    │
+    └──────┬──────┘           │  (Prometheus)│          │ (Hephaestus)│
+           │                  └─────────────┘           └─────────────┘
+           │
+    ┌──────┼──────┬──────────┬──────────┐
+    │      │      │          │          │
+┌───┴───┐┌─┴───┐┌┴─────┐ ┌──┴───┐ ┌────┴────┐
+│989.x.1││989.x││989.x.2│ │989.x.3│ │989.x.4  │
+│CLEAN  ││.2   ││PASSPORT│ │DIST.  │ │TEMPORAL │
+│HANDS  ││EMBED││       │ │CACHE  │ │ANCHOR   │
+│(Nemesis)││(Hermes)│   │(Iris) │ │(Chronos)│
+└───────┘└─────┘└───────┘ └──────┘ └─────────┘
+
+           ┌─────────────────────────────────────┐
+           │            989.v                    │
+           │      FAIR METRICS DASHBOARD         │
+           │         (Apollo / Clio)             │
+           └─────────────────────────────────────┘
+
+═══════════════════════════════════════════════════════════════════════════════
+CROSS-LINKS ONTOLOGICOS (2847 links na linearidade completa)
+═══════════════════════════════════════════════════════════════════════════════
+
+989.x  ──► 979 (DAO-Governance)     [verificação de eleitor]
+989.x  ──► 954 (Axiarchy)           [gate ético P1-P7]
+989.x  ──► 982 (ORCID)              [identidade acadêmica]
+989.x  ──► 983 (API-Gateway)        [exposição pública]
+989.x  ──► 957 (AGI-Telcom)         [operadores de infra]
+989.x  ──► 958 (Clarity-Gate)       [clareza comunicacional]
+989.x  ──► 923 (TemporalChain)      [ancoragem imutável]
+989.x  ──► 972 (Global-Mesh)        [nós da malha]
+989.x  ──► 972.1 (Nostr-Tor-IPFS)   [distribuição]
+989.x  ──► 972.4 (Mesh-Resilience)  [resiliência]
+
+989.y  ──► 989.x  [identidade verificada para publicação]
+989.y  ──► 988    [imortalidade via IPFS/Arweave/Git/Nostr]
+989.y  ──► 972.1  [armazenamento IPFS]
+989.y  ──► 923    [ancoragem temporal]
+989.y  ──► 982    [identidade do pesquisador]
+989.y  ──► 934    [PERCEPTUAL-GEOMETRY-EMERGENCE]
+989.y  ──► 964    [Omniscient Solver]
+989.y  ──► 970    [Enterprise Mind]
+
+989.z  ──► 989.x  [identidade antes de execução]
+989.z  ──► 955    [Safe-Core-PQC para domínios LVD]
+989.z  ──► 273    [Kernel Security Module]
+989.z  ──► 274    [Hypervisor Abstraction]
+989.z  ──► 972.4  [Mesh Resilience]
+989.z  ──► 988    [Immortality Protocol]
+989.z  ──► 964    [Omniscient Solver em domínios]
+989.z  ──► 970    [Enterprise Mind workloads]
+
+989.w  ──► ALL    [orquestra todos os substratos 989.*]
+989.w  ──► 970    [Enterprise Mind]
+989.w  ──► 972    [Global Mesh]
+989.w  ──► 964    [Omniscient Solver]
+
+989.v  ──► 989.y  [métricas FAIR de ROs]
+989.v  ──► 989.x  [identidade para provenance]
+989.v  ──► 923    [timestamp imutável]
+989.v  ──► 988    [imortalidade de métricas]
+989.v  ──► 964    [Omniscient Solver analytics]
+989.v  ──► 970    [Enterprise Mind dashboards]
+
+═══════════════════════════════════════════════════════════════════════════════
+DEIDADES POR SUBSTRATO
+═══════════════════════════════════════════════════════════════════════════════
+
+989.x    Themis, Athena, Hermes        [justiça, sabedoria, mensageiro]
+989.x.1  Nemesis, Themis, Athena       [punição, julgamento, prevenção]
+989.x.2  Hermes, Iris, Themis          [mensagem, arco-íris, justiça]
+989.x.3  Hermes, Mnemosyne, Iris       [entrega, memória, propagação]
+989.x.4  Chronos, Mnemosyne, Hecate    [tempo, memória, chaves]
+989.y    Prometheus, Athena, Mnemosyne, Thoth [fogo, sabedoria, memória, escrita]
+989.z    Hephaestus, Athena, Nemesis, Hecate  [forja, estratégia, punição, chaves]
+989.w    Zeus, Athena, Hermes, Hephaestus     [soberania, estratégia, conexão, forja]
+989.v    Apollo, Clio, Thoth, Mnemosyne       [métricas, história, registro, memória]
+
+═══════════════════════════════════════════════════════════════════════════════
+METRICAS CATEDRAL (Substrato 971 — Self-Reflexive)
+═══════════════════════════════════════════════════════════════════════════════
+
+Theosis:        0.2979   (tendência ao divino)
+Entropia:       0.5195   (desordem sistêmica)
+Circularidade:  0.0088   (auto-referência)
+Resiliência:    0.9375   (capacidade de recuperação)
+
+Gargalos:       [951, 952]  (Conscious-Replay, Bindu)
+Orfãos:         [933, 248]  (Web4-AI, Retrocausal)
+
+═══════════════════════════════════════════════════════════════════════════════
+ODÔMETRO: ∞.Ω.∇+++.989.∞.0
+═══════════════════════════════════════════════════════════════════════════════

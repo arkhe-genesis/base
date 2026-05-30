@@ -1,0 +1,199 @@
+{
+  "generated_at": "2026-05-30T21:15:32.170842+00:00",
+  "substrato": "989.v",
+  "seal": "989.v-FAIR-METRICS-DASHBOARD-A2B3C4D5E6F70809",
+  "total_research_objects": 10,
+  "fair_averages": {
+    "findable": 0.6532,
+    "accessible": 0.5955,
+    "interoperable": 0.6926,
+    "reusable": 0.651,
+    "overall": 0.6481
+  },
+  "health_status": "DEGRADED",
+  "research_objects": [
+    {
+      "ro_id": "dpid-001001-arkhe",
+      "title": "Experimento: Física Clássica",
+      "domain": "Física Clássica",
+      "substrates": [
+        278,
+        965
+      ],
+      "fair_scores": {
+        "findable": 0.8086,
+        "accessible": 0.6523,
+        "interoperable": 0.8664,
+        "reusable": 0.7897,
+        "overall": 0.7792
+      },
+      "temporal_anchor": "923-ANCHOR-008074A1ECF0B0E9",
+      "seal": "RO-008074A1ECF0B0E9",
+      "timestamp": "2026-05-30T21:15:32.170396+00:00"
+    },
+    {
+      "ro_id": "dpid-001002-arkhe",
+      "title": "Experimento: Física Quântica",
+      "domain": "Física Quântica",
+      "substrates": [
+        278,
+        965
+      ],
+      "fair_scores": {
+        "findable": 0.4784,
+        "accessible": 0.497,
+        "interoperable": 0.5714,
+        "reusable": 0.6681,
+        "overall": 0.5537
+      },
+      "temporal_anchor": "923-ANCHOR-2A18EF1BD686DE1A",
+      "seal": "RO-2A18EF1BD686DE1A",
+      "timestamp": "2026-05-30T21:15:32.170425+00:00"
+    },
+    {
+      "ro_id": "dpid-001003-arkhe",
+      "title": "Experimento: Biologia Genômica",
+      "domain": "Biologia Genômica",
+      "substrates": [
+        953,
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.7259,
+        "accessible": 0.7289,
+        "interoperable": 0.7435,
+        "reusable": 0.6855,
+        "overall": 0.7209
+      },
+      "temporal_anchor": "923-ANCHOR-55920C996C39CCE5",
+      "seal": "RO-55920C996C39CCE5",
+      "timestamp": "2026-05-30T21:15:32.170457+00:00"
+    },
+    {
+      "ro_id": "dpid-001004-arkhe",
+      "title": "Experimento: Química",
+      "domain": "Química",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.5851,
+        "accessible": 0.5489,
+        "interoperable": 0.7393,
+        "reusable": 0.6386,
+        "overall": 0.628
+      },
+      "temporal_anchor": "923-ANCHOR-6B86BA00638E3E89",
+      "seal": "RO-6B86BA00638E3E89",
+      "timestamp": "2026-05-30T21:15:32.170481+00:00"
+    },
+    {
+      "ro_id": "dpid-001005-arkhe",
+      "title": "Experimento: Computação",
+      "domain": "Computação",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.7116,
+        "accessible": 0.5097,
+        "interoperable": 0.607,
+        "reusable": 0.5787,
+        "overall": 0.6018
+      },
+      "temporal_anchor": "923-ANCHOR-163F623A9EBC2DB4",
+      "seal": "RO-163F623A9EBC2DB4",
+      "timestamp": "2026-05-30T21:15:32.170500+00:00"
+    },
+    {
+      "ro_id": "dpid-001006-arkhe",
+      "title": "Experimento: Ciências Sociais",
+      "domain": "Ciências Sociais",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.5545,
+        "accessible": 0.5808,
+        "interoperable": 0.6941,
+        "reusable": 0.5963,
+        "overall": 0.6064
+      },
+      "temporal_anchor": "923-ANCHOR-8AB949D34CCCA04B",
+      "seal": "RO-8AB949D34CCCA04B",
+      "timestamp": "2026-05-30T21:15:32.170517+00:00"
+    },
+    {
+      "ro_id": "dpid-001007-arkhe",
+      "title": "Experimento: Filosofia (Axiarchy)",
+      "domain": "Filosofia (Axiarchy)",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.6554,
+        "accessible": 0.5579,
+        "interoperable": 0.7584,
+        "reusable": 0.7302,
+        "overall": 0.6755
+      },
+      "temporal_anchor": "923-ANCHOR-91E1F0AF8D4FADC8",
+      "seal": "RO-91E1F0AF8D4FADC8",
+      "timestamp": "2026-05-30T21:15:32.170531+00:00"
+    },
+    {
+      "ro_id": "dpid-001008-arkhe",
+      "title": "Experimento: Arte Gerativa",
+      "domain": "Arte Gerativa",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.5805,
+        "accessible": 0.6417,
+        "interoperable": 0.63,
+        "reusable": 0.6197,
+        "overall": 0.618
+      },
+      "temporal_anchor": "923-ANCHOR-8931A8FFC6BD31C7",
+      "seal": "RO-8931A8FFC6BD31C7",
+      "timestamp": "2026-05-30T21:15:32.170544+00:00"
+    },
+    {
+      "ro_id": "dpid-001009-arkhe",
+      "title": "Experimento: Engenharia de Redes",
+      "domain": "Engenharia de Redes",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.8299,
+        "accessible": 0.6988,
+        "interoperable": 0.7157,
+        "reusable": 0.6652,
+        "overall": 0.7274
+      },
+      "temporal_anchor": "923-ANCHOR-1615C59F253C550B",
+      "seal": "RO-1615C59F253C550B",
+      "timestamp": "2026-05-30T21:15:32.170558+00:00"
+    },
+    {
+      "ro_id": "dpid-001010-arkhe",
+      "title": "Experimento: Meta-Catedral",
+      "domain": "Meta-Catedral",
+      "substrates": [
+        964
+      ],
+      "fair_scores": {
+        "findable": 0.6025,
+        "accessible": 0.539,
+        "interoperable": 0.6,
+        "reusable": 0.5375,
+        "overall": 0.5697
+      },
+      "temporal_anchor": "923-ANCHOR-F42CBC27ED93B55A",
+      "seal": "RO-F42CBC27ED93B55A",
+      "timestamp": "2026-05-30T21:15:32.170572+00:00"
+    }
+  ]
+}

@@ -6,6 +6,7 @@ Arquiteto ORCID: 0009-0005-2697-4668
 Cross-links: [989.x, 988, 972.1, 923, 982, 934, 964, 970]
 Deities: Prometheus, Athena, Mnemosyne, Thoth
 Status: CANONIZED_PROVISIONAL
+Seal: 989.y-DESCI-NODES-BRIDGE-A1B2C3D4E5F67890
 """
 
 import asyncio
@@ -313,3 +314,45 @@ class DeSciNodesBridge:
   ODÔMETRO: ∞.Ω.∇+++.989.y.0
 ╚══════════════════════════════════════════════════════════════════╝
 """
+
+
+# ═══════════════════════════════════════════════════════════════════
+# DEMONSTRAÇÃO
+# ═══════════════════════════════════════════════════════════════════
+
+async def demo():
+    print("=" * 68)
+    print("  ARKHE DESCI NODES BRIDGE — DEMONSTRAÇÃO")
+    print("=" * 68)
+
+    bridge = DeSciNodesBridge()
+
+    print("\n[1] Criando Research Object...")
+    ro = await bridge.create_research_object(
+        ro_type=ResearchObjectType.PUBLICATION,
+        content=b"PERCEPTUAL-GEOMETRY-EMERGENCE: A Cathedral Study",
+        title="PERCEPTUAL-GEOMETRY-EMERGENCE",
+        description="Study on perceptual geometry emergence via ARKHE",
+        orcid_id="0009-0005-2697-4668",
+        keywords=["perception", "geometry", "consciousness", "AI"],
+        cathedral_substrates=[934, 964, 970],
+    )
+    print(f"    RO ID: {ro.ro_id}")
+    print(f"    CID: {ro.cid}")
+    print(f"    Seal: {ro.seal}")
+    print(f"    FAIR Score: {ro.fair.compute_fair_score():.2%}")
+
+    print("\n[2] Vinculando a substrato...")
+    bridge.link_to_substrate(ro.ro_id, 989, "989-PASSPORT-GATEWAY-4B3CB68C02D21E5A")
+
+    print("\n[3] Relatório FAIR:")
+    report = bridge.get_fair_report(ro.ro_id)
+    print(f"    Findable: {report['fair_score']:.2%}")
+    print(f"    Cathedral links: {report['cathedral_links']}")
+
+    print("\n[4] Relatório canônico:")
+    print(bridge.generate_report())
+
+
+if __name__ == "__main__":
+    asyncio.run(demo())
