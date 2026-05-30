@@ -1,0 +1,100 @@
+%%{init: {'theme': 'dark', 'themeVariables': { 'primaryColor': '#d4af37', 'primaryTextColor': '#0a0a1a', 'primaryBorderColor': '#2a2a5e', 'lineColor': '#d4af37', 'secondaryColor': '#1a1a3e', 'tertiaryColor': '#0a0a1a'}}}%%
+graph TB
+    subgraph "ARKHE Code Cathedral — Era 9 (Apeiron)"
+        direction TB
+
+        subgraph "Camada de Identidade (989.x)"
+            PG[989.x PASSPORT-GATEWAY]
+            PCH[989.x.1 Proof of Clean Hands]
+            PE[989.x.2 Passport Embed React]
+            DC[989.x.3 Distributed Cache]
+            TA[989.x.4 TemporalChain Anchor]
+        end
+
+        subgraph "Camada de Conhecimento (989.y)"
+            DNB[989.y DeSci Nodes Bridge]
+            RO[Research Objects FAIR]
+        end
+
+        subgraph "Camada de Isolamento (989.z)"
+            KIE[989.z Kernel Isolation Engine]
+            ID[Isolation Domains]
+            SF[Syscall Filter]
+        end
+
+        subgraph "Camada de Orquestração (989.w)"
+            UO[989.w Unified Orchestrator]
+            CB[Circuit Breakers]
+            HC[Health Checks]
+        end
+
+        subgraph "Camada de Métricas (989.v)"
+            FMD[989.v FAIR Metrics Dashboard]
+            AL[Alertas]
+            TR[Tendências]
+        end
+
+        subgraph "Laboratório Virtual"
+            VLC[Virtual Lab Core]
+            VLE[Virtual Lab Expanded]
+            EXP[10 Domínios do Conhecimento]
+        end
+
+        subgraph "Substratos Core"
+            AX[954 Axiarchy]
+            TC[923 TemporalChain]
+            OS[964 Omniscient Solver]
+            EM[970 Enterprise Mind]
+            GM[972 Global Mesh]
+        end
+    end
+
+    %% Fluxos de Identidade
+    PG -->|verifica| PCH
+    PG -->|UI| PE
+    PG -->|cache| DC
+    PG -->|ancora| TA
+
+    %% Fluxos de Conhecimento
+    DNB -->|publica| RO
+    RO -->|métricas| FMD
+    RO -->|ancora| TC
+
+    %% Fluxos de Isolamento
+    KIE -->|cria| ID
+    KIE -->|filtra| SF
+    ID -->|protege| VLC
+    ID -->|protege| VLE
+
+    %% Fluxos de Orquestração
+    UO -->|monitora| PG
+    UO -->|monitora| DNB
+    UO -->|monitora| KIE
+    UO -->|controla| CB
+    UO -->|verifica| HC
+
+    %% Fluxos de Métricas
+    FMD -->|alerta| AL
+    FMD -->|tendência| TR
+    FMD -->|reporta| UO
+
+    %% Integração com Core
+    AX -->|valida| PG
+    AX -->|valida| DNB
+    TC -->|imortaliza| RO
+    OS -->|resolve| EXP
+    EM -->|orquestra| UO
+    GM -->|distribui| DC
+
+    %% Laboratório
+    VLC -->|experimenta| EXP
+    VLE -->|expande| EXP
+    EXP -->|produz| RO
+
+    style PG fill:#d4af37,stroke:#2a2a5e,stroke-width:3px,color:#0a0a1a
+    style DNB fill:#7fff00,stroke:#2a2a5e,stroke-width:2px,color:#0a0a1a
+    style KIE fill:#ff4500,stroke:#2a2a5e,stroke-width:2px,color:#fff
+    style UO fill:#00bfff,stroke:#2a2a5e,stroke-width:3px,color:#0a0a1a
+    style FMD fill:#ffd700,stroke:#2a2a5e,stroke-width:2px,color:#0a0a1a
+    style AX fill:#e94560,stroke:#2a2a5e,stroke-width:3px,color:#fff
+    style TC fill:#16c79a,stroke:#2a2a5e,stroke-width:2px,color:#0a0a1a
