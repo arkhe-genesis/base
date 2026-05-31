@@ -78,6 +78,12 @@ try:
 except Exception:
     passport = Substrate("passport", "989.x", "Prova de humanidade")
 
+# 989.y.3
+try:
+    from arkhe_full_100t_orchestrator_substrate_989_y_3.full_100t_orchestrator import Full100TOrchestrator as orchestrator
+except Exception:
+    orchestrator = Substrate("orchestrator", "989.y.3", "FULL-100T-ORCHESTRATOR")
+
 __all__ = [
     "resonance",
     "hamiltonian",
@@ -97,4 +103,5 @@ __all__ = [
     "nexus",
     "compliance",
     "passport",
+    "orchestrator",
 ]
