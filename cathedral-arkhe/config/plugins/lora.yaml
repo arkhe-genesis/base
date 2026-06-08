@@ -1,0 +1,30 @@
+substrates:
+  lora:
+    r: 8
+    alpha: 16
+    target_modules:
+      - q_proj
+      - v_proj
+      - k_proj
+      - o_proj
+    lora_dropout: 0.05
+    bias: "none"
+    min_lessons: 3
+    max_examples_per_lesson: 5
+    num_train_epochs: 1
+    learning_rate: 0.0002
+    lr_scheduler: "cosine"
+    warmup_ratio: 0.1
+    weight_decay: 0.01
+    batch_size: 4
+    gradient_accumulation_steps: 1
+    max_seq_length: 2048
+    hf_model_id: null  # ex: "meta-llama/Llama-2-7b-hf"
+    adapter_format: "gguf"  # "gguf" ou "hf"
+    augmentation_strategies:
+      - prefix_variation
+      - synonym_replacement
+      - paraphrase
+    auto_reload: true
+    reload_lora_scale: 1.0
+    keep_n_adapters: 5

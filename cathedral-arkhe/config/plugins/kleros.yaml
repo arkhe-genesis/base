@@ -1,0 +1,18 @@
+substrates:
+  kleros:
+    escalation_tee: 0.50
+    quarantine_tee: 0.20
+    dismiss_recovery: 0.3
+    urgency_weights:
+      tee: 0.30
+      theosis_inverse: 0.20
+      fatigue: 0.15
+      anomalies: 0.15
+      max_rate: 0.10
+      bifurcation: 0.10
+    verdict_thresholds:
+      escalate: 0.70
+      quarantine: 0.40
+      monitor: 0.20
+    auto_anchor: true
+    auto_deploy_verifier: false

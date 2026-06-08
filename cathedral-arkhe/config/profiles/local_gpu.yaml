@@ -1,0 +1,10 @@
+plugins:
+  target_type: "llama"
+
+substrates:
+  zkml:
+    force_simulated: false
+  lora:
+    batch_size: 4
+    num_train_epochs: 2
+    learning_rate: 0.0002
