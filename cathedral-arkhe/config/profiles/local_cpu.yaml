@@ -1,0 +1,13 @@
+system:
+  max_workers: 4
+
+plugins:
+  target_type: "llama"
+
+substrates:
+  zkml:
+    force_simulated: true
+  lora:
+    batch_size: 1
+    num_train_epochs: 1
+    learning_rate: 0.0001

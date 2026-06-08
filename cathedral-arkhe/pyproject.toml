@@ -1,0 +1,117 @@
+[build-system]
+requires = ["setuptools>=68.0", "wheel", "setuptools-scm>=8.0"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "cathedral-arkhe"
+version = "5.1.0"
+description = "Cathedral ARKHE — Recursive Self-Improvement Orchestration with ZKML verification, LoRA adaptation, and agentic safety scanning"
+readme = "docs/index.md"
+license = {text = "Apache-2.0"}
+requires-python = ">=3.10"
+authors = [
+    {name = "Cathedral ARKHE Team", email = "cathedral@arkhe.dev"},
+]
+keywords = ["llm", "safety", "zkml", "lora", "self-improvement", "rkhs", "gguf"]
+classifiers = [
+    "Development Status :: 4 - Beta",
+    "Intended Audience :: Science/Research",
+    "License :: OSI Approved :: Apache Software License",
+    "Programming Language :: Python :: 3.10",
+    "Programming Language :: Python :: 3.11",
+    "Programming Language :: Python :: 3.12",
+    "Topic :: Scientific/Engineering :: Artificial Intelligence",
+]
+
+dependencies = [
+    "numpy>=1.24.0",
+]
+
+[project.optional-dependencies]
+# Group: real inference
+llm = [
+    "llama-cpp-python>=0.2.50",
+]
+# Group: real ZKML
+zkml = [
+    "ezkl>=0.4.0",
+    "onnx>=1.14.0",
+    "onnxruntime>=1.16.0",
+]
+# Group: on-chain
+onchain = [
+    "web3>=6.0.0",
+    "ezkl>=0.4.0",
+]
+# Group: real LoRA fine-tuning
+lora = [
+    "torch>=2.0.0",
+    "transformers>=4.36.0",
+    "peft>=0.7.0",
+    "trl>=0.9.0",
+    "accelerate>=0.25.0",
+    "datasets>=2.14.0",
+]
+# Group: safety scanner
+safety = [
+    "garak>=0.9.0",
+]
+# Group: development
+dev = [
+    "pytest>=7.0",
+    "pytest-cov>=4.1",
+    "mypy>=1.8",
+    "ruff>=0.3.0",
+    "black>=24.0",
+    "isort>=5.12",
+    "pytest-asyncio",
+    "anyio"
+]
+# Meta-group: all
+all = [
+    "cathedral-arkhe[llm,zkml,onchain,lora,safety,dev]",
+]
+
+[project.scripts]
+cathedral = "cathedral.cli.main:main"
+cathedral-scan = "cathedral.cli.scan:main"
+cathedral-inspect = "cathedral.cli.inspect:main"
+cathedral-monitor = "cathedral.cli.monitor:main"
+
+[tool.setuptools.packages.find]
+where = ["."]
+
+[tool.setuptools_scm]
+version_scheme = "post-release"
+local_scheme = "node-and-date"
+
+[tool.ruff]
+target-version = "py310"
+line-length = 100
+
+[tool.mypy]
+python_version = "3.10"
+warn_return_any = true
+warn_unused_configs = true
+disallow_untyped_defs = true
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+addopts = "-v --tb=short --strict-markers"
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+markers = [
+    "slow: tests that take >10s",
+    "real: tests requiring real model or external service",
+    "integration: multi-substrate integration tests",
+    "asyncio: async tests",
+    "e2e: end to end tests",
+    "requires_infrastructure: requires infrastructure",
+    "fast: fast tests",
+    "mocked: mocked tests"
+]
+
+[tool.coverage.run]
+source = ["cathedral"]
+branch = true
+omit = ["cathedral/*/tests/*"]

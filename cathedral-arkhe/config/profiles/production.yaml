@@ -1,0 +1,21 @@
+system:
+  max_workers: 16
+  enable_experimental: false
+
+plugins:
+  target_type: "llama"
+
+substrates:
+  zkml:
+    chain_id: "12120014"
+    rpc_url: "${ZKML_RPC_URL}"
+    private_key: "${ZKML_PRIVATE_KEY}"
+    force_simulated: false
+    auto_deploy_verifier: true
+  lora:
+    hf_model_id: "${CATHEDRAL_HF_MODEL_ID}"
+    auto_reload: true
+    keep_n_adapters: 10
+  garak:
+    mode: "ADAPTIVE"
+    scan_frequency: 2

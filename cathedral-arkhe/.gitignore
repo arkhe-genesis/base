@@ -1,0 +1,26 @@
+# .gitignore
+__pycache__/
+*.pyc
+*.pyo
+*.egg-info/
+dist/
+build/
+*.egg
+.idea/
+.vscode/
+*.swp
+*.swo
+*~
+models/*.gguf
+models/adapters/*.gguf
+!models/.gitkeep
+data/lessons/curated/*.jsonl
+!data/lessons/curated/.gitkeep
+reports/
+!reports/.gitkeep
+.env
+.env.local
+.env.production
+.env.*.encrypted
+.DS_Store
+Thumbs.db
