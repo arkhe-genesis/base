@@ -20,7 +20,7 @@ jobs:
   action-tests:
     name: Action Tests
     runs-on:
-      group: BasePerfRunnerGroup
+      # group: BasePerfRunnerGroup
     timeout-minutes: 30
     steps:
       - name: Harden the runner (Audit all outbound calls)
