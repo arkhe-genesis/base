@@ -1,0 +1,42 @@
+name: zkHydra Security Scan
+
+on:
+  pull_request:
+    paths:
+      - '**/*.circom'
+  push:
+    branches:
+      - main
+    paths:
+      - '**/*.circom'
+
+jobs:
+  zkhydra-scan:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install docker pyyaml pytest numpy sympy torch networkx
+
+      - name: Run zkHydra Security Scan
+        run: |
+          export PYTHONPATH=$PYTHONPATH:$(pwd)/cathedral-arkhe
+
+          # Find all .circom files and run the scan
+          find . -name "*.circom" -type f | while read circuit; do
+            echo "Scanning $circuit with zkHydra..."
+            python -m cathedral.zkhydra_gateway analyze \
+              --circuit "$circuit" \
+              --tools all \
+              --fail-on-finding \
+              --output security-report.json || exit 1
+          done
