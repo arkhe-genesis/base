@@ -31,6 +31,7 @@ jobs:
             api.anthropic.com:443
             claude.ai:443
             downloads.claude.ai:443
+            actions-results-receiver-production.githubapp.com:443
             api.github.com:443
             bun.sh:443
             github.com:443
