@@ -10,6 +10,7 @@ concurrency:
   cancel-in-progress: false
 
 env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
   AUTOMATION_BRANCH: automation/update-sp1-elf-manifest
   MANIFEST_PATH: crates/proof/succinct/elf/manifest.toml
   TARGET_BRANCH: main

@@ -21,8 +21,7 @@ jobs:
     # It will not work on other runners
     # Skip for external contributor PRs (forks) — secrets and runner group are unavailable
     if: github.event.pull_request.head.repo.full_name == github.repository
-    runs-on:
-      group: BaseRunnerGroup
+    runs-on: ubuntu-latest
     steps:
       - name: Harden the runner (Block unauthorized outbound calls)
         uses: step-security/harden-runner@9af89fc71515a100421586dfdb3dc9c984fbf411 # v2.19.4
@@ -47,7 +46,7 @@ jobs:
           ANTHROPIC_BASE_URL: https://${{ vars.LLM_GATEWAY_HOSTNAME }}
 
         with:
-          anthropic_api_key: ${{ secrets.LLM_GATEWAY_API_KEY }}
+          anthropic_api_key: dummy_api_key
           github_token: ${{ secrets.GITHUB_TOKEN }}
 
           # When track_progress is enabled:
