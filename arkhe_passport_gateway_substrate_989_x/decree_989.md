@@ -130,7 +130,7 @@ jsx
 import PassportEmbed from './PassportEmbed';
 
 <PassportEmbed
-  apiBaseUrl="https://api.arkhe-cathedral.org/v1"
+  apiBaseUrl="https://example.com/v1"
   scorerId="1"
   theme="cathedral"  // 'light' | 'dark' | 'cathedral'
   onVerified={(result) => console.log(result)}

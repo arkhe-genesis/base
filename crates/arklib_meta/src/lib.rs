@@ -79,10 +79,10 @@ pub fn intervention(_attr: TokenStream, item: TokenStream) -> TokenStream {
 
     // Verificação: a função deve receber `layers: &[LayerId]`
     let has_layers_param = func.sig.inputs.iter().any(|arg| {
-        if let syn::FnArg::Typed(pat_type) = arg {
-            if let syn::Pat::Ident(pat_ident) = &*pat_type.pat {
-                return pat_ident.ident == "layers";
-            }
+        if let syn::FnArg::Typed(pat_type) = arg
+            && let syn::Pat::Ident(pat_ident) = &*pat_type.pat
+        {
+            return pat_ident.ident == "layers";
         }
         false
     });
