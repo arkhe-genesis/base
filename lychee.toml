@@ -49,5 +49,5 @@ exclude = [
     # the package-lock.json exclude_path; registry URLs are not meaningful doc links)
     'https://registry\.npmjs\.org',
     'https://opencollective\.com',     # Funding pages; rate-limits and redirects heavily
-    'https://api\\.arkhe-cathedral\\.org',
+    'https://api\\.arkhe-cathedral\\.org.*',
 ]
