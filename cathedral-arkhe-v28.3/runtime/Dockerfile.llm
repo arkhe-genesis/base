@@ -1,0 +1,12 @@
+FROM vllm/vllm-openai:latest
+
+WORKDIR /app
+
+ENV MODEL_PATH=/models/cathedral-llm-v28.3
+
+# Copy generation config and templates
+COPY core/model /app/model
+
+EXPOSE 8000
+
+CMD ["python3", "-m", "vllm.entrypoints.openai.api_server", "--model", "/app/model", "--port", "8000"]

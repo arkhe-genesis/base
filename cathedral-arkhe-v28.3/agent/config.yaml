@@ -1,0 +1,26 @@
+agent:
+  id: "cathedral-oracle-v28.3"
+  role: "oracle"
+  version: "28.3.0"
+  system_prompt_path: "agent/system_prompt.md"
+  tools_registry: "agent/tools/registry.json"
+  planning:
+    strategy: "ReAct"
+    max_steps: 50
+    consensus_mode: "MajorityVote"
+  memory:
+    short_term_capacity: 100
+    long_term_enabled: true
+    vector_db: "qdrant"
+  trust:
+    require_memory_proof: true
+    require_spex: true
+    post_quantum_signature: true
+
+governance:
+  constitution: "governance/CathedralConsensusLedger.sol"
+  policy_hash: "sha256:..."
+
+telemetry:
+  otel_endpoint: "http://jaeger:4317"
+  log_level: "info"
