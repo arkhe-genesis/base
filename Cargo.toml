@@ -12,6 +12,7 @@ resolver = "2"
 exclude = ["bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
 members = [
   "bin/*",
+  "orchestrator",
   "bin/prover/nitro-host",
   "bin/prover/nitro-enclave",
   "bin/prover/zk",
@@ -65,6 +66,7 @@ members = [
 ]
 default-members = [
   "bin/*",
+  "orchestrator",
   "bin/prover/nitro-host",
   "bin/prover/nitro-enclave",
   "bin/prover/zk",
