@@ -13,7 +13,12 @@ pub mod arklib {
             pub fn layers(&self) -> &[LayerId] {
                 &self.layers
             }
-            pub fn apply_vector_to_layer(&mut self, _layer: LayerId, _vector: &TaskVector, _alpha: f64) -> Result<(), InterventionError> {
+            pub fn apply_vector_to_layer(
+                &mut self,
+                _layer: LayerId,
+                _vector: &TaskVector,
+                _alpha: f64,
+            ) -> Result<(), InterventionError> {
                 Ok(())
             }
         }
@@ -50,7 +55,11 @@ pub mod arklib {
 
     pub mod metrics {
         use super::types::*;
-        pub fn compute_specificity_score(_sae: &SparseAutoencoder, _layer: &LayerId, _domain: &Domain) -> f64 {
+        pub fn compute_specificity_score(
+            _sae: &SparseAutoencoder,
+            _layer: &LayerId,
+            _domain: &Domain,
+        ) -> f64 {
             1.0
         }
         pub fn compute_optimal_alpha(_num_layers: usize) -> f64 {
@@ -62,8 +71,7 @@ pub mod arklib {
     }
 }
 
-use arklib::types::*;
-use arklib::metrics::*;
+use arklib::{metrics::*, types::*};
 use arklib_meta::{diagnostic, intervention};
 
 /// FASE 1 — DIAGNÓSTICO: Identifica as camadas-alvo usando SAEs.
@@ -98,19 +106,13 @@ pub fn apply_raw_task_vector(
     // Verificação da Lei de Conservação
     let budget = alpha * layers.len() as f64;
     if budget > MODIFICATION_BUDGET {
-        return Err(InterventionError::BudgetExceeded {
-            budget,
-            max: MODIFICATION_BUDGET,
-        });
+        return Err(InterventionError::BudgetExceeded { budget, max: MODIFICATION_BUDGET });
     }
 
     // Verificação de RTZ: a energia do vetor não pode estar abaixo de ρ_min
     let energy = task_vector.energy();
     if energy < RHO_MIN {
-        return Err(InterventionError::RtzCatastrophic {
-            energy,
-            threshold: RHO_MIN,
-        });
+        return Err(InterventionError::RtzCatastrophic { energy, threshold: RHO_MIN });
     }
 
     // Aplicação do vetor bruto, 100% de energia
@@ -129,13 +131,14 @@ pub fn asi_self_edit(
     task_vector: &TaskVector,
 ) -> Result<Vec<LayerId>, EditError> {
     // 1. DIAGNÓSTICO (estetoscópio)
-    let target_layers = sae_diagnose_target_layers(
-        model, domain, sae, SP_THRESHOLD
-    );
+    let target_layers = sae_diagnose_target_layers(model, domain, sae, SP_THRESHOLD);
 
     // 2. INTERVENÇÃO (bisturi)
     apply_raw_task_vector(
-        model, &target_layers, task_vector, compute_optimal_alpha(target_layers.len())
+        model,
+        &target_layers,
+        task_vector,
+        compute_optimal_alpha(target_layers.len()),
     )?;
 
     // 3. VERIFICAÇÃO PÓS-EDIÇÃO (metacognição)

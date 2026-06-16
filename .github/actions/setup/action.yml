@@ -140,7 +140,7 @@ runs:
         if [ -x "$HOME/.sp1/bin/cargo-prove" ]; then
           echo "cargo-prove already installed"
         else
-          curl -L https://sp1up.succinct.xyz | bash
+          curl -L https://sp1.succinct.xyz | bash
           "$HOME/.sp1/bin/sp1up" --version "$SP1_VERSION"
         fi
         echo "$HOME/.sp1/bin" >> "$GITHUB_PATH"
