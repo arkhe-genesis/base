@@ -141,3 +141,6 @@ pub mod geometry {
 pub mod governance {
     pub mod geometric_policy_engine;
 }
+pub mod sandbox;
+pub mod subagent_spawner;
+pub mod context;
