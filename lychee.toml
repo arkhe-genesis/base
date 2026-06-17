@@ -38,6 +38,7 @@ exclude = [
     'https://github\.com/base/base/blob/main/crates/execution/upgrades/src/chain\.rs',
     'https://github\.com/base/base/blob/main/crates/common/genesis/src/rollup\.rs',
     'https://github\.com/base/base/blob/main/crates/common/genesis/src/chain/hardfork\.rs',
+    'https://github\.com/base/base/blob/main/crates/common/chains/tests/hardfork_consistency\.rs',
 
     # Internal / staging sites not meant for link checking
     'https://rustup\.rs/',
