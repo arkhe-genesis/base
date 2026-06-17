@@ -1,0 +1,17 @@
+[package]
+name = "orchestrator"
+version = "0.1.0"
+edition = "2021"
+
+[features]
+default = []
+deployment-sim = []
+
+[dependencies]
+ndarray = { version = "0.15", features = ["serde"] }
+nalgebra = "0.32"
+async-trait = "0.1"
+uuid = { version = "1", features = ["v4"] }
+chrono = "0.4"
+tracing = "0.1"
+serde = { version = "1", features = ["derive"] }
