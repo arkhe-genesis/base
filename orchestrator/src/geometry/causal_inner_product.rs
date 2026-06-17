@@ -48,8 +48,8 @@ impl CovarianceMatrix {
     }
 
     pub fn identity(d: usize) -> Self {
-        let mut cov = Array2::zeros((d, d));
-        let mut cov_inv = Array2::zeros((d, d));
+        let mut cov = Array2::<f32>::zeros((d, d));
+        let mut cov_inv = Array2::<f32>::zeros((d, d));
         for i in 0..d {
             cov[[i, i]] = 1.0;
             cov_inv[[i, i]] = 1.0;
@@ -87,7 +87,7 @@ impl CovarianceMatrix {
         let dot_vu = self.causal_dot(v, u);
         let dot_uu = self.causal_dot(u, u);
         if dot_uu < 1e-9 {
-            return Array1::zeros(v.len());
+            return Array1::<f32>::zeros(v.len());
         }
         let coeff = dot_vu / dot_uu;
         let mut result = u.to_owned();

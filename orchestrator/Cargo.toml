@@ -8,7 +8,7 @@ default = []
 deployment-sim = []
 
 [dependencies]
-ndarray = { version = "0.15", features = ["serde"] }
+ndarray = { version = "0.16.1", features = ["serde"] }
 nalgebra = "0.32"
 async-trait = "0.1"
 uuid = { version = "1", features = ["v4"] }

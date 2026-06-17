@@ -13146,20 +13146,6 @@ dependencies = [
 
 [[package]]
 name = "ndarray"
-version = "0.15.6"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "adb12d4e967ec485a5f71c6311fe28158e9d6f4bc4a447b474184d0f91a8fa32"
-dependencies = [
- "matrixmultiply",
- "num-complex",
- "num-integer",
- "num-traits",
- "rawpointer",
- "serde",
-]
-
-[[package]]
-name = "ndarray"
 version = "0.16.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "882ed72dce9365842bf196bdeedf5055305f11fc8c03dee7bb0194a6cad34841"
@@ -13172,6 +13158,7 @@ dependencies = [
  "portable-atomic-util",
  "rawpointer",
  "rayon",
+ "serde",
 ]
 
 [[package]]
@@ -13981,7 +13968,7 @@ dependencies = [
  "async-trait",
  "chrono",
  "nalgebra",
- "ndarray 0.15.6",
+ "ndarray",
  "serde",
  "tracing",
  "uuid",
@@ -19361,7 +19348,7 @@ dependencies = [
  "hex",
  "hex-literal 0.4.1",
  "metal",
- "ndarray 0.16.1",
+ "ndarray",
  "parking_lot",
  "paste",
  "rand 0.9.4",
