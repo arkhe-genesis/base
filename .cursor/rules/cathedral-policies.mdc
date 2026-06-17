@@ -1,0 +1,75 @@
+---
+description: Aplica as políticas de governança do Cathedral ARKHE durante o desenvolvimento.
+globs: ["**/*.rs", "**/*.py", "**/Cargo.toml"]
+---
+
+# Cathedral ARKHE — Políticas de Governança para Agentes
+
+Este arquivo define as regras que os agentes de IA devem seguir ao interagir com o código do Cathedral ARKHE.
+
+## 1. Identidade Soberana (P13)
+
+- **Regra**: Antes de executar qualquer operação que modifique o estado do sistema (ex: deploy, alteração de políticas, execução de workloads críticos), o agente **deve** solicitar uma prova de identidade via MCP.
+
+- **Ferramenta MCP**: `attest_identity`
+- **Exemplo de chamada**:
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "attest_identity",
+      "arguments": { "force_refresh": false }
+    }
+  }
+  ```
+
+- **Condição**: A operação só pode prosseguir se o `IdentityAttestation` retornado tiver `confidence > 0.7` e `identity_verified == true`.
+
+## 2. Atestação de Execução
+
+- **Regra**: Toda execução de código que possa impactar a segurança ou integridade do sistema (ex: compilação, deploy, otimização CUDA) **deve** gerar um `ExecutionAttestation`.
+
+- **Ferramenta MCP**: `execute_workload`
+- **Exemplo de chamada**:
+  ```json
+  {
+    "method": "tools/call",
+    "params": {
+      "name": "execute_workload",
+      "arguments": {
+        "workload": "cargo build --release",
+        "cost_cap": 0.01,
+        "force_identity_refresh": false
+      }
+    }
+  }
+  ```
+
+- **Condição**: O atestado resultante deve ter `policy_compliance == true` e `identity_confidence > 0.6`.
+
+## 3. Políticas Geométricas
+
+- **Regra**: Ao escrever código que manipula embeddings ou geometria causal (CausalGeometryService), o agente **deve** garantir que as operações respeitem as políticas de ortogonalidade (PII, steering safety, etc.).
+
+- **Ferramenta MCP**: `list_policies` para consultar políticas ativas.
+
+- **Verificação**: As políticas devem ser registradas no `PolicyAttestation` associado à execução.
+
+## 4. Prova de Vida por Voz (integração VoiceCore)
+
+- **Regra**: Para operações de alto risco (ex: DeadManSwitch override, transferência de controle), o agente **deve** solicitar confirmação por voz via MCP.
+
+- **Ferramenta MCP**: `request_voice_proof` (ver seção D abaixo).
+
+- **Exemplo**: Antes de executar `disarm("P13_OVERRIDE")`, o agente chama `request_voice_proof` com a frase esperada.
+
+## 5. Proveniência
+
+- **Regra**: Toda operação deve ser taggeada com provenance: `user`, `ai-suggested`, `ai-executed` ou `user-revised`.
+
+- **Ação**: O agente deve incluir o campo `provenance` em todas as chamadas MCP que suportarem este parâmetro.
+
+---
+
+**Versão**: 1.0
+**Válido para**: Cathedral ARKHE v28.3.2

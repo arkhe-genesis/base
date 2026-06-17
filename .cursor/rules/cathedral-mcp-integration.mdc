@@ -1,0 +1,168 @@
+---
+description: Integra o Cursor com o servidor MCP do Cathedral ARKHE para identidade soberana, atestação e governança.
+globs: ["**/*.rs", "**/*.py", "**/*.toml", "**/*.md"]
+version: 2.0
+---
+
+# 🏛️ Cathedral ARKHE — MCP Integration Rules (Refinado)
+
+Este arquivo define o comportamento do agente Cursor ao interagir com o servidor MCP do Cathedral. Ele reflete as validações rigorosas implementadas no `handle_execute_workload` e alinha-se com o P13 (Escudo do Arquiteto).
+
+---
+
+## 📡 Configuração do Servidor MCP
+
+| Variável | Valor Padrão | Descrição |
+|----------|--------------|-----------|
+| `ENABLE_MCP_SERVER` | `true` | Ativa o servidor MCP |
+| `MCP_PORT` | `3032` | Porta do servidor |
+| `MCP_AUTH_TOKEN` | (opcional) | Token Bearer para autenticação |
+| `IDENTITY_TTL_SECONDS` | `86400` | TTL do IdentityAttestation (24h) |
+
+**Endpoint:** `http://localhost:3032`
+
+---
+
+## 🧰 Ferramentas MCP Disponíveis (v2)
+
+| Ferramenta | Descrição | Códigos de Erro |
+|------------|-----------|-----------------|
+| `attest_identity` | Gera prova de identidade do Arquiteto | `-32000` a `-32003` |
+| `execute_workload` | Executa workload com autorização | `-32001` a `-32010` |
+| `request_voice_proof` | Solicita confirmação por voz | `-32000` |
+| `validate_attestation` | Verifica validade de ExecutionAttestation | `-32000` |
+| `list_policies` | Lista políticas ativas do Cathedral | `-32000` |
+
+---
+
+## 🛡️ Regras de Validação do Agente
+
+### 1. Antes de qualquer `execute_workload`, o agente DEVE verificar:
+
+**A. IdentityAttestation válido** (via `attest_identity` ou cache)
+
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "attest_identity",
+    "arguments": { "force_refresh": false }
+  }
+}
+```
+
+**Campos obrigatórios para aprovação:**
+- `confidence > 0.7`
+- `identity_verified == true`
+- `timestamp` não expirado (TTL padrão: 86400s)
+- `architect_signature` válida (se presente)
+
+**B. Caso o `attest_identity` retorne erro -32003 (expirado):**
+- O agente DEVE chamar `request_voice_proof` para renovar a identidade.
+
+```json
+{
+  "method": "tools/call",
+  "params": {
+    "name": "request_voice_proof",
+    "arguments": {
+      "phrase": "confirmo minha identidade",
+      "timeout_secs": 30
+    }
+  }
+}
+```
+
+**C. Caso o `attest_identity` retorne erro -32001 (confiança insuficiente):**
+- O agente DEVE abortar a operação e sugerir nova prova de vida.
+
+### 2. Durante o `execute_workload`, o agente DEVE:
+
+**A. Fornecer `provenance` obrigatório:**
+
+```json
+"provenance": "ai-suggested"  // ou "user", "ai-executed", "user-revised"
+```
+
+**B. Processar os códigos de erro específicos:**
+
+| Código | Significado | Ação do Agente |
+|--------|-------------|----------------|
+| `-32001` | Confiança insuficiente | Abortar, sugerir `request_voice_proof` |
+| `-32002` | Identidade não verificada | Abortar, exigir prova de vida |
+| `-32003` | IdentityAttestation expirado | Chamar `request_voice_proof` com `force_refresh=true` |
+| `-32004` | Assinatura inválida | Abortar, alertar possível adulteração |
+| `-32005` | Falha ao consultar políticas | Tentar novamente ou abortar |
+| `-32006` | Workload bloqueado por política | Abortar, mostrar política bloqueadora |
+| `-32007` | Falha na execução | Mostrar detalhes do erro |
+| `-32008` | ExecutionAttestation não conforme | Abortar, mostrar política violada |
+| `-32009` | Falha na persistência | Tentar novamente ou abortar |
+
+### 3. Pós-execução, o agente DEVE:
+
+**A. Verificar `policy_compliance == true` no `ExecutionAttestation` retornado.**
+**B. Registrar o `ExecutionAttestation` localmente (ex: em arquivo ou exibir ao usuário).**
+**C. Se `policy_compliance == false`, abortar e reportar a política violada.**
+
+### 4. Operações de Alto Risco (Override P13)
+
+**Trigger:** Qualquer operação que:
+- Use `--dangerously-skip-permissions`
+- Execute `disarm("P13_OVERRIDE")`
+- Modifique `BIBLE.md` ou políticas do sistema
+
+**Procedimento Obrigatório:**
+
+1. Chamar `request_voice_proof` com frase específica.
+2. Aguardar resposta com `phrase_matched == true` e `coercion_score < 0.6`.
+3. Se falhar, abortar com mensagem de segurança.
+
+---
+
+## 📋 Fluxos de Trabalho Recomendados
+
+### Cenário 1: Compilação segura (`cargo build`)
+
+```
+1. Agente: `attest_identity` → válido
+2. Agente: `execute_workload` com workload="cargo build", provenance="ai-suggested"
+3. Agente: Recebe ExecutionAttestation
+4. Agente: Exibe "Compilação autorizada e atestada (ID: ...)"
+```
+
+### Cenário 2: Override P13 (emergência)
+
+```
+1. Usuário: "execute disarm P13_OVERRIDE"
+2. Agente: `request_voice_proof` com phrase="confirmo override P13"
+3. Agente: Aguarda resposta de voz (timeout 30s)
+4. Se válido: executa override
+5. Se inválido: aborta com "Autorização negada"
+```
+
+### Cenário 3: Otimização CUDA com políticas
+
+```
+1. Usuário: "otimize este kernel CUDA"
+2. Agente: `list_policies` → identifica restrições (ex: sem PII, steering safety)
+3. Agente: Gera código respeitando políticas
+4. Agente: `execute_workload` com o código gerado
+5. Agente: Verifica `policy_compliance == true`
+6. Agente: Exibe atestado ao usuário
+```
+
+---
+
+## 🚫 Comportamento Proibido
+
+- **NUNCA** execute `--dangerously-skip-permissions` sem `request_voice_proof`.
+- **NUNCA** ignore um `IdentityAttestation` expirado (código -32003).
+- **NUNCA** prossiga se `policy_compliance == false`.
+- **NUNCA** use `provenance` fora dos valores permitidos.
+- **NUNCA** execute workloads que violem políticas listadas em `list_policies`.
+
+---
+
+**Versão:** 2.0
+**Válido para:** Cathedral ARKHE v28.3.2
+**Selo:** CATHEDRAL-ARKHE-v28.3.2-CURSOR-RULES-V2-2026-06-17
