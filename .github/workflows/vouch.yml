@@ -37,6 +37,8 @@ jobs:
             sp1.succinct.xyz:443
             raw.githubusercontent.com:443
             hosted-compute-request-orchestrator-prod-iad-02.githubapp.com:443
+            hosted-compute-request-orchestrator-prod-iad-01.githubapp.com:443
+            hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             prod.app-api.stepsecurity.io:443
             claude.ai:443
             downloads.claude.ai:443
@@ -69,6 +71,8 @@ jobs:
             index.crates.io:443
             static.rust-lang.org:443
             hosted-compute-request-orchestrator-prod-eus-02.githubapp.com:443
+            hosted-compute-request-orchestrator-prod-eus-01.githubapp.com:443
+            hosted-compute-watchdog-prod-eus-01.githubapp.com:443
             actions-results-receiver-production.githubapp.com:443
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             actions-results-receiver-production.githubapp.com:443
@@ -108,6 +112,8 @@ jobs:
             sp1.succinct.xyz:443
             raw.githubusercontent.com:443
             hosted-compute-request-orchestrator-prod-iad-02.githubapp.com:443
+            hosted-compute-request-orchestrator-prod-iad-01.githubapp.com:443
+            hosted-compute-watchdog-prod-iad-01.githubapp.com:443
             prod.app-api.stepsecurity.io:443
             claude.ai:443
             downloads.claude.ai:443
@@ -140,6 +146,8 @@ jobs:
             index.crates.io:443
             static.rust-lang.org:443
             hosted-compute-request-orchestrator-prod-eus-02.githubapp.com:443
+            hosted-compute-request-orchestrator-prod-eus-01.githubapp.com:443
+            hosted-compute-watchdog-prod-eus-01.githubapp.com:443
             actions-results-receiver-production.githubapp.com:443
             hosted-compute-watchdog-prod-eus-02.githubapp.com:443
             actions-results-receiver-production.githubapp.com:443
