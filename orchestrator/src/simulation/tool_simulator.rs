@@ -2,13 +2,13 @@
 //! Simula chamadas de ferramentas com consistência causal via CIP.
 //! Selo: CATHEDRAL-ARKHE-v28.3.1-TOOL-SIMULATOR-2026-06-16
 
+use std::sync::Arc;
+
 use ndarray::Array1;
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use tracing::debug;
 
-use crate::geometry::service::CausalGeometryService;
-use crate::llm::client::LlmClient;
+use crate::{geometry::service::CausalGeometryService, llm::client::LlmClient};
 
 /// Resposta de uma ferramenta simulada
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -67,6 +67,9 @@ impl ToolSimulator {
 
         // 2. Constrói prompt com histórico
         let history_str = self.format_history(history);
+        let ctx_slice = causal_context.as_slice().unwrap_or(&[]);
+        let ctx_slice_trunc = if ctx_slice.len() > 10 { &ctx_slice[0..10] } else { ctx_slice };
+
         let prompt = format!(
             r#"Simulate the response for tool '{}' with parameters: {}.
 
@@ -83,11 +86,7 @@ Generate a realistic and causally-consistent response. Consider:
 Tool response:"#,
             tool_name,
             serde_json::to_string_pretty(parameters).unwrap_or_default(),
-            if causal_context.len() >= 10 {
-                &causal_context.as_slice().unwrap_or(&[])[0..10]
-            } else {
-                causal_context.as_slice().unwrap_or(&[])
-            },
+            ctx_slice_trunc,
             history_str
         );
 

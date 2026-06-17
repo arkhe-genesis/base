@@ -3,12 +3,14 @@
 //!
 //! Execute com: cargo run --example causal_geometry_demo
 
-use ndarray::Array1;
-use orchestrator::geometry::embedding_bridge::EmbeddingModel;
-use orchestrator::geometry::service::CausalGeometryService;
-use orchestrator::governance::geometric_policy_engine::GeometricPolicyEngine;
-use orchestrator::orchestrator::AgentRole;
 use std::sync::Arc;
+
+use ndarray::Array1;
+use orchestrator::{
+    geometry::{embedding_bridge::EmbeddingModel, service::CausalGeometryService},
+    governance::geometric_policy_engine::GeometricPolicyEngine,
+    orchestrator::AgentRole,
+};
 
 pub struct SimpleEmbedder {
     dim: usize,

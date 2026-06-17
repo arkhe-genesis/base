@@ -2,12 +2,11 @@
 //! Políticas baseadas em ortogonalidade e subespaços causais.
 //! Selo: CATHEDRAL-ARKHE-v28.3.2-GEOMETRIC-POLICY-2026-06-16
 
-use ndarray::{Array1, ArrayView1};
-use std::collections::HashMap;
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
 
-use crate::geometry::service::CausalGeometryService;
-use crate::orchestrator::AgentRole;
+use ndarray::{Array1, ArrayView1};
+
+use crate::{geometry::service::CausalGeometryService, orchestrator::AgentRole};
 
 #[derive(Debug, Clone)]
 pub enum GeometricPolicyType {

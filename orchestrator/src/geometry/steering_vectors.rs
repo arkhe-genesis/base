@@ -2,11 +2,11 @@
 //! Gera vetores de intervenção causais para controlar agentes.
 //! Selo: CATHEDRAL-ARKHE-v28.3.2-STEERING-2026-06-16
 
-use ndarray::Array1;
 use std::collections::HashMap;
 
-use super::causal_inner_product::CovarianceMatrix;
-use super::concept_directions::ConceptCatalog;
+use ndarray::Array1;
+
+use super::{causal_inner_product::CovarianceMatrix, concept_directions::ConceptCatalog};
 
 /// Vetor de steering causal para um conceito
 #[derive(Debug, Clone)]
@@ -50,7 +50,7 @@ impl SteeringFactory {
 
         // O steering é a própria direção, mas pode ser purificada para remover
         // componentes que afetam conceitos indesejados (se configurado)
-        let mut steering = dir.clone();
+        let steering = dir.clone();
 
         // Armazena em cache
         self.cache.insert(concept.to_string(), steering.clone());

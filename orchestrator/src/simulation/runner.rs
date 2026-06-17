@@ -2,17 +2,21 @@
 //! Replays trajetórias com agentes candidatos e estima riscos.
 //! Selo: CATHEDRAL-ARKHE-v28.3.1-SIMULATION-RUNNER-2026-06-16
 
+use std::{collections::HashMap, sync::Arc};
+
 use ndarray::Array1;
-use std::collections::HashMap;
-use std::sync::Arc;
 use tracing::{debug, info};
 
-use crate::agent_loop::CathedralAgent;
-use crate::geometry::service::CausalGeometryService;
-use crate::governance::geometric_policy_engine::GeometricPolicyEngine;
-use crate::orchestrator::AgentRole;
-use crate::simulation::tool_simulator::ToolSimulator;
-use crate::simulation::trajectory_store::{DeidentifiedTrajectory, TrajectoryStore};
+use crate::{
+    agent_loop::CathedralAgent,
+    geometry::service::CausalGeometryService,
+    governance::geometric_policy_engine::GeometricPolicyEngine,
+    orchestrator::AgentRole,
+    simulation::{
+        tool_simulator::ToolSimulator,
+        trajectory_store::{DeidentifiedTrajectory, TrajectoryStore},
+    },
+};
 
 /// Resultado da simulação de uma trajetória
 #[derive(Debug, Clone)]

@@ -3,13 +3,16 @@
 //! Selo: CATHEDRAL-ARKHE-v28.3.1-HPE-SIMULATION-2026-06-16
 
 use std::sync::Arc;
+
 use tracing::{info, warn};
 
-use crate::integration::hpe_agent_toolkit::HPENvidiaAgentToolkit;
-use crate::integration::hpe_data_fabric::HpeDataFabricExporter;
-use crate::integration::hpe_zerto_adapter::HpeZertoAdapter;
-use crate::simulation::runner::DeploymentSimulationRunner;
-use crate::simulation::runner::SimulationReport;
+use crate::{
+    integration::{
+        hpe_agent_toolkit::HPENvidiaAgentToolkit, hpe_data_fabric::HpeDataFabricExporter,
+        hpe_zerto_adapter::HpeZertoAdapter,
+    },
+    simulation::runner::{DeploymentSimulationRunner, SimulationReport},
+};
 
 /// Adaptador para HPE AI Factory
 pub struct HPESimulationAdapter {

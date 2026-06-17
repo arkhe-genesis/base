@@ -2,15 +2,16 @@
 //! Camada unificada para toda a geometria causal.
 //! Selo: CATHEDRAL-ARKHE-v28.3.2-GEOMETRY-SERVICE-2026-06-16
 
-use ndarray::{Array1, ArrayView1};
 use std::sync::Arc;
+
+use ndarray::{Array1, ArrayView1};
 use tokio::sync::RwLock;
 
-use super::causal_inner_product::CovarianceMatrix;
-use super::concept_directions::ConceptCatalog;
-use super::embedding_bridge::EmbeddingModel;
-use super::steering_vectors::SteeringFactory;
-use super::subspace_operations::SubspaceOperations;
+use super::{
+    causal_inner_product::CovarianceMatrix, concept_directions::ConceptCatalog,
+    embedding_bridge::EmbeddingModel, steering_vectors::SteeringFactory,
+    subspace_operations::SubspaceOperations,
+};
 
 pub struct CausalGeometryService {
     cov: Arc<CovarianceMatrix>,

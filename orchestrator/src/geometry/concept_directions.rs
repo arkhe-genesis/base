@@ -2,9 +2,9 @@
 //! Extrai e mantém direções causais para conceitos conhecidos.
 //! Selo: CATHEDRAL-ARKHE-v28.3.2-CONCEPT-DIRS-2026-06-16
 
+use std::{collections::HashMap, sync::Arc};
+
 use ndarray::Array1;
-use std::collections::HashMap;
-use std::sync::Arc;
 use tracing::debug;
 
 use super::causal_inner_product::CovarianceMatrix;

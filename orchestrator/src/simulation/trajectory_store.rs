@@ -2,15 +2,16 @@
 //! Coleta e armazena trajetórias de agentes com remoção de PII.
 //! Selo: CATHEDRAL-ARKHE-v28.3.1-TRAJECTORY-STORE-2026-06-16
 
+use std::sync::Arc;
+
 use chrono::{Duration, Utc};
 use serde::{Deserialize, Serialize};
-use std::sync::Arc;
 use tracing::{debug, info, warn};
 use uuid::Uuid;
 
-use crate::cache::semantic_cache::SemanticCache;
-use crate::orchestrator::AgentAction;
-use crate::privacy::PrivacyGuard;
+use crate::{
+    cache::semantic_cache::SemanticCache, orchestrator::AgentAction, privacy::PrivacyGuard,
+};
 
 /// Trajetória desidentificada de um agente
 #[derive(Debug, Clone, Serialize, Deserialize)]

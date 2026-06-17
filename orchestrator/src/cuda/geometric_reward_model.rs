@@ -3,10 +3,10 @@
 //! Selo: CATHEDRAL-ARKHE-v28.3.2-GEOMETRIC-REWARD-2026-06-16
 
 use std::sync::Arc;
+
 use tracing::debug;
 
-use crate::cuda::CudaRewardModel;
-use crate::geometry::service::CausalGeometryService;
+use crate::{cuda::CudaRewardModel, geometry::service::CausalGeometryService};
 
 pub struct GeometricCudaReward {
     base_evaluator: Arc<CudaRewardModel>,

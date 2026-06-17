@@ -52,8 +52,9 @@ impl CovarianceMatrix {
 
         // Calcula a inversa (usando nalgebra)
         let cov_na = na::DMatrix::from_vec(d, d, cov.iter().cloned().collect());
-        let cov_inv_na =
-            cov_na.clone().try_inverse().unwrap_or_else(|| cov_na.pseudo_inverse(1e-6).unwrap());
+        let cov_inv_na = cov_na.clone().try_inverse().unwrap_or_else(|| {
+            cov_na.pseudo_inverse(1e-6).unwrap_or_else(|_| na::DMatrix::zeros(d, d))
+        });
 
         let cov_inv = Array2::from_shape_vec((d, d), cov_inv_na.as_slice().to_vec()).unwrap();
 

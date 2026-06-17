@@ -3,19 +3,21 @@
 //!
 //! Execute com: cargo run --example deployment_simulation_demo
 
-use ndarray::Array1;
 use std::sync::Arc;
 
-use orchestrator::agent_loop::{AgentResult, CathedralAgent};
-use orchestrator::cache::semantic_cache::SemanticCache;
-use orchestrator::geometry::embedding_bridge::EmbeddingModel;
-use orchestrator::geometry::service::CausalGeometryService;
-use orchestrator::governance::geometric_policy_engine::GeometricPolicyEngine;
-use orchestrator::llm::client::LlmClient;
-use orchestrator::privacy::PrivacyGuard;
-use orchestrator::simulation::runner::DeploymentSimulationRunner;
-use orchestrator::simulation::tool_simulator::ToolSimulator;
-use orchestrator::simulation::trajectory_store::TrajectoryStore;
+use ndarray::Array1;
+use orchestrator::{
+    agent_loop::{AgentResult, CathedralAgent},
+    cache::semantic_cache::SemanticCache,
+    geometry::{embedding_bridge::EmbeddingModel, service::CausalGeometryService},
+    governance::geometric_policy_engine::GeometricPolicyEngine,
+    llm::client::LlmClient,
+    privacy::PrivacyGuard,
+    simulation::{
+        runner::DeploymentSimulationRunner, tool_simulator::ToolSimulator,
+        trajectory_store::TrajectoryStore,
+    },
+};
 
 pub struct SimpleEmbedder {
     dim: usize,
