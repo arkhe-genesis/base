@@ -142,7 +142,7 @@ runs:
           echo "cargo-prove already installed"
         else
           curl -L https://sp1.succinct.xyz | bash
-          "$HOME/.sp1/bin/sp1up" --version "$SP1_VERSION"
+          curl -sSfL https://github.com/succinctlabs/sp1/releases/download/$SP1_VERSION/sp1up -o "$HOME/.sp1/bin/sp1up" && chmod +x "$HOME/.sp1/bin/sp1up" && "$HOME/.sp1/bin/sp1up" --version "$SP1_VERSION"
         fi
         echo "$HOME/.sp1/bin" >> "$GITHUB_PATH"
 

@@ -1,4 +1,7 @@
 
+pub mod fastbrain;
+pub mod wormgraph_arweave;
+
 pub mod integrations {
     pub mod qvac;
     pub mod pearpass;
@@ -9,6 +12,8 @@ pub mod integrations {
     pub mod pix_openapi;
     pub mod picnic;
     pub mod x402;
+    pub mod bittensor;
+    pub mod openant;
 }
 
 pub mod webhooks {
