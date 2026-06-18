@@ -281,7 +281,7 @@ mod tests {
                     timestamp: 0,
                     prev_randao: Default::default(),
                     suggested_fee_recipient: Default::default(),
-                    withdrawals: None,
+                    withdrawals: None, target_gas_limit: None,
                     parent_beacon_block_root: None,
                     slot_number: None,
                 },
