@@ -78,7 +78,6 @@ jobs:
             objects.githubusercontent.com:443
             registry.npmjs.org:443
             release-assets.githubusercontent.com:443
-            ${{ vars.LLM_GATEWAY_HOSTNAME }}:443
             claude.ai:443
             downloads.claude.ai:443
             api.anthropic.com:443
@@ -97,7 +96,6 @@ jobs:
         id: claude-review
         uses: anthropics/claude-code-action@1b8ee3b94104046d71fde52ec3557651ad8c0d71 # v1.0.29
         env:
-          ANTHROPIC_BASE_URL: https://${{ vars.LLM_GATEWAY_HOSTNAME }}
 
         with:
           anthropic_api_key: dummy_api_key
