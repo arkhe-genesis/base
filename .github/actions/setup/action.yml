@@ -136,6 +136,7 @@ runs:
       shell: bash
       env:
         SP1_VERSION: ${{ inputs.sp1-version }}
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
       run: |
         if [ -x "$HOME/.sp1/bin/cargo-prove" ]; then
           echo "cargo-prove already installed"
