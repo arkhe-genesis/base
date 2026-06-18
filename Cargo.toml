@@ -623,3 +623,15 @@ toml = { version = "1.0", default-features = false }
 ark-ff = { version = "0.5.0", default-features = false }
 unsigned-varint = { version = "0.8", default-features = false }
 ark-bls12-381 = { version = "0.5.0", default-features = false }
+
+
+x402-rs = "0.3"
+x402-axum = "0.3"
+x402-chain-eip155 = "0.3"
+x402-types = "0.3"
+qvac-sdk = "0.1"
+pearpass-sdk = "0.1"
+nostr-sdk = "0.30"
+wdk-sdk = "0.1"
+tensorzkp = "0.1"
+inquire = "0.6"
