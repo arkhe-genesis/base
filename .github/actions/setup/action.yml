@@ -44,7 +44,7 @@ runs:
   steps:
     - name: Free Disk Space (fast pre-clean)
       if: inputs.free-disk == 'true'
-      shell: sh
+      shell: bash
       run: |
         sudo rm -rf /usr/local/lib/android
         sudo rm -rf /usr/share/dotnet
@@ -74,7 +74,7 @@ runs:
 
     - name: Install Rust (stable via rust-toolchain.toml)
       if: inputs.toolchain == 'stable'
-      shell: sh
+      shell: bash
       env:
         COMPONENTS: ${{ inputs.components }}
       run: |
@@ -133,7 +133,7 @@ runs:
 
     - name: Install SP1 toolchain
       if: inputs.sp1 == 'true'
-      shell: sh
+      shell: bash
       env:
         SP1_VERSION: ${{ inputs.sp1-version }}
         GITHUB_TOKEN: ${{ github.token }}
@@ -141,14 +141,14 @@ runs:
         if [ -x "$HOME/.sp1/bin/cargo-prove" ]; then
           echo "cargo-prove already installed"
         else
-          curl -L https://sp1.succinct.xyz | sh
-          "$HOME/.sp1/bin/sp1up" --version "$SP1_VERSION"
+          curl -L https://sp1.succinct.xyz | bash
+          curl -sSfL https://github.com/succinctlabs/sp1/releases/download/$SP1_VERSION/sp1up -o "$HOME/.sp1/bin/sp1up" && chmod +x "$HOME/.sp1/bin/sp1up" && "$HOME/.sp1/bin/sp1up" --version "$SP1_VERSION"
         fi
         echo "$HOME/.sp1/bin" >> "$GITHUB_PATH"
 
     - name: Set LIBCLANG_PATH
       if: inputs.native-deps == 'true'
-      shell: sh
+      shell: bash
       run: |
         LLVM_BIN=$(command -v llvm-config || ls /usr/bin/llvm-config-* 2>/dev/null | sort -V | tail -1)
         LLVM_VERSION=$($LLVM_BIN --version | cut -d. -f1)
