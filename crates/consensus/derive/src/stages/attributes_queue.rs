@@ -231,7 +231,7 @@ mod tests {
                 timestamp: 0,
                 suggested_fee_recipient: Address::default(),
                 prev_randao: B256::default(),
-                withdrawals: None,
+                withdrawals: None, target_gas_limit: None,
                 parent_beacon_block_root: None,
                 slot_number: None,
             },
