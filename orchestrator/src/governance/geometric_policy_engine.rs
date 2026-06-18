@@ -180,3 +180,18 @@ impl GeometricPolicyEngine {
         (variance / 0.5).clamp(0.0, 1.0)
     }
 }
+
+impl GeometricPolicyEngine {
+    pub async fn list_active_policies(&self) -> Result<Vec<crate::attestation::PolicyDescriptor>, String> {
+        let mut active = Vec::new();
+        for policy in &self.policies {
+            if policy.enabled {
+                active.push(crate::attestation::PolicyDescriptor {
+                    name: policy.name.clone(),
+                    blocking: true, // simplified
+                });
+            }
+        }
+        Ok(active)
+    }
+}

@@ -13965,13 +13965,18 @@ name = "orchestrator"
 version = "0.1.0"
 dependencies = [
  "async-trait",
+ "axum 0.8.9",
+ "blake3",
  "chrono",
+ "hex",
+ "hmac 0.12.1",
  "lazy_static",
  "nalgebra",
  "ndarray",
  "prometheus",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "tokio",
  "tracing",
  "uuid",

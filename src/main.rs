@@ -79,8 +79,11 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
                 attestation_manager_clone,
                 identity_provider_clone,
                 execution_provider_clone,
-                architect_verifier_opt,
+                                architect_verifier_opt,
                 voice_core_clone,
+                None,
+                None,
+                None,
                 mcp_port,
                 mcp_token
             )

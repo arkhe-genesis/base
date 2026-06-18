@@ -141,3 +141,14 @@ pub mod geometry {
 pub mod governance {
     pub mod geometric_policy_engine;
 }
+
+// Modules for agent multiplication
+pub mod context;
+pub mod identity_derivation;
+pub mod sandbox;
+pub mod subagent_communication;
+pub mod subagent_persistence;
+pub mod subagent_spawner;
+
+pub mod attestation;
+pub mod mcp;

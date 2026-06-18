@@ -21,6 +21,13 @@ use crate::identity_attestation::IdentityAttestationProvider;
 use crate::voice::VoiceCore;
 use crate::mcp::auth::{auth_middleware, AuthConfig};
 
+use crate::orchestrator::subagent_spawner::SubagentSpawner;
+use crate::orchestrator::context::ContextManager;
+use crate::security::blockchain_nervous_system::BlockchainNervousSystem;
+use crate::mcp::subagent_handler::*;
+use crate::mcp::context_handler::*;
+
+
 // ============================================================================
 // 1. Estado do Servidor
 // ============================================================================
@@ -31,6 +38,12 @@ pub struct MCPServerState {
     pub execution_provider: Arc<dyn AttestationProvider + Send + Sync>,
     pub architect_verifier: Option<Arc<dyn AttestationVerifier + Send + Sync>>,
     pub voice_core: Option<Arc<VoiceCore>>,
+    subagent_spawner: Option<Arc<SubagentSpawner>>,
+    context_manager: Option<Arc<ContextManager>>,
+    nervous_system: Option<Arc<BlockchainNervousSystem>>,
+    pub subagent_spawner: Option<Arc<SubagentSpawner>>,
+    pub context_manager: Option<Arc<ContextManager>>,
+    pub nervous_system: Option<Arc<BlockchainNervousSystem>>,
     pub default_provenance: String,
 }
 
@@ -267,6 +280,9 @@ pub async fn start_mcp_server(
     execution_provider: Arc<dyn AttestationProvider + Send + Sync>,
     architect_verifier: Option<Arc<dyn AttestationVerifier + Send + Sync>>,
     voice_core: Option<Arc<VoiceCore>>,
+    subagent_spawner: Option<Arc<SubagentSpawner>>,
+    context_manager: Option<Arc<ContextManager>>,
+    nervous_system: Option<Arc<BlockchainNervousSystem>>,
     port: u16,
     required_token: Option<String>,
 ) -> Result<(), Box<dyn std::error::Error>> {
@@ -276,6 +292,9 @@ pub async fn start_mcp_server(
         execution_provider,
         architect_verifier,
         voice_core,
+        subagent_spawner,
+        context_manager,
+        nervous_system,
         default_provenance: "ai-suggested".to_string(),
     });
 
@@ -390,6 +409,8 @@ async fn handle_tools_list() -> Result<serde_json::Value, MCPError> {
         }),
     ];
 
+        tools.extend(subagent_tool_definitions());
+    tools.extend(context_tool_definitions());
     Ok(serde_json::json!({ "tools": tools }))
 }
 
@@ -423,6 +444,15 @@ async fn handle_tools_call(
         "request_voice_proof" => handle_voice_proof(args, state).await,
         "validate_attestation" => handle_validate_attestation(args, state).await,
         "list_policies" => handle_list_policies(state).await,
+        "spawn_subagent" => handle_spawn_subagent(args, state).await,
+        "list_subagents" => handle_list_subagents(args, state).await,
+        "terminate_subagent" => handle_terminate_subagent(args, state).await,
+        "execute_subagent" => handle_execute_subagent(args, state).await,
+        "create_context" => handle_create_context(args, state).await,
+        "add_to_context" => handle_add_to_context(args, state).await,
+        "get_context" => handle_get_context(args, state).await,
+        "list_contexts" => handle_list_contexts(args, state).await,
+        "clear_context" => handle_clear_context(args, state).await,
         _ => Err(MCPError {
             code: -32601,
             message: format!("Ferramenta não encontrada: {}", tool_name),
