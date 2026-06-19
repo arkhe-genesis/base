@@ -1,12 +1,12 @@
 //! src/substrato_4004/memo_tracer.rs
 //! Rastreia memos B20 para integracao com EventStore e CrossChainEmitter
 
-use std::sync::Arc;
-use ethers::types::Address;
-use sha2::{Sha256, Digest};
 use crate::substrato_4004::b20_mapper::Action;
 use crate::substrato_4004::compliance_engine::{EventStore, OrchestratorEvent};
 use crate::substrato_4004::settlement_engine::CrossChainEmitterV2;
+use ethers::types::Address;
+use sha2::{Digest, Sha256};
+use std::sync::Arc;
 
 #[derive(Debug)]
 pub enum TracerError {
@@ -15,12 +15,15 @@ pub enum TracerError {
 }
 
 pub struct MemoTracer {
-    event_store: Arc<EventStore>,
+    #[allow(dead_code)] event_store: Arc<EventStore>,
     cross_chain_emitter: Arc<CrossChainEmitterV2>,
 }
 
 impl MemoTracer {
-    pub fn new(event_store: Arc<EventStore>, cross_chain_emitter: Arc<CrossChainEmitterV2>) -> Self {
+    pub fn new(
+        #[allow(dead_code)] event_store: Arc<EventStore>,
+        cross_chain_emitter: Arc<CrossChainEmitterV2>,
+    ) -> Self {
         Self { event_store, cross_chain_emitter }
     }
 
@@ -51,7 +54,10 @@ impl MemoTracer {
         // Mock store
         // self.event_store.store(event.clone()).await?;
 
-        self.cross_chain_emitter.emit_cross_chain(event).await.map_err(|e| TracerError::CrossChainError(format!("{:?}", e)))?;
+        self.cross_chain_emitter
+            .emit_cross_chain(event)
+            .await
+            .map_err(|e| TracerError::CrossChainError(format!("{:?}", e)))?;
 
         Ok(())
     }

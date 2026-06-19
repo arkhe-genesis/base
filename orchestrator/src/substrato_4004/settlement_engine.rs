@@ -1,22 +1,29 @@
 //! src/substrato_4004/settlement_engine.rs
 //! Settlement engine para pagamentos B20 integrado ao Substrato 7001
 
-use std::sync::Arc;
-use ethers::types::{Address, U256};
-use ethers::providers::{Provider, Http};
-use ethers::contract::Contract;
+use crate::substrato_4004::b20_mapper::{Action, B20Operation, B20TokenMapper};
+use crate::substrato_4004::compliance_engine::{
+    ComplianceEngine, ComplianceVerdict, EthicalCompliance, OrchestratorEvent, PauseCompliance,
+    PolicyCompliance, RoleCompliance, SettlementReceipt,
+};
 use ethers::abi::Abi;
-use crate::substrato_4004::b20_mapper::{B20TokenMapper, B20Operation, Action};
-use crate::substrato_4004::compliance_engine::{ComplianceEngine, ComplianceVerdict, SettlementReceipt, EthicalCompliance, PolicyCompliance, PauseCompliance, RoleCompliance, OrchestratorEvent};
+use ethers::contract::Contract;
+use ethers::providers::{Http, Provider};
+use ethers::types::{Address, U256};
+use std::sync::Arc;
 
 pub struct BatchSettlementEngine;
 pub struct CrossChainEmitterV2;
 impl CrossChainEmitterV2 {
-    pub async fn emit_cross_chain(&self, _event: OrchestratorEvent) -> Result<(), SettlementError> { Ok(()) }
+    pub async fn emit_cross_chain(&self, _event: OrchestratorEvent) -> Result<(), SettlementError> {
+        Ok(())
+    }
 }
 pub struct HybridZkVerifier;
 impl HybridZkVerifier {
-    pub async fn prove_settlement(&self, _hashes: &[String]) -> Result<String, SettlementError> { Ok("proof".to_string()) }
+    pub async fn prove_settlement(&self, _hashes: &[String]) -> Result<String, SettlementError> {
+        Ok("proof".to_string())
+    }
 }
 
 #[derive(Debug, Clone)]
@@ -76,10 +83,20 @@ impl B20SettlementEngine {
         zk_prover: Arc<HybridZkVerifier>,
         provider: Arc<Provider<Http>>,
     ) -> Self {
-        Self { b20_mapper, compliance_engine, batch_engine, cross_chain_emitter, zk_prover, provider }
+        Self {
+            b20_mapper,
+            compliance_engine,
+            batch_engine,
+            cross_chain_emitter,
+            zk_prover,
+            provider,
+        }
     }
 
-    pub async fn settle_batch(&self, batch: &B20PaymentBatch) -> Result<SettlementReceipt, SettlementError> {
+    pub async fn settle_batch(
+        &self,
+        batch: &B20PaymentBatch,
+    ) -> Result<SettlementReceipt, SettlementError> {
         let mut compliant_payments = Vec::new();
         let mut rejected = Vec::new();
 
@@ -94,20 +111,27 @@ impl B20SettlementEngine {
                     rejected.push((payment.id.clone(), verdict));
                 }
                 Err(e) => {
-                    rejected.push((payment.id.clone(), ComplianceVerdict {
-                        ethical: EthicalCompliance::Failed(vec![]),
-                        policy: PolicyCompliance::Denied(e.to_string()),
-                        pause: PauseCompliance::Passed,
-                        role: RoleCompliance::Passed,
-                        overall: false,
-                    }));
+                    rejected.push((
+                        payment.id.clone(),
+                        ComplianceVerdict {
+                            ethical: EthicalCompliance::Failed(vec![]),
+                            policy: PolicyCompliance::Denied(e.to_string()),
+                            pause: PauseCompliance::Passed,
+                            role: RoleCompliance::Passed,
+                            overall: false,
+                        },
+                    ));
                 }
             }
         }
 
         let mut b20_ops = Vec::new();
         for payment in &compliant_payments {
-            let op = self.b20_mapper.map_action(&payment.to_action()).await.map_err(|e| SettlementError::Mapping(format!("{:?}", e)))?;
+            let op = self
+                .b20_mapper
+                .map_action(&payment.to_action())
+                .await
+                .map_err(|e| SettlementError::Mapping(format!("{:?}", e)))?;
             b20_ops.push(op);
         }
 
@@ -129,28 +153,34 @@ impl B20SettlementEngine {
             timestamp: chrono::Utc::now().timestamp(),
         };
 
-        self.cross_chain_emitter.emit_cross_chain(
-            OrchestratorEvent::B20BatchSettled {
+        self.cross_chain_emitter
+            .emit_cross_chain(OrchestratorEvent::B20BatchSettled {
                 batch_id: batch.id.clone(),
                 receipt: receipt.clone(),
                 timestamp: chrono::Utc::now().timestamp(),
-            }
-        ).await?;
+            })
+            .await?;
 
         Ok(receipt)
     }
 
-    pub async fn execute_b20_operation(&self, op: &B20Operation) -> Result<String, SettlementError> {
+    pub async fn execute_b20_operation(
+        &self,
+        op: &B20Operation,
+    ) -> Result<String, SettlementError> {
         match op {
             B20Operation::Transfer { token, to, amount, memo, .. } => {
                 let abi_str = r#"[{"inputs":[{"internalType":"address","name":"to","type":"address"},{"internalType":"uint256","name":"amount","type":"uint256"},{"internalType":"bytes32","name":"memo","type":"bytes32"}],"name":"transferWithMemo","outputs":[],"stateMutability":"nonpayable","type":"function"}]"#;
                 let abi: Abi = serde_json::from_str(abi_str).unwrap();
                 let b20 = Contract::new(*token, abi, self.provider.clone());
 
-                let tx = b20.method::<_, ()>("transferWithMemo", (*to, *amount, memo.unwrap_or([0; 32])))
+                let tx = b20
+                    .method::<_, ()>("transferWithMemo", (*to, *amount, memo.unwrap_or([0; 32])))
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
-                let pending = tx.send().await
+                let pending = tx
+                    .send()
+                    .await
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
                 Ok(format!("{:?}", pending.tx_hash()))
@@ -160,10 +190,13 @@ impl B20SettlementEngine {
                 let abi: Abi = serde_json::from_str(abi_str).unwrap();
                 let b20 = Contract::new(*token, abi, self.provider.clone());
 
-                let tx = b20.method::<_, ()>("mintWithMemo", (*to, *amount, memo.unwrap_or([0; 32])))
+                let tx = b20
+                    .method::<_, ()>("mintWithMemo", (*to, *amount, memo.unwrap_or([0; 32])))
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
-                let pending = tx.send().await
+                let pending = tx
+                    .send()
+                    .await
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
                 Ok(format!("{:?}", pending.tx_hash()))
@@ -181,10 +214,13 @@ impl B20SettlementEngine {
                 let abi: Abi = serde_json::from_str(&abi_str).unwrap();
                 let b20 = Contract::new(*token, abi, self.provider.clone());
 
-                let tx = b20.method::<_, ()>(method_name, (*from, *amount, memo.unwrap_or([0; 32])))
+                let tx = b20
+                    .method::<_, ()>(method_name, (*from, *amount, memo.unwrap_or([0; 32])))
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
-                let pending = tx.send().await
+                let pending = tx
+                    .send()
+                    .await
                     .map_err(|e| SettlementError::TransactionError(e.to_string()))?;
 
                 Ok(format!("{:?}", pending.tx_hash()))
