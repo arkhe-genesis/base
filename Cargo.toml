@@ -52,7 +52,6 @@ members = [
   "crates/proof/succinct/utils/ethereum/host",
   "crates/proof/succinct/scripts/*",
   "crates/proof/succinct/validity",
-
   "crates/utilities/*",
   "crates/batcher/*",
   "crates/builder/*",
@@ -63,6 +62,14 @@ members = [
   "etc/tools/*",
   "devnet",
   "actions/*",
+  "crates/cathedral-scheduler",
+  "crates/cathedral-episodic",
+  "crates/cathedral-tee",
+  "crates/cathedral-fallback",
+  "crates/cathedral-agi",
+  "crates/cathedral-edge-agent",
+  "crates/cathedral-core",
+  "crates/cathedral-lc3-vm",
 ]
 default-members = [
   "orchestrator",
@@ -412,7 +419,7 @@ tokio-tungstenite = "0.28.0"
 
 # async
 futures = "0.3.31"
-reqwest = "0.13.1"
+reqwest = { version = "0.13.1", features = ["json"] }
 async-trait = "0.1.83"
 
 # grpc

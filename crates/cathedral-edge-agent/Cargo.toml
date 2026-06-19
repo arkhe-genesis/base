@@ -1,0 +1,19 @@
+[package]
+name = "cathedral-edge-agent"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true, features = ["full", "signal"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+tracing-subscriber = "0.3"
+cathedral-scheduler = { path = "../cathedral-scheduler" }
+cathedral-fallback = { path = "../cathedral-fallback" }
+cathedral-agi = { path = "../cathedral-agi" }
+cathedral-episodic = { path = "../cathedral-episodic" }
+chrono = { workspace = true }
+reqwest = { workspace = true }
+axum = "0.7"

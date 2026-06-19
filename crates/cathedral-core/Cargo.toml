@@ -1,0 +1,12 @@
+[package]
+name = "cathedral-core"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+cathedral-scheduler = { path = "../cathedral-scheduler" }
+cathedral-episodic = { path = "../cathedral-episodic" }
+cathedral-tee = { path = "../cathedral-tee" }
+cathedral-fallback = { path = "../cathedral-fallback" }
+cathedral-agi = { path = "../cathedral-agi" }
+cathedral-edge-agent = { path = "../cathedral-edge-agent" }

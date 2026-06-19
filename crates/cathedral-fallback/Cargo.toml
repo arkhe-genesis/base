@@ -1,0 +1,13 @@
+[package]
+name = "cathedral-fallback"
+version = "1.0.0"
+edition = "2021"
+
+[dependencies]
+tokio = { workspace = true, features = ["full"] }
+anyhow = { workspace = true }
+tracing = { workspace = true }
+chrono = { workspace = true, features = ["clock"] }
+serde = { workspace = true, features = ["derive", "alloc"] }
+serde_json = { version = "1.0", features = ["alloc", "std"] }
+async-trait = "0.1"
