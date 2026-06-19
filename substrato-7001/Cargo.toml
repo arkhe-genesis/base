@@ -7,13 +7,17 @@ license = "Apache-2.0"
 rust-version = "1.85"
 
 [features]
-default = ["mcp-server", "webhooks", "oss", "metrics-export"]
-mcp-server = ["tokio", "serde_json", "tracing"]
-webhooks = ["axum", "tower-http", "hmac", "sha2", "hex"]
-oss = ["chrono"]
-metrics-export = ["metrics", "metrics-exporter-prometheus"]
-cli = ["clap"]
-full = ["mcp-server", "webhooks", "oss", "metrics-export", "cli"]
+default = [ "mcp-server", "metrics-export", "oss", "webhooks" ]
+mcp-server = [ "serde_json", "tokio", "tracing" ]
+webhooks = [ "axum", "hex", "hmac", "sha2", "tower-http" ]
+oss = [ "chrono" ]
+metrics-export = [
+	"dep:metrics",
+	"metrics-exporter-prometheus",
+	"tower-http?/metrics",
+]
+cli = [ "clap" ]
+full = [ "cli", "mcp-server", "metrics-export", "oss", "webhooks" ]
 
 [dependencies]
 # Async runtime
