@@ -108,4 +108,5 @@ serde = [
 	"base-execution-chainspec/serde",
 	"reth-network/serde",
 	"secp256k1/serde",
+	"url/serde",
 ]
