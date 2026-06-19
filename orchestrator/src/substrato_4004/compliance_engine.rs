@@ -2,10 +2,9 @@
 //! Engine de compliance que integra EthicalFilter com B20 policies
 
 use std::sync::Arc;
-use ethers::types::Address;
 use ethers::providers::{Provider, Http};
 use crate::substrato_4004::b20_mapper::{
-    Action, B20TokenMapper, B20Operation, EthicalFilter, FilterVerdict, MapperError, PausableFeature, PolicyScope, BurnType
+    Action, B20TokenMapper, B20Operation, EthicalFilter, FilterVerdict, MapperError, PausableFeature, PolicyScope
 };
 use crate::substrato_4004::policy_adapter::PolicyAdapter;
 
