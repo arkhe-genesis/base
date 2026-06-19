@@ -3366,6 +3366,7 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "31b698c5f9a010f6573133b09e0de5408834d0c82f8d7475a89fc1867a71cd90"
 dependencies = [
  "axum-core 0.5.6",
+ "axum-macros",
  "base64 0.22.1",
  "bytes",
  "form_urlencoded",
@@ -3392,6 +3393,7 @@ dependencies = [
  "tower 0.5.3",
  "tower-layer",
  "tower-service",
+ "tracing",
 ]
 
 [[package]]
@@ -3448,6 +3450,18 @@ dependencies = [
  "sync_wrapper 1.0.2",
  "tower-layer",
  "tower-service",
+ "tracing",
+]
+
+[[package]]
+name = "axum-macros"
+version = "0.5.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "7aa268c23bfbbd2c4363b9cd302a4f504fb2a9dfe7e3451d66f35dd392e20aca"
+dependencies = [
+ "proc-macro2",
+ "quote",
+ "syn 2.0.118",
 ]
 
 [[package]]
@@ -3831,7 +3845,7 @@ dependencies = [
  "jsonrpsee-types",
  "k256",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "moka",
  "nanoid",
  "opentelemetry 0.31.0",
@@ -4021,7 +4035,7 @@ dependencies = [
  "eyre",
  "libc",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "metrics-process",
  "rstest",
  "serde",
@@ -4411,7 +4425,7 @@ dependencies = [
  "derive_more 2.1.1",
  "http-body-util",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "rand 0.9.4",
  "rstest",
  "serde",
@@ -5343,7 +5357,7 @@ version = "0.0.0"
 dependencies = [
  "ctor",
  "metrics",
- "metrics-util",
+ "metrics-util 0.20.4",
  "ordered-float 5.3.0",
 ]
 
@@ -5868,7 +5882,7 @@ dependencies = [
  "kzg-rs",
  "lazy_static",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "metrics-process",
  "num-format",
  "opentelemetry 0.31.0",
@@ -6153,7 +6167,7 @@ dependencies = [
  "jsonrpsee",
  "k256",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "rand 0.9.4",
  "reqwest 0.13.4",
  "rstest",
@@ -7782,6 +7796,33 @@ dependencies = [
 ]
 
 [[package]]
+name = "cathedral-x402-polar"
+version = "2.0.0"
+dependencies = [
+ "anyhow",
+ "assert-json-diff",
+ "axum 0.8.9",
+ "chrono",
+ "clap",
+ "hex",
+ "hmac 0.12.1",
+ "metrics",
+ "metrics-exporter-prometheus 0.16.2",
+ "reqwest 0.12.28",
+ "serde",
+ "serde_json",
+ "sha2 0.10.9",
+ "thiserror 2.0.18",
+ "tokio",
+ "tokio-retry",
+ "tokio-test",
+ "tower-http",
+ "tracing",
+ "tracing-subscriber 0.3.23",
+ "wiremock",
+]
+
+[[package]]
 name = "cbc"
 version = "0.1.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -7852,13 +7893,24 @@ dependencies = [
 ]
 
 [[package]]
+name = "chacha20"
+version = "0.10.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "6f8d983286843e49675a4b7a2d174efe136dc93a18d69130dd18198a6c167601"
+dependencies = [
+ "cfg-if",
+ "cpufeatures 0.3.0",
+ "rand_core 0.10.1",
+]
+
+[[package]]
 name = "chacha20poly1305"
 version = "0.10.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "10cd79432192d1c0f4e1a0fef9527696cc039165d729fb41b3f4f4f354c2dc35"
 dependencies = [
  "aead",
- "chacha20",
+ "chacha20 0.9.1",
  "cipher",
  "poly1305",
  "zeroize",
@@ -11323,6 +11375,7 @@ dependencies = [
  "js-sys",
  "libc",
  "r-efi 6.0.0",
+ "rand_core 0.10.1",
  "wasm-bindgen",
 ]
 
@@ -14370,6 +14423,27 @@ dependencies = [
 
 [[package]]
 name = "metrics-exporter-prometheus"
+version = "0.16.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "dd7399781913e5393588a8d8c6a2867bf85fb38eaf2502fdce465aad2dc6f034"
+dependencies = [
+ "base64 0.22.1",
+ "http-body-util",
+ "hyper 1.10.1",
+ "hyper-rustls 0.27.9",
+ "hyper-util",
+ "indexmap 2.14.0",
+ "ipnet",
+ "metrics",
+ "metrics-util 0.19.1",
+ "quanta",
+ "thiserror 1.0.69",
+ "tokio",
+ "tracing",
+]
+
+[[package]]
+name = "metrics-exporter-prometheus"
 version = "0.18.3"
 source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "1db0d8f1fc9e62caebd0319e11eaec5822b0186c171568f0480b46a0137f9108"
@@ -14382,7 +14456,7 @@ dependencies = [
  "indexmap 2.14.0",
  "ipnet",
  "metrics",
- "metrics-util",
+ "metrics-util 0.20.4",
  "quanta",
  "thiserror 2.0.18",
  "tokio",
@@ -14403,6 +14477,22 @@ dependencies = [
  "procfs",
  "rlimit",
  "windows 0.62.2",
+]
+
+[[package]]
+name = "metrics-util"
+version = "0.19.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "b8496cc523d1f94c1385dd8f0f0c2c480b2b8aeccb5b7e4485ad6365523ae376"
+dependencies = [
+ "crossbeam-epoch",
+ "crossbeam-utils",
+ "hashbrown 0.15.5",
+ "metrics",
+ "quanta",
+ "rand 0.9.4",
+ "rand_xoshiro",
+ "sketches-ddsketch",
 ]
 
 [[package]]
@@ -17397,6 +17487,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "rand"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "d2e8e8bcc7961af1fdac401278c6a831614941f6164ee3bf4ce61b7edb162207"
+dependencies = [
+ "chacha20 0.10.0",
+ "getrandom 0.4.3",
+ "rand_core 0.10.1",
+]
+
+[[package]]
 name = "rand_chacha"
 version = "0.2.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -17453,6 +17554,12 @@ dependencies = [
  "getrandom 0.3.4",
  "serde",
 ]
+
+[[package]]
+name = "rand_core"
+version = "0.10.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "63b8176103e19a2643978565ca18b50549f6101881c443590420e4dc998a3c69"
 
 [[package]]
 name = "rand_hc"
@@ -17869,6 +17976,7 @@ dependencies = [
  "futures-core",
  "futures-util",
  "h2 0.4.15",
+ "hickory-resolver",
  "http 1.4.2",
  "http-body 1.0.1",
  "http-body-util",
@@ -17880,6 +17988,7 @@ dependencies = [
  "log",
  "mime",
  "native-tls",
+ "once_cell",
  "percent-encoding",
  "pin-project-lite",
  "quinn",
@@ -19678,9 +19787,9 @@ dependencies = [
  "jsonrpsee-server",
  "mappings",
  "metrics",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "metrics-process",
- "metrics-util",
+ "metrics-util 0.20.4",
  "pprof_util",
  "procfs",
  "reqwest 0.13.4",
@@ -26742,7 +26851,7 @@ dependencies = [
  "aes",
  "aes-gcm",
  "cbc",
- "chacha20",
+ "chacha20 0.9.1",
  "cipher",
  "ctr",
  "poly1305",
@@ -27658,6 +27767,17 @@ dependencies = [
 ]
 
 [[package]]
+name = "tokio-retry"
+version = "0.3.2"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "4a129d95275ebf4c493ec53bf0f8cd95f5ac161bc4f381700809a54f595d4470"
+dependencies = [
+ "pin-project-lite",
+ "rand 0.10.1",
+ "tokio",
+]
+
+[[package]]
 name = "tokio-rustls"
 version = "0.24.1"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -27687,6 +27807,17 @@ dependencies = [
  "pin-project-lite",
  "tokio",
  "tokio-util",
+]
+
+[[package]]
+name = "tokio-test"
+version = "0.4.5"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "3f6d24790a10a7af737693a3e8f1d03faef7e6ca0cc99aae5066f533766de545"
+dependencies = [
+ "futures-core",
+ "tokio",
+ "tokio-stream",
 ]
 
 [[package]]
@@ -29351,7 +29482,7 @@ dependencies = [
  "dotenvy",
  "futures",
  "hostname",
- "metrics-exporter-prometheus",
+ "metrics-exporter-prometheus 0.18.3",
  "serde",
  "tokio",
  "tokio-util",
