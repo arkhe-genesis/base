@@ -68,7 +68,7 @@ strum_macros.workspace = true
 base-proof-succinct-build-utils.workspace = true
 
 [dev-dependencies]
-postgresql_embedded = { version = "0.20", features = ["bundled"] }
+postgresql_embedded = { version = "0.19", features = ["bundled"] }
 
 [lints]
 workspace = true

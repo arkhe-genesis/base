@@ -1,3 +1,4 @@
+pub mod substrato_4004;
 
 pub mod fastbrain;
 pub mod wormgraph_arweave;

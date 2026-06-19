@@ -1,3 +1,4 @@
+pub mod substrato_4004;
 pub mod cache {
     pub mod semantic_cache {
         pub struct SemanticCache;
