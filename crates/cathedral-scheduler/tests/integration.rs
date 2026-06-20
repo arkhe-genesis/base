@@ -1,5 +1,8 @@
-use cathedral_scheduler::{HybridScheduler, WorkerRegistry, WorkerProfile, WorkerTier, TaskType, TeeType};
 use std::sync::Arc;
+
+use cathedral_scheduler::{
+    HybridScheduler, TaskType, TeeType, WorkerProfile, WorkerRegistry, WorkerTier,
+};
 
 #[tokio::test]
 async fn test_register_and_schedule() {

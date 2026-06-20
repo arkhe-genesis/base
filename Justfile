@@ -203,8 +203,8 @@ basectl:
 # Comandos de build, teste e execução
 # ============================================================
 
-# --- Build ---
-build:
+# --- Cathedral Build ---
+build-cathedral:
 	cargo build --release
 
 build-core:
@@ -229,8 +229,8 @@ run-agi:
 run-ui:
 	cd ui && npm install && npm start &
 
-# --- Test ---
-test:
+# --- Cathedral Test ---
+test-cathedral:
 	cargo test --all
 
 test-agi:
@@ -261,18 +261,18 @@ train-grpo:
 eval:
 	python3 training/run_eval.py --model model.gguf --holdout data/eval/holdout.jsonl
 
-# --- Clean ---
-clean:
+# --- Cathedral Clean ---
+clean-cathedral:
 	cargo clean
 	rm -rf ui/.next
 	rm -rf data/episodic.db
 
-# --- Utils ---
-check:
+# --- Cathedral Utils ---
+check-cathedral:
 	cargo check --workspace
 
-fmt:
+fmt-cathedral:
 	cargo fmt --all
 
-lint:
+lint-cathedral:
 	cargo clippy --all -- -D warnings

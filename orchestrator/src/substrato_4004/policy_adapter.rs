@@ -1,11 +1,14 @@
 //! src/substrato_4004/policy_adapter.rs
 //! Adapter para o PolicyRegistry da Base
 
+use ethers::{
+    abi::Abi,
+    contract::Contract,
+    providers::{Http, Provider},
+    types::Address,
+};
+
 use crate::substrato_4004::b20_mapper::PolicyScope;
-use ethers::abi::Abi;
-use ethers::contract::Contract;
-use ethers::providers::{Http, Provider};
-use ethers::types::Address;
 
 #[derive(Debug)]
 pub enum PolicyError {
@@ -15,7 +18,8 @@ pub enum PolicyError {
 /// Cliente para o PolicyRegistry singleton da Base
 pub struct PolicyAdapter {
     contract: Contract<Provider<Http>>,
-    #[allow(dead_code)] b20_factory: Address,
+    #[allow(dead_code)]
+    b20_factory: Address,
 }
 
 impl PolicyAdapter {
