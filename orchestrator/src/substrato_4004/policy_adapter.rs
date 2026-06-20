@@ -15,7 +15,8 @@ pub enum PolicyError {
 /// Cliente para o PolicyRegistry singleton da Base
 pub struct PolicyAdapter {
     contract: Contract<Provider<Http>>,
-    #[allow(dead_code)] b20_factory: Address,
+    #[allow(dead_code)]
+    b20_factory: Address,
 }
 
 impl PolicyAdapter {

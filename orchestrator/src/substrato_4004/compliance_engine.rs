@@ -82,7 +82,8 @@ pub struct ComplianceEngine {
     policy_registry: Arc<PolicyAdapter>,
     b20_mapper: Arc<B20TokenMapper>,
     event_store: Arc<EventStore>,
-    #[allow(dead_code)] provider: Arc<Provider<Http>>,
+    #[allow(dead_code)]
+    provider: Arc<Provider<Http>>,
 }
 
 #[allow(dead_code)]

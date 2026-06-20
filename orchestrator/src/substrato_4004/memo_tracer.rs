@@ -15,7 +15,8 @@ pub enum TracerError {
 }
 
 pub struct MemoTracer {
-    #[allow(dead_code)] event_store: Arc<EventStore>,
+    #[allow(dead_code)]
+    event_store: Arc<EventStore>,
     cross_chain_emitter: Arc<CrossChainEmitterV2>,
 }
 
