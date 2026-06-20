@@ -1,10 +1,9 @@
-use std::time::{Duration, Instant};
-
+use crate::cost::OptimizationStats;
+use crate::cost::CostOptimizer;
 use anyhow::{Result, anyhow};
+use std::time::{Duration, Instant};
 use tokio::time::timeout;
-use tracing::info;
-
-use crate::cost::{CostOptimizer, OptimizationStats};
+use tracing::{info, warn, error};
 
 #[derive(Debug, Clone, PartialEq)]
 pub enum WorkerTier {
@@ -65,12 +64,7 @@ impl FallbackChain {
         info!("Fallback Level 1: DePIN GPU");
         for worker in &self.gpu_workers {
             if let Ok(result) = self.execute_worker(worker, task).await {
-                self.record_cost(
-                    worker.id.clone(),
-                    "depin_gpu",
-                    start.elapsed().as_millis() as u64,
-                    true,
-                );
+                self.record_cost(worker.id.clone(), "depin_gpu", start.elapsed().as_millis() as u64, true);
                 return Ok(result);
             }
         }
@@ -78,12 +72,7 @@ impl FallbackChain {
         info!("Fallback Level 2: DePIN CPU");
         for worker in &self.cpu_workers {
             if let Ok(result) = self.execute_worker(worker, task).await {
-                self.record_cost(
-                    worker.id.clone(),
-                    "depin_cpu",
-                    start.elapsed().as_millis() as u64,
-                    true,
-                );
+                self.record_cost(worker.id.clone(), "depin_cpu", start.elapsed().as_millis() as u64, true);
                 return Ok(result);
             }
         }
@@ -91,12 +80,7 @@ impl FallbackChain {
         info!("Fallback Level 3: Datacenter");
         for worker in &self.datacenter_workers {
             if let Ok(result) = self.execute_worker(worker, task).await {
-                self.record_cost(
-                    worker.id.clone(),
-                    "datacenter",
-                    start.elapsed().as_millis() as u64,
-                    true,
-                );
+                self.record_cost(worker.id.clone(), "datacenter", start.elapsed().as_millis() as u64, true);
                 return Ok(result);
             }
         }

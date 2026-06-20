@@ -1,13 +1,10 @@
-use std::{collections::HashMap, sync::Arc};
-
+use crate::types::{TaskType, WorkerTier, SchedulingDecision, SchedulerStats};
+use crate::registry::WorkerRegistry;
+use crate::metrics::SchedulerMetrics;
 use anyhow::Result;
+use std::collections::HashMap;
+use std::sync::Arc;
 use uuid::Uuid;
-
-use crate::{
-    metrics::SchedulerMetrics,
-    registry::WorkerRegistry,
-    types::{SchedulerStats, SchedulingDecision, TaskType, WorkerTier},
-};
 
 pub struct HybridScheduler {
     registry: Arc<WorkerRegistry>,
@@ -84,8 +81,7 @@ impl HybridScheduler {
             let score = cost_weight * cost_normalized + latency_weight * latency_normalized;
 
             let latency_penalty = if worker.latency_p95_ms > self.max_latency_ms {
-                ((worker.latency_p95_ms - self.max_latency_ms) as f32 / self.max_latency_ms as f32)
-                    * 0.5
+                ((worker.latency_p95_ms - self.max_latency_ms) as f32 / self.max_latency_ms as f32) * 0.5
             } else {
                 0.0
             };

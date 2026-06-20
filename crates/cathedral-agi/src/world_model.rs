@@ -1,10 +1,9 @@
-use std::{collections::VecDeque, sync::Arc};
-
+use crate::llm_client::OllamaClient;
 use serde::{Deserialize, Serialize};
 use serde_json::json;
+use std::collections::VecDeque;
+use std::sync::Arc;
 use tracing::info;
-
-use crate::llm_client::OllamaClient;
 
 #[derive(Debug, Clone, Serialize, Deserialize, PartialEq)]
 pub enum Intent {

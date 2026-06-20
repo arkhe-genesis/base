@@ -1,12 +1,9 @@
-use std::{
-    fs::{File, OpenOptions},
-    io::{BufRead, BufReader, BufWriter, Write},
-    path::PathBuf,
-};
-
 use anyhow::Result;
 use async_trait::async_trait;
-use serde::{Serialize, de::DeserializeOwned};
+use serde::{de::DeserializeOwned, Serialize};
+use std::fs::{File, OpenOptions};
+use std::io::{BufReader, BufWriter, Write, BufRead};
+use std::path::PathBuf;
 
 #[async_trait]
 pub trait Storage<T: Serialize + DeserializeOwned + Send + Sync> {
@@ -27,7 +24,10 @@ impl JsonlStorage {
 #[async_trait]
 impl<T: Serialize + DeserializeOwned + Send + Sync> Storage<T> for JsonlStorage {
     async fn append(&self, entry: &T) -> Result<()> {
-        let file = OpenOptions::new().create(true).append(true).open(&self.path)?;
+        let file = OpenOptions::new()
+            .create(true)
+            .append(true)
+            .open(&self.path)?;
         let mut writer = BufWriter::new(file);
         let line = serde_json::to_string(entry)? + "\n";
         writer.write_all(line.as_bytes())?;

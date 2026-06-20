@@ -1,8 +1,7 @@
-use std::time::Duration;
-
 use anyhow::Result;
 use reqwest::Client;
 use serde_json::json;
+use std::time::Duration;
 
 pub struct OllamaClient {
     client: Client,
@@ -14,7 +13,10 @@ pub struct OllamaClient {
 impl OllamaClient {
     pub fn new(model: &str) -> Self {
         Self {
-            client: Client::builder().timeout(Duration::from_secs(120)).build().unwrap(),
+            client: Client::builder()
+                .timeout(Duration::from_secs(120))
+                .build()
+                .unwrap(),
             model: model.to_string(),
             base_url: "http://localhost:11434".to_string(),
             timeout_secs: 120,
@@ -26,12 +28,7 @@ impl OllamaClient {
         self
     }
 
-    pub async fn generate(
-        &self,
-        prompt: &str,
-        max_tokens: usize,
-        temperature: f32,
-    ) -> Result<String> {
+    pub async fn generate(&self, prompt: &str, max_tokens: usize, temperature: f32) -> Result<String> {
         let body = json!({
             "model": self.model,
             "prompt": prompt,
@@ -44,8 +41,11 @@ impl OllamaClient {
             }
         });
 
-        let res =
-            self.client.post(format!("{}/api/generate", self.base_url)).json(&body).send().await?;
+        let res = self.client
+            .post(format!("{}/api/generate", self.base_url))
+            .json(&body)
+            .send()
+            .await?;
 
         if !res.status().is_success() {
             anyhow::bail!("Ollama error: {}", res.status());
@@ -55,11 +55,7 @@ impl OllamaClient {
         Ok(json["response"].as_str().unwrap_or("").to_string())
     }
 
-    pub async fn generate_chat(
-        &self,
-        messages: &[ChatMessage],
-        max_tokens: usize,
-    ) -> Result<String> {
+    pub async fn generate_chat(&self, messages: &[ChatMessage], max_tokens: usize) -> Result<String> {
         let body = json!({
             "model": self.model,
             "messages": messages,
@@ -70,8 +66,11 @@ impl OllamaClient {
             }
         });
 
-        let res =
-            self.client.post(format!("{}/api/chat", self.base_url)).json(&body).send().await?;
+        let res = self.client
+            .post(format!("{}/api/chat", self.base_url))
+            .json(&body)
+            .send()
+            .await?;
 
         let json: serde_json::Value = res.json().await?;
         Ok(json["message"]["content"].as_str().unwrap_or("").to_string())

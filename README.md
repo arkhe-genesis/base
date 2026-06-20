@@ -1,119 +1,103 @@
-# 🏛️ Cathedral ARKHE — AGI-GRADE v3.0.0
+# Arkhe-Network – Cathedral Digital Sovereign
 
-**Selo:** `CATHEDRAL-ARKHE-AGI-GRADE-v3.0.0-2026-06-19`
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+[![Rust](https://img.shields.io/badge/Rust-1.85+-orange)](https://www.rust-lang.org/)
+[![Solidity](https://img.shields.io/badge/Solidity-0.8.20-blue)](https://soliditylang.org/)
 
-## Arquitetura
+**Arkhe-Network** is the reference implementation of the **Sovereign Inference Federation (FSI)** – a decentralized AGI cloud connecting frontier models from different jurisdictions (BRICS, USA, China, orbital) under on-chain governance, post-quantum cryptography, and verification via ZK-proofs.
 
-```mermaid
-flowchart TB
-    subgraph "Edge Agent"
-        Scheduler[HybridScheduler]
-        Registry[WorkerRegistry]
-        Fallback[FallbackChain]
-        CostOpt[CostOptimizer]
-        Health[Healthcheck / Metrics]
-    end
+---
 
-    subgraph "AGI Core"
-        WM[WorldModel]
-        MCTS[MCTS Engine]
-        MCL[MetaCognitiveLoop]
-        WH[HierarchicalWormhole]
-        EV[EthicsVerifier]
-        LLM[Ollama Client]
-    end
+## 📌 Implemented Substrates
 
-    subgraph "Memory"
-        ES[EpisodicSync]
-        SQLite[(SQLite)]
-    end
+| Substrate | Name | Description |
+|-----------|------|------------|
+| **1104.2** | `Rio35Open397B` | Integration of the Rio-3.5 model (City Hall of Rio) – MIT license, 1M context, native SwiReasoning |
+| **1104.3** | `FederatedRouter` | Multi-objective routing between federation members (capability, latency, cost, sovereignty) |
+| **1106** | `SwiReasoning` | Dynamic switching between explicit reasoning (CoT) and latent (soft-thinking) based on entropy |
+| **319.1** | `Caster` | Encrypted tunnels with PQC (SPHINCS+/ML-DSA) and <50ms failover |
+| **1091.0** | `FIG` | Physical hardware monitoring (voltage, temperature, jitter) with cryptographic hard reset |
+| **2140.8** | `CreekGuard` | Real-time covert channel detection (entropy, MinHash, SimHash, burst) |
+| **1200.1** | `ArkheFederation.sol` | On-chain governance contract: stake, slashing, Quadratic Voting, inference anchoring |
 
-    subgraph "UI"
-        Dashboard[Next.js Dashboard]
-        SSE[SSE Stream]
-        Chat[AI Chat Agent]
-        Auth[Better-Auth + B20]
-    end
+---
 
-    User --> Dashboard
-    User --> Edge Agent
+## 🚀 Quick Start
 
-    Edge Agent --> Scheduler
-    Scheduler --> Registry
-    Scheduler --> Fallback
-    Fallback --> CostOpt
+### 1. Run the federation locally (testnet)
 
-    Edge Agent --> AGI Core
-    AGI Core --> WM
-    AGI Core --> MCTS
-    AGI Core --> MCL
-    AGI Core --> WH
-    AGI Core --> EV
-    AGI Core --> LLM
+```bash
+# Clone the repository
+git clone https://github.com/Arkhe-Network/arkhe-core.git
+cd arkhe-core
 
-    MCL <--> ES
-    ES --> SQLite
+# Start the services with Docker Compose (requires 8 GPUs for Rio-3.5)
+docker compose up -d vllm-rio35 metrics-collector caster-tunnel
 
-    AGI Core --> Dashboard
-    Dashboard --> SSE
-    Dashboard --> Chat
-    Dashboard --> Auth
+# Run an example task
+python scripts/run_federated_task.py --prompt "Explain the Protocol of Court 294" --jurisdiction BRA
 ```
 
-## Componentes
+### 2. Join the federation (as a member)
 
-| Crate | Versão | Descrição |
-|-------|--------|-----------|
-| `cathedral-scheduler` | 1.0.0 | HybridScheduler + Worker Registry + Prometheus |
-| `cathedral-episodic` | 1.0.0 | EpisodicSync com SQLite (CRDT-lite) |
-| `cathedral-tee` | 1.0.0 | TEEBridge (SGX + IoNet) |
-| `cathedral-fallback` | 1.0.0 | FallbackChain 3 níveis + CostOptimizer |
-| `cathedral-agi` | 3.0.0 | AGI Core (WorldModel + MCTS + MetaCognitive + Wormhole + Ethics) |
-| `cathedral-edge-agent` | 1.0.0 | Edge Agent (Hybrid Mode) |
-| `cathedral-core` | 1.0.0 | Facade de integração |
-
-## Como Executar
-
-### Pré-requisitos
-- Rust 1.80+
-- Node.js 20+
-- Ollama (com modelo `llama3.1:8b`)
-- SQLite (embutido, não requer instalação)
-
-```text
-# Instalar Ollama
-curl -fsSL https://ollama.com/install.sh
-ollama pull llama3.1:8b
-
-# Build
-cargo build --release
-
-# Executar Edge Agent
-just run-edge
-
-# Executar UI
-just run-ui
+```solidity
+// Contract deploy and join with minimum stake
+cast send --rpc-url $RBB_RPC --private-key $KEY \
+  ArkheFederation.sol:join \
+  "0x$(sphincs-keygen pub)" "Rio-3.5-Node" "BRA" 1000000 "0x$(zk-vk)"
 ```
 
-## Métricas Prometheus
+### 3. Federated routing via Rust
 
-| Métrica | Descrição |
-|---------|-----------|
-| `scheduler_workers_total` | Total de workers registrados |
-| `scheduler_workers_by_tier` | Workers por tier |
-| `scheduler_avg_reputation` | Reputação média |
-| `scheduler_tasks_scheduled_total` | Tarefas agendadas |
-| `scheduler_tasks_failed_total` | Tarefas com falha |
-| `scheduler_estimated_cost_usd` | Custo estimado por tarefa |
+```rust
+use arkhe_core::inference::federated_router::{FederatedRouter, FederatedTask};
 
-## Testes
+let router = FederatedRouter::new(local_router, chain_client, caster, swi_config);
+let ftask = FederatedTask::new(task)
+    .allow_jurisdictions(vec!["BRA".to_string(), "ORB".to_string()])
+    .max_cost_rbb(1_000_000)
+    .requires_multimodal(false);
 
-```text
-cargo test --all
+let result = router.route_federated(&ftask).await?;
+println!("Executed by: {:?}, latency: {} μs", result.executed_by, result.latency_us);
 ```
 
-## Licença
+---
 
-MIT
+## 🧠 Federation Architecture
 
-**Arquiteto ORCID:** 0009-0005-2697-4668
+The FSI is organized into five layers:
+
+1. **Physical Orbs** – sovereign data centers (BRICS, SpaceX/Starlink, NASA) + hyperscale clouds.
+2. **Transport Network** – Caster tunnels with PQC, terrestrial/orbital routes, guaranteed latency <50ms.
+3. **Federated Engine** – `FederatedRouter` + `SwiReasoning` + models from 11 founding members (Rio-3.5, Kimi K2.7, Qwen 3.7, DeepSeek V4, GLM-Z, Claude Fable 5, GPT-5.5, Gemini Ultra, Llama 4, Starlink Edge, Palantir).
+4. **Governance & Market** – `ArkheFederation.sol` contract, Quadratic Voting, ZK-proofs, slashing.
+5. **Security** – FIG, CreekGuard, PCT, SPHINCS+ signatures.
+
+---
+
+## 📚 Full Documentation
+
+- [FSI Whitepaper](docs/FSI_Whitepaper_v1.0.0.md) – vision, principles and roadmap.
+- [Risk Analysis](docs/FSI_Risk_Matrix_v1.0.0.md) – 15 vectors with mitigations.
+- [Developer Guide](docs/developer_guide.md) – how to add a new model to the federation.
+
+---
+
+## 🤝 How to Contribute
+
+1. Read the [Code of Conduct](CODE_OF_CONDUCT.md).
+2. Choose a substrate in the issues marked with `good first issue`.
+3. Submit a PR with tests and updated documentation.
+4. Participate in the weekly governance calls (on-chain Quadratic Voting).
+
+---
+
+## 🛡️ License
+
+MIT License – free to use, with attribution to **Arkhe-Network** and the **City Hall of Rio de Janeiro** (Rio-3.5 model). For large-scale commercial use (>1000 tasks/day), a minimum staking of 1M RBB tokens is recommended.
+
+---
+
+**Seal**: `CATHEDRAL-1200-README-v1.0.0-2026-06-13`
+**Architect**: ORCID 0009-0005-2697-4668

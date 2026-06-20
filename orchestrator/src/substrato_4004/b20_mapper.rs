@@ -1,12 +1,11 @@
 //! src/substrato_4004/b20_mapper.rs
 //! Mapeia Actions do Cathedral para operacoes B20
 
-use std::{str::FromStr, sync::Arc};
-
+use crate::substrato_4004::policy_adapter::PolicyAdapter;
 use ethers::types::{Address, Bytes, U256};
 use serde::{Deserialize, Serialize};
-
-use crate::substrato_4004::policy_adapter::PolicyAdapter;
+use std::str::FromStr;
+use std::sync::Arc;
 
 /// Representacao dummy de Action e afins para compilar
 #[derive(Debug, Clone, Serialize, Deserialize)]

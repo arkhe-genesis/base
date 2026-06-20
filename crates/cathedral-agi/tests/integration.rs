@@ -1,6 +1,5 @@
-use std::sync::Arc;
-
 use cathedral_agi::{AGICore, OllamaClient};
+use std::sync::Arc;
 
 #[tokio::test]
 async fn test_agi_core_init() {

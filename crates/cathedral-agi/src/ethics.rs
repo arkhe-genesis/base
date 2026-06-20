@@ -1,8 +1,7 @@
-use std::collections::HashMap;
-
+use crate::world_model::WorldState;
+use crate::mcts::MCTSResult;
 use serde::{Deserialize, Serialize};
-
-use crate::{mcts::MCTSResult, world_model::WorldState};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EthicsResult {
@@ -41,7 +40,12 @@ impl EthicsVerifier {
         }
 
         let overall = if passed { 0.9 } else { 0.2 };
-        EthicsResult { passed, violations, principle_scores: scores, overall_score: overall }
+        EthicsResult {
+            passed,
+            violations,
+            principle_scores: scores,
+            overall_score: overall,
+        }
     }
 
     pub fn verify(&self, mcts_result: &MCTSResult) -> EthicsResult {
@@ -58,11 +62,7 @@ impl EthicsVerifier {
             }
         }
 
-        let overall = if mcts_result.best_path.is_empty() {
-            0.0
-        } else {
-            total_score / mcts_result.best_path.len() as f32
-        };
+        let overall = if mcts_result.best_path.is_empty() { 0.0 } else { total_score / mcts_result.best_path.len() as f32 };
         EthicsResult {
             passed: all_passed,
             violations,

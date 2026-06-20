@@ -1,6 +1,5 @@
-use std::collections::HashMap;
-
 use serde::{Deserialize, Serialize};
+use std::collections::HashMap;
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct VectorClock {
@@ -32,15 +31,11 @@ impl VectorClock {
 
         for (k, v) in &self.entries {
             let other_v = other.entries.get(k).unwrap_or(&0);
-            if v > other_v {
-                self_greater = true;
-            }
-            if v < other_v {
-                other_greater = true;
-            }
+            if v > other_v { self_greater = true; }
+            if v < other_v { other_greater = true; }
         }
 
-        for (k, _v) in &other.entries {
+        for (k, v) in &other.entries {
             if !self.entries.contains_key(k) {
                 other_greater = true;
             }

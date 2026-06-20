@@ -1,16 +1,14 @@
 //! src/substrato_4004/cross_chain_bridge.rs
 //! Bridge entre B20 (Base) e XRPL escrows
 
-use std::sync::Arc;
-
-use ethers::types::Address;
-
-use crate::substrato_4004::{
-    b20_mapper::{B20Operation, PolicyScope},
-    compliance_engine::{ComplianceVerdict, OrchestratorEvent},
-    memo_tracer::MemoTracer,
-    settlement_engine::{B20Payment, B20SettlementEngine, CrossChainEmitterV2},
+use crate::substrato_4004::b20_mapper::{B20Operation, PolicyScope};
+use crate::substrato_4004::compliance_engine::{ComplianceVerdict, OrchestratorEvent};
+use crate::substrato_4004::memo_tracer::MemoTracer;
+use crate::substrato_4004::settlement_engine::{
+    B20Payment, B20SettlementEngine, CrossChainEmitterV2,
 };
+use ethers::types::Address;
+use std::sync::Arc;
 
 pub struct EscrowState {
     pub released: bool,

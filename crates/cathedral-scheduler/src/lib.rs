@@ -1,12 +1,12 @@
 //! Cathedral Scheduler — HybridScheduler + Worker Registry
 //! Selo: CATHEDRAL-ARKHE-SCHEDULER-v1.0.0-2026-06-19
 
-mod metrics;
-mod registry;
 mod scheduler;
+mod registry;
+mod metrics;
 mod types;
 
-pub use metrics::SchedulerMetrics;
-pub use registry::WorkerRegistry;
 pub use scheduler::HybridScheduler;
-pub use types::{SchedulerStats, SchedulingDecision, TaskType, TeeType, WorkerProfile, WorkerTier};
+pub use registry::WorkerRegistry;
+pub use types::{WorkerProfile, WorkerTier, TaskType, SchedulingDecision, SchedulerStats, TeeType};
+pub use metrics::SchedulerMetrics;

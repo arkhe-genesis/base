@@ -1,14 +1,10 @@
-use std::sync::Arc;
-
+use crate::types::{EpisodicEntry, VectorClock, Ordering};
+use crate::sqlite_storage::SqliteStorage;
 use anyhow::Result;
-use chrono::Utc;
+use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
-
-use crate::{
-    sqlite_storage::SqliteStorage,
-    types::{EpisodicEntry, Ordering, VectorClock},
-};
+use chrono::Utc;
 
 pub struct EpisodicSync {
     storage: Arc<SqliteStorage>,
@@ -20,15 +16,14 @@ impl EpisodicSync {
     pub async fn new(worker_id: String, database_url: &str) -> Result<Self> {
         let storage = Arc::new(SqliteStorage::new(database_url).await?);
         let entries = storage.list_all().await?;
-        Ok(Self { storage, worker_id, cache: Arc::new(RwLock::new(entries)) })
+        Ok(Self {
+            storage,
+            worker_id,
+            cache: Arc::new(RwLock::new(entries)),
+        })
     }
 
-    pub async fn upsert(
-        &self,
-        user_input: &str,
-        assistant_output: &str,
-        confidence: f32,
-    ) -> Result<String> {
+    pub async fn upsert(&self, user_input: &str, assistant_output: &str, confidence: f32) -> Result<String> {
         let id = format!("ep-{}", Uuid::new_v4());
         let now = Utc::now().timestamp();
         let mut clock = VectorClock::new();
@@ -61,8 +56,7 @@ impl EpisodicSync {
                     *local = remote;
                 }
                 Ordering::Concurrent => {
-                    local.assistant_output =
-                        format!("{} [merged] {}", local.assistant_output, remote.assistant_output);
+                    local.assistant_output = format!("{} [merged] {}", local.assistant_output, remote.assistant_output);
                     local.confidence = (local.confidence + remote.confidence) / 2.0;
                     local.version += 1;
                     local.vector_clock.merge(&remote.vector_clock);
@@ -78,10 +72,13 @@ impl EpisodicSync {
         Ok(())
     }
 
-    pub async fn retrieve(&self, _query: &str, limit: usize) -> Vec<EpisodicEntry> {
+    pub async fn retrieve(&self, query: &str, limit: usize) -> Vec<EpisodicEntry> {
         let cache = self.cache.read().await;
-        let mut entries: Vec<EpisodicEntry> =
-            cache.iter().filter(|e| !e.deleted).cloned().collect();
+        let mut entries: Vec<EpisodicEntry> = cache
+            .iter()
+            .filter(|e| !e.deleted)
+            .cloned()
+            .collect();
         entries.sort_by(|a, b| b.timestamp.cmp(&a.timestamp));
         entries.truncate(limit);
         entries

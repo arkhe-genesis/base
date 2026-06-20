@@ -1,14 +1,11 @@
 //! src/substrato_4004/policy_adapter.rs
 //! Adapter para o PolicyRegistry da Base
 
-use ethers::{
-    abi::Abi,
-    contract::Contract,
-    providers::{Http, Provider},
-    types::Address,
-};
-
 use crate::substrato_4004::b20_mapper::PolicyScope;
+use ethers::abi::Abi;
+use ethers::contract::Contract;
+use ethers::providers::{Http, Provider};
+use ethers::types::Address;
 
 #[derive(Debug)]
 pub enum PolicyError {

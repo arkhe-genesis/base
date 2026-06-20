@@ -1,4 +1,4 @@
-use cathedral_tee::{AttestationReport, TEEBridge, TeeType};
+use cathedral_tee::{TEEBridge, AttestationReport, TeeType};
 use chrono::Utc;
 
 #[test]
