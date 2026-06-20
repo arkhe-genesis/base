@@ -62,7 +62,7 @@ members = [
   "crates/arklib_meta",
   "etc/tools/*",
   "devnet",
-  "actions/*",
+  "actions/*", "bridge",
 ]
 default-members = [
   "orchestrator",

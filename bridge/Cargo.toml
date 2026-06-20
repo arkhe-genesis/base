@@ -1,0 +1,22 @@
+[package]
+name = "bridge"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+tonic = "0.12"
+prost = "0.13"
+prost-types = "0.13"
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+uuid = { version = "1", features = ["v4"] }
+tracing = "0.1"
+tracing-subscriber = "0.3"
+ed25519-dalek = "2.1"
+hex = "0.4"
+zstd = "0.13"
+base64.workspace = true
+
+[build-dependencies]
+tonic-build = "0.12"
