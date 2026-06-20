@@ -2,12 +2,14 @@ pub mod grpc {
     tonic::include_proto!("cathedral.v1");
 }
 
-use anyhow::{anyhow, Result};
-use grpc::cathedral_bridge_client::CathedralBridgeClient;
-use grpc::{IngestRequest, GovernanceRequest, Event, EventMetadata, EventType, GovernanceVerdict};
+use std::{collections::HashMap, time::Duration};
+
+use anyhow::{Result, anyhow};
+use grpc::{
+    Event, EventMetadata, EventType, GovernanceRequest, GovernanceVerdict, IngestRequest,
+    cathedral_bridge_client::CathedralBridgeClient,
+};
 use serde::{Deserialize, Serialize};
-use std::collections::HashMap;
-use std::time::Duration;
 use tokio::sync::mpsc;
 use tracing::{debug, error};
 
@@ -96,7 +98,8 @@ impl CathedralSdk {
         let config_clone = config.clone();
         tokio::spawn(async move {
             let mut batch = Vec::with_capacity(config_clone.batch_size);
-            let mut interval = tokio::time::interval(Duration::from_millis(config_clone.flush_interval_ms));
+            let mut interval =
+                tokio::time::interval(Duration::from_millis(config_clone.flush_interval_ms));
             let mut client = client;
 
             loop {
@@ -121,11 +124,7 @@ impl CathedralSdk {
             }
         });
 
-        Ok(Self {
-            config,
-            event_tx: tx,
-            metrics: SdkMetrics::default(),
-        })
+        Ok(Self { config, event_tx: tx, metrics: SdkMetrics::default() })
     }
 
     async fn flush_batch(
@@ -140,21 +139,55 @@ impl CathedralSdk {
         let mut grpc_events = vec![];
         for event in batch.iter() {
             let (event_type, design_hash, parent_hashes, payload, domain, cost) = match event {
-                SdkEvent::DesignProposed { design_hash, parent_hashes, parameters, rationale: _, agent_id: _ } => {
-                    (EventType::DesignProposed as i32, design_hash.clone(), parent_hashes.clone(), serde_json::to_string(&parameters).unwrap(), "aerospace".to_string(), 0.0)
-                }
-                SdkEvent::SimulationCompleted { design_hash, simulator: _, metrics, convergence: _, compute_cost_usd } => {
-                    (EventType::SimulationCompleted as i32, design_hash.clone(), vec![], serde_json::to_string(&metrics).unwrap(), "simulation".to_string(), *compute_cost_usd)
-                }
-                SdkEvent::AgentMutation { mutation_description, previous_agent_hash, substrate_version: _ } => {
-                    (EventType::AgentMutation as i32, blake3::hash(mutation_description.as_bytes()).to_hex().to_string(), vec![previous_agent_hash.clone()], serde_json::to_string(&mutation_description).unwrap(), "meta".to_string(), 0.0)
-                }
+                SdkEvent::DesignProposed {
+                    design_hash,
+                    parent_hashes,
+                    parameters,
+                    rationale: _,
+                    agent_id: _,
+                } => (
+                    EventType::DesignProposed as i32,
+                    design_hash.clone(),
+                    parent_hashes.clone(),
+                    serde_json::to_string(&parameters).unwrap(),
+                    "aerospace".to_string(),
+                    0.0,
+                ),
+                SdkEvent::SimulationCompleted {
+                    design_hash,
+                    simulator: _,
+                    metrics,
+                    convergence: _,
+                    compute_cost_usd,
+                } => (
+                    EventType::SimulationCompleted as i32,
+                    design_hash.clone(),
+                    vec![],
+                    serde_json::to_string(&metrics).unwrap(),
+                    "simulation".to_string(),
+                    *compute_cost_usd,
+                ),
+                SdkEvent::AgentMutation {
+                    mutation_description,
+                    previous_agent_hash,
+                    substrate_version: _,
+                } => (
+                    EventType::AgentMutation as i32,
+                    blake3::hash(mutation_description.as_bytes()).to_hex().to_string(),
+                    vec![previous_agent_hash.clone()],
+                    serde_json::to_string(&mutation_description).unwrap(),
+                    "meta".to_string(),
+                    0.0,
+                ),
             };
 
             grpc_events.push(Event {
                 event_id: uuid::Uuid::new_v4().to_string(),
                 timestamp: Some(prost_types::Timestamp {
-                    seconds: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
+                    seconds: std::time::SystemTime::now()
+                        .duration_since(std::time::UNIX_EPOCH)
+                        .unwrap()
+                        .as_secs() as i64,
                     nanos: 0,
                 }),
                 event_type,
@@ -179,7 +212,11 @@ impl CathedralSdk {
 
         match client.ingest(request).await {
             Ok(resp) => {
-                debug!("✅ Batch of {} events sent successfully. Bridge response: {}", batch.len(), resp.into_inner().message);
+                debug!(
+                    "✅ Batch of {} events sent successfully. Bridge response: {}",
+                    batch.len(),
+                    resp.into_inner().message
+                );
             }
             Err(e) => {
                 error!("❌ Failed to send batch via gRPC: {}", e);
@@ -202,7 +239,8 @@ impl CathedralSdk {
             rationale,
             agent_id: self.config.agent_id.clone(),
         };
-        self.event_tx.send(event)
+        self.event_tx
+            .send(event)
             .map_err(|e| anyhow!("Failed to send event to background task: {}", e))?;
         Ok(())
     }
@@ -222,7 +260,8 @@ impl CathedralSdk {
             convergence,
             compute_cost_usd,
         };
-        self.event_tx.send(event)
+        self.event_tx
+            .send(event)
             .map_err(|e| anyhow!("Failed to send event to background task: {}", e))?;
         Ok(())
     }
@@ -237,7 +276,8 @@ impl CathedralSdk {
         }
 
         let risk = Self::estimate_risk(&event);
-        if self.config.governance_mode == GovernanceMode::AutonomousWithCircuitBreaker && risk < 0.5 {
+        if self.config.governance_mode == GovernanceMode::AutonomousWithCircuitBreaker && risk < 0.5
+        {
             return Ok(GovernanceResponseResult {
                 verdict: "approved".to_string(),
                 rationale: "Low risk decision".to_string(),
@@ -245,7 +285,8 @@ impl CathedralSdk {
             });
         }
 
-        let endpoint = tonic::transport::Endpoint::from_shared(self.config.bridge_endpoint.clone())?;
+        let endpoint =
+            tonic::transport::Endpoint::from_shared(self.config.bridge_endpoint.clone())?;
         let channel = endpoint.connect_timeout(Duration::from_secs(5)).connect().await?;
         let mut client = CathedralBridgeClient::new(channel);
 
@@ -284,7 +325,11 @@ impl CathedralSdk {
         Ok(GovernanceResponseResult {
             verdict: verdict_str.to_string(),
             rationale: resp_inner.rationale,
-            conditions: if resp_inner.conditions.is_empty() { None } else { Some(resp_inner.conditions) },
+            conditions: if resp_inner.conditions.is_empty() {
+                None
+            } else {
+                Some(resp_inner.conditions)
+            },
         })
     }
 

@@ -1,10 +1,9 @@
-use tonic::{transport::Server, Request, Response, Status};
+use std::{collections::HashMap, convert::TryInto, io::Read};
+
+use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 use serde_json::Value;
-use std::collections::HashMap;
-use ed25519_dalek::{Signature, VerifyingKey, Verifier};
-use std::convert::TryInto;
+use tonic::{Request, Response, Status, transport::Server};
 use zstd::stream::read::Decoder;
-use std::io::Read;
 
 pub mod cathedral {
     pub mod v1 {
@@ -12,10 +11,10 @@ pub mod cathedral {
     }
 }
 
-use cathedral::v1::cathedral_bridge_server::{CathedralBridge, CathedralBridgeServer};
 use cathedral::v1::{
-    IngestRequest, IngestResponse, GovernanceRequest, GovernanceResponse,
-    QueryProvenanceRequest, QueryProvenanceResponse, GovernanceVerdict,
+    GovernanceRequest, GovernanceResponse, GovernanceVerdict, IngestRequest, IngestResponse,
+    QueryProvenanceRequest, QueryProvenanceResponse,
+    cathedral_bridge_server::{CathedralBridge, CathedralBridgeServer},
 };
 
 const MAX_DECOMPRESSED_SIZE: u64 = 5 * 1024 * 1024; // 5 MB limit
@@ -29,27 +28,42 @@ impl MyCathedralBridge {
     pub fn decompress_payload(base64_data: &str) -> Result<Vec<u8>, Status> {
         use base64::{Engine as _, engine::general_purpose::STANDARD};
 
-        let compressed = STANDARD.decode(base64_data).map_err(|e| Status::invalid_argument(format!("Invalid base64 payload: {}", e)))?;
+        let compressed = STANDARD
+            .decode(base64_data)
+            .map_err(|e| Status::invalid_argument(format!("Invalid base64 payload: {}", e)))?;
 
-        let decoder = Decoder::new(compressed.as_slice()).map_err(|e| Status::invalid_argument(format!("Failed to init zstd decoder: {}", e)))?;
+        let decoder = Decoder::new(compressed.as_slice())
+            .map_err(|e| Status::invalid_argument(format!("Failed to init zstd decoder: {}", e)))?;
         let mut limited_decoder = decoder.take(MAX_DECOMPRESSED_SIZE);
 
         let mut decompressed = Vec::new();
-        limited_decoder.read_to_end(&mut decompressed).map_err(|e| Status::invalid_argument(format!("Failed to decompress: {}", e)))?;
+        limited_decoder
+            .read_to_end(&mut decompressed)
+            .map_err(|e| Status::invalid_argument(format!("Failed to decompress: {}", e)))?;
         Ok(decompressed)
     }
 
-    pub fn verify_signature(&self, agent_id: &str, message: &[u8], signature_hex: &str) -> Result<(), Status> {
-        let key = self.agent_keys.get(agent_id).ok_or_else(|| Status::unauthenticated("Unknown agent_id"))?;
+    pub fn verify_signature(
+        &self,
+        agent_id: &str,
+        message: &[u8],
+        signature_hex: &str,
+    ) -> Result<(), Status> {
+        let key = self
+            .agent_keys
+            .get(agent_id)
+            .ok_or_else(|| Status::unauthenticated("Unknown agent_id"))?;
 
-        let sig_bytes = hex::decode(signature_hex).map_err(|_| Status::invalid_argument("Invalid hex signature"))?;
+        let sig_bytes = hex::decode(signature_hex)
+            .map_err(|_| Status::invalid_argument("Invalid hex signature"))?;
         if sig_bytes.len() != 64 {
             return Err(Status::invalid_argument("Invalid signature length"));
         }
 
         let signature = Signature::from_bytes(sig_bytes.as_slice().try_into().unwrap());
 
-        key.verify(message, &signature).map_err(|_| Status::unauthenticated("Invalid signature"))?;
+        key.verify(message, &signature)
+            .map_err(|_| Status::unauthenticated("Invalid signature"))?;
 
         Ok(())
     }
@@ -61,8 +75,15 @@ impl CathedralBridge for MyCathedralBridge {
         &self,
         request: Request<IngestRequest>,
     ) -> Result<Response<IngestResponse>, Status> {
-        let compressed = request.metadata().get("x-payload-compressed").map(|v| v.to_str().unwrap_or("false") == "true").unwrap_or(false);
-        let signature_opt = request.metadata().get("x-agent-signature").map(|v| v.to_str().unwrap_or("").to_string());
+        let compressed = request
+            .metadata()
+            .get("x-payload-compressed")
+            .map(|v| v.to_str().unwrap_or("false") == "true")
+            .unwrap_or(false);
+        let signature_opt = request
+            .metadata()
+            .get("x-agent-signature")
+            .map(|v| v.to_str().unwrap_or("").to_string());
 
         let req = request.into_inner();
         println!("Received ingest for project: {}", req.project_id);
@@ -108,7 +129,10 @@ impl CathedralBridge for MyCathedralBridge {
             conditions: vec![],
             evaluated_by: "grpc_server".to_string(),
             evaluated_at: Some(prost_types::Timestamp {
-                seconds: std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() as i64,
+                seconds: std::time::SystemTime::now()
+                    .duration_since(std::time::UNIX_EPOCH)
+                    .unwrap()
+                    .as_secs() as i64,
                 nanos: 0,
             }),
         };
@@ -136,10 +160,7 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
 
     println!("CathedralBridge server listening on {}", addr);
 
-    Server::builder()
-        .add_service(CathedralBridgeServer::new(bridge))
-        .serve(addr)
-        .await?;
+    Server::builder().add_service(CathedralBridgeServer::new(bridge)).serve(addr).await?;
 
     Ok(())
 }

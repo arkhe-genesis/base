@@ -4,14 +4,19 @@
 //! Selo: CATHEDRAL-ZK-PHYSICAL-CONSTRAINT-v1.0.0-2026-06-19
 
 use anyhow::{Context, Result};
-use plonky2::field::goldilocks_field::GoldilocksField;
-use plonky2::field::types::Field;
-use plonky2::iop::target::Target;
-use plonky2::iop::witness::{PartialWitness, WitnessWrite};
-use plonky2::plonk::circuit_builder::CircuitBuilder;
-use plonky2::plonk::circuit_data::{CircuitConfig, CircuitData};
-use plonky2::plonk::config::PoseidonGoldilocksConfig;
-use plonky2::plonk::proof::ProofWithPublicInputs;
+use plonky2::{
+    field::{goldilocks_field::GoldilocksField, types::Field},
+    iop::{
+        target::Target,
+        witness::{PartialWitness, WitnessWrite},
+    },
+    plonk::{
+        circuit_builder::CircuitBuilder,
+        circuit_data::{CircuitConfig, CircuitData},
+        config::PoseidonGoldilocksConfig,
+        proof::ProofWithPublicInputs,
+    },
+};
 use serde::{Deserialize, Serialize};
 
 pub const D: usize = 2;
@@ -25,18 +30,18 @@ pub type C = PoseidonGoldilocksConfig;
 /// Inputs públicos (verificáveis por qualquer um)
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct PublicConstraintInputs {
-    pub design_hash_low: u64,        // Primeiros 8 bytes do hash Blake3
-    pub design_hash_high: u64,       // Últimos 8 bytes do hash Blake3
-    pub spec_hash: u64,              // Hash da especificação (ex: "safety_factor >= 1.5")
-    pub claimed_safety_factor: f64,  // Valor público do fator de segurança
-    pub claimed_stress_mpa: f64,     // Valor público da tensão máxima (MPa)
+    pub design_hash_low: u64,       // Primeiros 8 bytes do hash Blake3
+    pub design_hash_high: u64,      // Últimos 8 bytes do hash Blake3
+    pub spec_hash: u64,             // Hash da especificação (ex: "safety_factor >= 1.5")
+    pub claimed_safety_factor: f64, // Valor público do fator de segurança
+    pub claimed_stress_mpa: f64,    // Valor público da tensão máxima (MPa)
 }
 
 /// Inputs privados (witness, não revelados)
 #[derive(Debug, Clone)]
 pub struct PrivateConstraintWitness {
-    pub actual_safety_factor: f64,   // Valor real calculado pela simulação
-    pub actual_stress_mpa: f64,      // Valor real da tensão
+    pub actual_safety_factor: f64,    // Valor real calculado pela simulação
+    pub actual_stress_mpa: f64,       // Valor real da tensão
     pub material_yield_strength: f64, // Força de escoamento do material
     pub design_parameters: Vec<f64>,  // Parâmetros do design (ex: geometria)
     pub simulation_output_hash: [u8; 32], // Hash dos resultados da simulação
@@ -88,11 +93,7 @@ impl PhysicalConstraintCircuit {
         let stress_actual = builder.add_virtual_target();
         let yield_strength = builder.add_virtual_target();
 
-        let private_inputs_targets = vec![
-            safety_factor_actual,
-            stress_actual,
-            yield_strength,
-        ];
+        let private_inputs_targets = vec![safety_factor_actual, stress_actual, yield_strength];
 
         // ============================================================
         // CONSTRAINT 1: safety_factor_actual >= 1.5 (1500 em fixed-point)
@@ -113,11 +114,7 @@ impl PhysicalConstraintCircuit {
         builder.connect(stress_claimed, stress_actual);
 
         let circuit_data = builder.build::<C>();
-        Self {
-            circuit_data,
-            public_inputs_targets,
-            private_inputs_targets,
-        }
+        Self { circuit_data, public_inputs_targets, private_inputs_targets }
     }
 
     // ============================================================
@@ -140,7 +137,10 @@ impl PhysicalConstraintCircuit {
 
         // Set public inputs
         pw.set_target(self.public_inputs_targets[0], F::from_canonical_u64(public.design_hash_low));
-        pw.set_target(self.public_inputs_targets[1], F::from_canonical_u64(public.design_hash_high));
+        pw.set_target(
+            self.public_inputs_targets[1],
+            F::from_canonical_u64(public.design_hash_high),
+        );
         pw.set_target(self.public_inputs_targets[2], F::from_canonical_u64(public.spec_hash));
         pw.set_target(self.public_inputs_targets[3], F::from_canonical_u64(safety_claimed_fixed));
         pw.set_target(self.public_inputs_targets[4], F::from_canonical_u64(stress_claimed_fixed));
@@ -159,7 +159,8 @@ impl PhysicalConstraintCircuit {
     // ============================================================
 
     pub fn verify(&self, proof: &ProofWithPublicInputs<F, C, D>) -> Result<bool> {
-        self.circuit_data.verify(proof.clone())
+        self.circuit_data
+            .verify(proof.clone())
             .map_err(|e| anyhow::anyhow!("Verification failed: {}", e))
             .map(|_| true)
     }
