@@ -1,0 +1,160 @@
+# alerts/expanded_alerts.yml
+# Expanded Prometheus alert rules for Cathedral ARKHE
+#
+# Selo: CATHEDRAL-ARKHE-8000-ALERTS-EXPANDED-v2.1.0-2026-06-19
+
+groups:
+  - name: cathedral_expanded_alerts
+    interval: 30s
+    rules:
+      # ============================================================
+      # 1. MCP Server Alerts
+      # ============================================================
+      - alert: MCPDown
+        expr: up{job="cathedral-mcp"} == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: mcp-server
+        annotations:
+          summary: "MCP Server is down"
+          description: "{{ $labels.instance }} has been down for more than 1 minute."
+
+      - alert: HighMCPErrorRate
+        expr: rate(mcp_requests_total{status=~"5.."}[5m]) / rate(mcp_requests_total[5m]) > 0.05
+        for: 5m
+        labels:
+          severity: warning
+          component: mcp-server
+        annotations:
+          summary: "High error rate on MCP Server"
+          description: "Error rate is {{ $value | humanizePercentage }} on {{ $labels.instance }}"
+
+      - alert: HighMCPLatency
+        expr: histogram_quantile(0.95, rate(mcp_request_duration_seconds_bucket[5m])) > 5
+        for: 5m
+        labels:
+          severity: warning
+          component: mcp-server
+        annotations:
+          summary: "High MCP Server latency"
+          description: "95th percentile latency is {{ $value }}s on {{ $labels.instance }}"
+
+      - alert: MCPMemoryHigh
+        expr: container_memory_usage_bytes{container="cathedral-mcp"} > 400000000
+        for: 5m
+        labels:
+          severity: warning
+          component: memory
+        annotations:
+          summary: "MCP Server memory usage high"
+          description: "Memory usage is {{ $value | humanize1024 }} bytes on {{ $labels.instance }}"
+
+      # ============================================================
+      # 2. Resiliency & Circuit Breaker Alerts
+      # ============================================================
+      - alert: CircuitBreakerOpen
+        expr: circuit_breaker_state{state="open"} == 1
+        for: 30s
+        labels:
+          severity: critical
+          component: circuit-breaker
+        annotations:
+          summary: "Circuit Breaker is open"
+          description: "Circuit breaker for {{ $labels.component }} is open"
+
+      - alert: DLQSizeExceeded
+        expr: dlq_size > 1000
+        for: 5m
+        labels:
+          severity: warning
+          component: dlq
+        annotations:
+          summary: "DLQ size exceeded threshold"
+          description: "DLQ has {{ $value }} messages waiting"
+
+      - alert: PoisonPillDetected
+        expr: increase(poison_pills_detected_total[1h]) > 0
+        for: 1m
+        labels:
+          severity: warning
+          component: dlq
+        annotations:
+          summary: "Poison Pill detected in DLQ"
+          description: "{{ $value }} poison pills detected in the last hour."
+
+      - alert: LastEffortExhausted
+        expr: increase(last_effort_exhausted_total[1h]) > 0
+        for: 1m
+        labels:
+          severity: critical
+          component: last-effort
+        annotations:
+          summary: "Last-Effort Engine exhausted"
+          description: "{{ $value }} messages were escalated to human intervention in the last hour."
+
+      - alert: HighCompensationFailures
+        expr: increase(compensation_failures_total[1h]) > 10
+        for: 10m
+        labels:
+          severity: high
+          component: compensation
+        annotations:
+          summary: "High rate of compensation failures"
+          description: "{{ $value }} compensation failures in the last hour."
+
+      # ============================================================
+      # 3. Security & Seal Alerts
+      # ============================================================
+      - alert: HighSealAccessDenials
+        expr: rate(seal_access_denials_total[5m]) > 1
+        for: 5m
+        labels:
+          severity: warning
+          component: seal
+        annotations:
+          summary: "High rate of Seal access denials"
+          description: "Seal access denial rate is {{ $value }} per second over the last 5 minutes."
+
+      - alert: CapabilityTokenRevocationsSpike
+        expr: increase(capability_tokens_revoked_total[1h]) > 50
+        for: 5m
+        labels:
+          severity: high
+          component: capability-tokens
+        annotations:
+          summary: "Spike in Capability Token revocations"
+          description: "{{ $value }} capability tokens were revoked in the last hour."
+
+      # ============================================================
+      # 4. Infrastructure & Database Alerts
+      # ============================================================
+      - alert: PostgresDown
+        expr: pg_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: database
+        annotations:
+          summary: "PostgreSQL is down"
+          description: "PostgreSQL database has been down for more than 1 minute."
+
+      - alert: HighPostgresConnections
+        expr: pg_stat_activity_count > 80
+        for: 5m
+        labels:
+          severity: warning
+          component: database
+        annotations:
+          summary: "High number of PostgreSQL connections"
+          description: "PostgreSQL has {{ $value }} active connections."
+
+      - alert: RedisDown
+        expr: redis_up == 0
+        for: 1m
+        labels:
+          severity: critical
+          component: cache
+        annotations:
+          summary: "Redis is down"
+          description: "Redis cache has been down for more than 1 minute."
