@@ -1,0 +1,99 @@
+{
+  "dashboard": {
+    "title": "Cathedral ARKHE — Segurança & Capability Tokens + Seal",
+    "tags": ["cathedral", "security", "seal", "capability-tokens"],
+    "timezone": "browser",
+    "schemaVersion": 39,
+    "version": 1,
+    "refresh": "30s",
+    "panels": [
+      {
+        "title": "Capability Tokens Ativos por Tipo",
+        "type": "piechart",
+        "targets": [
+          {
+            "expr": "sum by (token_type) (capability_tokens_active)",
+            "legendFormat": "{{token_type}}"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 0, "w": 8, "h": 8 }
+      },
+      {
+        "title": "Capability Tokens Emitidos (1h)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "increase(capability_tokens_issued_total[1h])",
+            "legendFormat": "Emitidos"
+          }
+        ],
+        "gridPos": { "x": 8, "y": 0, "w": 8, "h": 4 }
+      },
+      {
+        "title": "Capability Tokens Revogados (1h)",
+        "type": "stat",
+        "targets": [
+          {
+            "expr": "increase(capability_tokens_revoked_total[1h])",
+            "legendFormat": "Revogados"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "thresholds": {
+              "mode": "absolute",
+              "steps": [
+                { "color": "green", "value": null },
+                { "color": "orange", "value": 10 },
+                { "color": "red", "value": 50 }
+              ]
+            }
+          }
+        },
+        "gridPos": { "x": 8, "y": 4, "w": 8, "h": 4 }
+      },
+      {
+        "title": "Seal Access Denials (Bloqueios)",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(seal_access_denials_total[5m])",
+            "legendFormat": "Negados"
+          }
+        ],
+        "gridPos": { "x": 16, "y": 0, "w": 8, "h": 8 }
+      },
+      {
+        "title": "Seal Policy Evaluations (Por Minuto)",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(seal_policy_evaluations_total[1m])",
+            "legendFormat": "Avaliações/min"
+          }
+        ],
+        "gridPos": { "x": 0, "y": 8, "w": 12, "h": 8 }
+      },
+      {
+        "title": "Falhas de Autenticação / Erros de Permissão",
+        "type": "timeseries",
+        "targets": [
+          {
+            "expr": "rate(mcp_requests_total{status=~\"401|403\"}[1m])",
+            "legendFormat": "{{status}}"
+          }
+        ],
+        "fieldConfig": {
+          "defaults": {
+            "custom": {
+              "lineInterpolation": "smooth"
+            }
+          }
+        },
+        "gridPos": { "x": 12, "y": 8, "w": 12, "h": 8 }
+      }
+    ],
+    "time": { "from": "now-6h", "to": "now" }
+  },
+  "overwrite": true
+}
