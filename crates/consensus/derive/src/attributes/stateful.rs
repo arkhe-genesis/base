@@ -203,7 +203,7 @@ where
                 suggested_fee_recipient: Predeploys::SEQUENCER_FEE_VAULT,
                 parent_beacon_block_root: parent_beacon_root,
                 withdrawals,
-                target_gas_limit: None,
+
                 slot_number: None,
             },
             transactions: Some(txs),
@@ -489,7 +489,7 @@ mod tests {
                 suggested_fee_recipient: Predeploys::SEQUENCER_FEE_VAULT,
                 parent_beacon_block_root: None,
                 withdrawals: None,
-                target_gas_limit: None,
+
                 slot_number: None,
             },
             transactions: payload.transactions.clone(),
@@ -543,7 +543,7 @@ mod tests {
                 suggested_fee_recipient: Predeploys::SEQUENCER_FEE_VAULT,
                 parent_beacon_block_root: None,
                 withdrawals: Some(Vec::default()),
-                target_gas_limit: None,
+
                 slot_number: None,
             },
             transactions: payload.transactions.clone(),
@@ -598,7 +598,7 @@ mod tests {
                 suggested_fee_recipient: Predeploys::SEQUENCER_FEE_VAULT,
                 parent_beacon_block_root,
                 withdrawals: Some(vec![]),
-                target_gas_limit: None,
+
                 slot_number: None,
             },
             transactions: payload.transactions.clone(),
@@ -652,7 +652,7 @@ mod tests {
                 suggested_fee_recipient: Predeploys::SEQUENCER_FEE_VAULT,
                 parent_beacon_block_root: Some(B256::ZERO),
                 withdrawals: Some(vec![]),
-                target_gas_limit: None,
+
                 slot_number: None,
             },
             transactions: payload.transactions.clone(),

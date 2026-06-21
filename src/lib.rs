@@ -44,3 +44,13 @@ pub mod hashtree {
         }
     }
 }
+
+pub mod substrato_5002 {
+    pub mod compensation_prompt_integration;
+    pub mod thompson_bandit;
+    pub mod meta_controller_v2_3;
+}
+
+pub mod substrato_9000 {
+    pub mod cognitive_router_integration;
+}
