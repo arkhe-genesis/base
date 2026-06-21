@@ -1,12 +1,16 @@
 //! src/substrato_4004/memo_tracer.rs
 //! Rastreia memos B20 para integracao com EventStore e CrossChainEmitter
 
-use crate::substrato_4004::b20_mapper::Action;
-use crate::substrato_4004::compliance_engine::{EventStore, OrchestratorEvent};
-use crate::substrato_4004::settlement_engine::CrossChainEmitterV2;
+use std::sync::Arc;
+
 use ethers::types::Address;
 use sha2::{Digest, Sha256};
-use std::sync::Arc;
+
+use crate::substrato_4004::{
+    b20_mapper::Action,
+    compliance_engine::{EventStore, OrchestratorEvent},
+    settlement_engine::CrossChainEmitterV2,
+};
 
 #[derive(Debug)]
 pub enum TracerError {

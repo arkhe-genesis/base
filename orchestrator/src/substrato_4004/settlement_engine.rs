@@ -1,16 +1,22 @@
 //! src/substrato_4004/settlement_engine.rs
 //! Settlement engine para pagamentos B20 integrado ao Substrato 7001
 
-use crate::substrato_4004::b20_mapper::{Action, B20Operation, B20TokenMapper};
-use crate::substrato_4004::compliance_engine::{
-    ComplianceEngine, ComplianceVerdict, EthicalCompliance, OrchestratorEvent, PauseCompliance,
-    PolicyCompliance, RoleCompliance, SettlementReceipt,
-};
-use ethers::abi::Abi;
-use ethers::contract::Contract;
-use ethers::providers::{Http, Provider};
-use ethers::types::{Address, U256};
 use std::sync::Arc;
+
+use ethers::{
+    abi::Abi,
+    contract::Contract,
+    providers::{Http, Provider},
+    types::{Address, U256},
+};
+
+use crate::substrato_4004::{
+    b20_mapper::{Action, B20Operation, B20TokenMapper},
+    compliance_engine::{
+        ComplianceEngine, ComplianceVerdict, EthicalCompliance, OrchestratorEvent, PauseCompliance,
+        PolicyCompliance, RoleCompliance, SettlementReceipt,
+    },
+};
 
 pub struct BatchSettlementEngine;
 pub struct CrossChainEmitterV2;
