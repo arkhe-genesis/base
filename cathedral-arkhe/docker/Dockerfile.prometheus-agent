@@ -1,0 +1,31 @@
+# docker/Dockerfile.prometheus-agent
+FROM rust:1.76-slim-bookworm AS builder
+
+WORKDIR /app
+
+RUN apt-get update && apt-get install -y \
+    protobuf-compiler \
+    pkg-config \
+    libssl-dev \
+    ca-certificates \
+    && rm -rf /var/lib/apt/lists/*
+
+COPY Cargo.toml Cargo.lock ./
+COPY prometheus-agent prometheus-agent/
+COPY sdk-rs sdk-rs/
+COPY proto proto/
+
+RUN cargo build --release --bin prometheus-agent
+
+FROM debian:bookworm-slim
+
+RUN apt-get update && apt-get install -y \
+    ca-certificates \
+    libssl-dev \
+    && rm -rf /var/lib/apt/lists/*
+
+WORKDIR /app
+
+COPY --from=builder /app/target/release/prometheus-agent /usr/local/bin/
+
+ENTRYPOINT ["prometheus-agent"]

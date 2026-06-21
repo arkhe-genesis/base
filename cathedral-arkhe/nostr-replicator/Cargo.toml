@@ -1,0 +1,7 @@
+[package]
+name = "arkhe-nostr"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+nostr-sdk.workspace = true

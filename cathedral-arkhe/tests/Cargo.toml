@@ -1,0 +1,26 @@
+[package]
+name = "arkhe-integration-tests"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+arkhe-bridge = { path = "../bridge", package = "arkhe-bridge" }
+cathedral-sdk = { path = "../sdk-rs" }
+arkhe-wormgraph = { path = "../wormgraph", package = "arkhe-wormgraph" }
+arkhe-test-utils = { path = "../test-utils", package = "arkhe-test-utils" }
+anyhow.workspace = true
+tokio.workspace = true
+tracing.workspace = true
+tracing-subscriber.workspace = true
+tonic.workspace = true
+prost.workspace = true
+observer-5d = { path = "../observer-5d" }
+cem-adapter = { path = "../cem-adapter" }
+sail-zk-pipeline = { path = "../sail-zk-pipeline" }
+arkhe-zk-circuits = { path = "../zk-circuits", package = "arkhe-zk-circuits" }
+shard-controller = { path = "../shard-controller" }
+uuid.workspace = true
+serde_json.workspace = true
+
+[build-dependencies]
+tonic-build.workspace = true
