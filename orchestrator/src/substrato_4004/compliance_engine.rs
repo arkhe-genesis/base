@@ -1,13 +1,17 @@
 //! src/substrato_4004/compliance_engine.rs
 //! Engine de compliance que integra EthicalFilter com B20 policies
 
-use crate::substrato_4004::b20_mapper::{
-    Action, B20Operation, B20TokenMapper, EthicalFilter, FilterVerdict, MapperError,
-    PausableFeature, PolicyScope,
-};
-use crate::substrato_4004::policy_adapter::PolicyAdapter;
-use ethers::providers::{Http, Provider};
 use std::sync::Arc;
+
+use ethers::providers::{Http, Provider};
+
+use crate::substrato_4004::{
+    b20_mapper::{
+        Action, B20Operation, B20TokenMapper, EthicalFilter, FilterVerdict, MapperError,
+        PausableFeature, PolicyScope,
+    },
+    policy_adapter::PolicyAdapter,
+};
 
 pub struct EventStore;
 impl EventStore {

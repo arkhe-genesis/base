@@ -70,6 +70,16 @@ multiple-versions = "deny"
 # Skip crates with multiple versions from upstream dependencies that we cannot control
 # These are primarily from reth, alloy, and upstream dependencies
 skip = [
+    "solana-sysvar",
+    "solana-sysvar-id",
+    "strum",
+    "supports-color",
+    "synstructure",
+    "system-configuration",
+    "system-configuration-sys",
+    "uint",
+    "uuid",
+    "wasi",
     # Windows platform crates - different versions used by various upstream deps
     "windows",
     "windows-core",
@@ -116,15 +126,11 @@ skip = [
     "bitflags",
     "redox_users",
     "windows",
-    "windows-collections",
     "windows-core",
-    "windows-future",
     "windows-implement",
     "windows-link",
-    "windows-numerics",
     "windows-result",
     "windows-strings",
-    "windows-threading",
 
     # Network crates
     "tungstenite",
@@ -229,7 +235,6 @@ skip = [
     "opentelemetry_sdk",
     "tracing-opentelemetry",
     "strum_macros",
-    "wit-bindgen",
     "block-buffer",
     "const-oid",
     "crypto-common",
