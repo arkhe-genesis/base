@@ -12,6 +12,7 @@ resolver = "2"
 exclude = ["bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
 members = [
   "bridge",
+  "crates/cathedral-cse",
   "sdk-rs",
   "zk-circuits",
 
@@ -69,9 +70,11 @@ members = [
   "etc/tools/*",
   "devnet",
   "actions/*", "bridge",
+  "crates/cathedral-cse",
 ]
 default-members = [
   "bridge",
+  "crates/cathedral-cse",
   "sdk-rs",
   "zk-circuits",
 
