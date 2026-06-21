@@ -15,7 +15,7 @@ tracing = "0.1"
 chrono = "0.4"
 uuid = { version = "1.0", features = ["v4"] }
 async-trait = "0.1"
-bitcoin = "0.32.100"
+bitcoin = "0.32.5"
 ethers = "2.0.14"
 anchor-lang = "1.0.2"
 borsh = "1.6.1"

@@ -49,11 +49,21 @@ impl CapabilityVerifier {
         }
 
         // 2. Verifica assinatura via HSM
-        let valid = self.governance_hsm.verify_ed25519(
-            &token.signature,
-            &self.token_payload(token),
-            &token.issued_by,
-        ).await.map_err(|e| CapabilityError::HsmError(e.to_string()))?;
+        let valid = if token.signature.len() == 64 {
+            // Ed25519 fallback
+            self.governance_hsm.verify_ed25519(
+                &token.signature,
+                &self.token_payload(token),
+                &token.issued_by,
+            ).await.map_err(|e| CapabilityError::HsmError(e.to_string()))?
+        } else {
+            // ML-DSA primary
+            self.governance_hsm.verify_ml_dsa(
+                &token.signature,
+                &self.token_payload(token),
+                &token.issued_by,
+            ).await.map_err(|e| CapabilityError::HsmError(e.to_string()))?
+        };
 
         if !valid {
             return Err(CapabilityError::InvalidSignature);
@@ -779,7 +789,9 @@ pub enum BackendType { InMemory }
 #[derive(Debug, Clone)] pub struct CognitivePromptEngine;
 impl CognitivePromptEngine {
     pub fn compose_prompt(&self, _task: &TaskDescription, _domain: Option<PromptDomain>) -> Result<ComposedPrompt, String> { Ok(ComposedPrompt { text: "placeholder".to_string(), metadata: PromptMetadata::default(), estimated_tokens: 100 }) }
-    pub fn record_performance(&mut self, _id: &str, _perf: PromptPerformance) -> Result<(), String> { Ok(()) }
+    pub fn record_performance(&mut self, _id: &str, _perf: PromptPerformance) -> Result<(), String> { // Expose to prometheus metrics
+        // In a real implementation this would use metrics::histogram!
+        Ok(()) }
 }
 #[derive(Debug, Clone)] pub struct TaskDescription { pub description: String, pub constraints: Vec<String>, pub priority: f64 }
 #[derive(Debug, Clone)] pub struct ComposedPrompt { pub text: String, pub metadata: PromptMetadata, pub estimated_tokens: usize }
@@ -796,6 +808,7 @@ impl CognitivePromptEngine {
 #[async_trait::async_trait]
 pub trait HsmInterface: Send + Sync {
     async fn verify_ed25519(&self, signature: &[u8], message: &[u8], public_key: &str) -> Result<bool, String>;
+    async fn verify_ml_dsa(&self, signature: &[u8], message: &[u8], public_key: &str) -> Result<bool, String>;
 }
 
 #[cfg(test)]
