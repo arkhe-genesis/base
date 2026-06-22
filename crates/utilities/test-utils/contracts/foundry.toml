@@ -11,6 +11,6 @@ remappings = [
 [dependencies]
 forge-std = "1.14.0"
 openzeppelin-contracts = { version = "5.5.0", git = "https://github.com/OpenZeppelin/openzeppelin-contracts.git", tag = "v5.5.0" }
-solmate = "main"
+solmate = "6.8.0"
 
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options
