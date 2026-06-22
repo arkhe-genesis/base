@@ -1,13 +1,9 @@
-//! Cathedral ARKHE — xtask
-//! Comandos de automação para desenvolvimento e CI/CD.
-//! Selo: CATHEDRAL-ARKHE-XTASK-v1.0.0-2026-06-21
-
 use std::{
     process::{Command, Stdio},
     time::Instant,
 };
 
-use anyhow::{Context, Result, anyhow};
+use anyhow::{Result, anyhow};
 use clap::{Parser, Subcommand};
 use colored::*;
 use which::which;
@@ -15,7 +11,6 @@ use which::which;
 #[derive(Parser)]
 #[command(name = "xtask")]
 #[command(about = "Cathedral ARKHE development tasks")]
-#[command(version = env!("CARGO_PKG_VERSION"))]
 struct Cli {
     #[command(subcommand)]
     command: Commands,
@@ -23,14 +18,10 @@ struct Cli {
 
 #[derive(Subcommand)]
 enum Commands {
-    /// Executa verificações rápidas para PRs (fmt, check, clippy, deny, audit, unit tests)
-    PreCommit,
-    /// Executa todas as verificações para merge (testes completos, semver, bench, docs, cobertura)
-    Ci,
-    /// Executa auditoria completa para releases (tudo do CI + publish dry-run + SBOM)
-    FullAudit,
-    /// Verifica se todas as ferramentas necessárias estão instaladas
     CheckTools,
+    PreCommit,
+    Ci,
+    FullAudit,
 }
 
 fn main() -> Result<()> {
@@ -38,10 +29,10 @@ fn main() -> Result<()> {
     let start = Instant::now();
 
     match cli.command {
+        Commands::CheckTools => check_tools()?,
         Commands::PreCommit => pre_commit()?,
         Commands::Ci => ci()?,
         Commands::FullAudit => full_audit()?,
-        Commands::CheckTools => check_tools()?,
     }
 
     println!("\n{}", "✅ Todas as verificações concluídas com sucesso!".green());
@@ -49,53 +40,21 @@ fn main() -> Result<()> {
     Ok(())
 }
 
-// ============================================================================
-// COMANDOS
-// ============================================================================
-
-fn pre_commit() -> Result<()> {
-    step("🔍 Pre-commit: verificações rápidas");
-
-    check_tools()?;
-
-    run("cargo fmt --all -- --check", "Formatação")?;
-    run("cargo check --workspace --all-targets --all-features", "MSRV e sintaxe")?;
-    run("cargo clippy --workspace --all-features -- -D warnings", "Lints (clippy)")?;
-    run("cargo test --workspace --lib", "Testes unitários")?;
-
-    Ok(())
-}
-
-fn ci() -> Result<()> {
-    step("🔬 CI: verificações completas para merge");
-
-    pre_commit()?;
-
-    run("cargo test --workspace --test '*'", "Testes de integração")?;
-    run("cargo bench --workspace", "Benchmarks")?;
-    run("cargo doc --workspace --no-deps --document-private-items", "Documentação")?;
-
-    // Verifica se a cobertura está acima de 80% (simplificado)
-    check_coverage_threshold()?;
-
-    Ok(())
-}
-
-fn full_audit() -> Result<()> {
-    step("🔒 Full Audit: verificação completa para release");
-
-    ci()?;
-
-    run("cargo publish --dry-run --no-verify", "Publicação (dry-run)")?;
-
-    Ok(())
-}
-
 fn check_tools() -> Result<()> {
     step("🔧 Verificando ferramentas instaladas");
-
-    let tools = ["cargo", "cargo-fmt", "cargo-clippy", "cargo-nextest"];
-
+    let tools = [
+        "cargo",
+        "cargo-fmt",
+        "cargo-clippy",
+        "cargo-deny",
+        "cargo-audit",
+        "cargo-semver-checks",
+        "cargo-llvm-cov",
+        "cargo-insta",
+        "cargo-deadlinks",
+        "cargo-sbom",
+        "cargo-ndk",
+    ];
     let mut missing = Vec::new();
     for tool in &tools {
         if which(tool).is_ok() {
@@ -105,7 +64,6 @@ fn check_tools() -> Result<()> {
             missing.push(*tool);
         }
     }
-
     if !missing.is_empty() {
         println!("\n{}", "⚠️  Ferramentas faltando:".yellow());
         for tool in &missing {
@@ -113,13 +71,42 @@ fn check_tools() -> Result<()> {
         }
         return Err(anyhow!("Ferramentas faltando"));
     }
-
     Ok(())
 }
 
-// ============================================================================
-// HELPERS
-// ============================================================================
+fn pre_commit() -> Result<()> {
+    step("🔍 Pre-commit");
+    check_tools()?;
+    run("cargo fmt --all -- --check", "Formatação")?;
+    run("cargo check --workspace --all-targets --all-features", "MSRV e sintaxe")?;
+    run("cargo clippy --workspace --all-features -- -D warnings", "Lints (clippy)")?;
+    run("cargo deny check", "Dependências (deny)")?;
+    run("cargo audit --deny-warnings", "Vulnerabilidades (audit)")?;
+    run("cargo test --workspace --lib", "Testes unitários")?;
+    Ok(())
+}
+
+fn ci() -> Result<()> {
+    step("🔬 CI");
+    pre_commit()?;
+    run("cargo test --workspace --test '*'", "Testes de integração")?;
+    run("cargo insta test --workspace", "Snapshot tests")?;
+    run("cargo semver-checks --workspace --baseline-rev HEAD~1", "SemVer")?;
+    run("cargo bench --workspace", "Benchmarks")?;
+    run("cargo llvm-cov --workspace --html --output-dir target/coverage", "Cobertura")?;
+    run("cargo doc --workspace --no-deps --document-private-items", "Documentação")?;
+    run("cargo deadlinks --check-http", "Links quebrados")?;
+    Ok(())
+}
+
+fn full_audit() -> Result<()> {
+    step("🔒 Full Audit");
+    ci()?;
+    run("cargo publish --dry-run --no-verify", "Publicação (dry-run)")?;
+    run("cargo sbom --output target/sbom.json", "SBOM")?;
+    run("cargo audit --json > target/audit_report.json", "Relatório de vulnerabilidades")?;
+    Ok(())
+}
 
 fn step(msg: &str) {
     println!("\n{}", msg.bold().cyan());
@@ -136,32 +123,14 @@ fn run(cmd: &str, description: &str) -> Result<()> {
         .stdout(Stdio::inherit())
         .stderr(Stdio::inherit())
         .status()
-        .with_context(|| format!("Falha ao executar: {}", cmd))?;
+        .map_err(|e| anyhow!("Falha ao executar: {} {}", cmd, e))?;
 
     let elapsed = start.elapsed().as_secs_f64();
-
     if status.success() {
         println!("✅ ({:.2}s)", elapsed);
         Ok(())
     } else {
         println!("❌ ({:.2}s)", elapsed);
         Err(anyhow!("Comando falhou: {}", cmd))
-    }
-}
-
-fn check_coverage_threshold() -> Result<()> {
-    let coverage_file = "target/coverage/index.html";
-    // Em produção, extrair o valor do relatório HTML ou usar `cargo llvm-cov --summary`
-    println!("  ▶ Verificando cobertura (threshold: 80%) ...");
-
-    // Simulação: se o arquivo existir, consideramos OK.
-    // Em um pipeline real, extrairíamos o valor do JSON.
-    if std::path::Path::new(coverage_file).exists() {
-        println!("✅ cobertura OK (arquivo gerado)");
-        Ok(())
-    } else {
-        // Para demonstração, permitimos passar mesmo sem o arquivo.
-        println!("⚠️  Arquivo de cobertura não encontrado (ignorando)");
-        Ok(())
     }
 }
