@@ -1,11 +1,14 @@
 use std::sync::Arc;
+
+use cathedral_zk_circuits::{ZkProof as CircuitProof, ZkPublicInputs};
+use cathedral_zk_risc0::Risc0Verifier;
 use tonic::{Request, Response, Status};
 use tracing::info;
 
-use crate::proto::{ZkVerifyRequest, ZkVerifyResponse};
-use crate::server::BridgeState;
-use cathedral_zk_risc0::Risc0Verifier;
-use cathedral_zk_circuits::{ZkProof as CircuitProof, ZkPublicInputs};
+use crate::{
+    proto::{ZkVerifyRequest, ZkVerifyResponse},
+    server::BridgeState,
+};
 
 pub struct ZkHandler;
 
@@ -18,12 +21,9 @@ impl ZkHandler {
         info!("🔐 VerifyZkProof: circuit={}, agent={}", req.circuit_id, req.agent_id);
 
         // 1. Busca a chave de verificação (em produção, de um registro)
-        let vk = state.verification_keys
-            .read()
-            .await
-            .get(&req.circuit_id)
-            .cloned()
-            .ok_or_else(|| Status::not_found(format!("Circuito '{}' não encontrado", req.circuit_id)))?;
+        let vk = state.verification_keys.read().await.get(&req.circuit_id).cloned().ok_or_else(
+            || Status::not_found(format!("Circuito '{}' não encontrado", req.circuit_id)),
+        )?;
 
         // 2. Constrói a prova
         let proof = CircuitProof {
@@ -35,11 +35,10 @@ impl ZkHandler {
 
         // 3. Usa o backend RISC Zero para verificar
         let verifier = Risc0Verifier::new(&vk.elf).map_err(|e| Status::internal(e))?;
-        let public_inputs = ZkPublicInputs {
-            inputs: proof.public_inputs.clone(),
-        };
+        let public_inputs = ZkPublicInputs { inputs: proof.public_inputs.clone() };
 
-        let valid = verifier.verify(&proof, &public_inputs)
+        let valid = verifier
+            .verify(&proof, &public_inputs)
             .map_err(|e| Status::internal(format!("Erro na verificação: {}", e)))?;
 
         // 4. Registra no WormGraph (proveniência)
@@ -54,7 +53,8 @@ impl ZkHandler {
                     "agent": req.agent_id,
                     "design_hash": req.design_hash,
                     "valid": valid,
-                }).to_string(),
+                })
+                .to_string(),
                 rationale: Some("Prova ZK verificada com sucesso".to_string()),
                 timestamp: chrono::Utc::now().timestamp(),
                 agent_id: req.agent_id.clone(),

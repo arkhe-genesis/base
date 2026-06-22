@@ -1,7 +1,7 @@
-@openzeppelin/=dependencies/openzeppelin-contracts-5.5.0/
-ds-test/=dependencies/solmate-6.8.0/lib/ds-test/src/
-erc4626-tests/=dependencies/openzeppelin-contracts-5.5.0/lib/erc4626-tests/
-forge-std/=dependencies/forge-std-1.14.0/src/
-halmos-cheatcodes/=dependencies/openzeppelin-contracts-5.5.0/lib/halmos-cheatcodes/src/
-openzeppelin-contracts/=dependencies/openzeppelin-contracts-5.5.0/
-solmate/=dependencies/solmate-6.8.0/src/
+@openzeppelin/=dependencies/openzeppelin-contracts/
+ds-test/=dependencies/solmate/lib/ds-test/src/
+erc4626-tests/=dependencies/openzeppelin-contracts/lib/erc4626-tests/
+forge-std/=dependencies/forge-std/src/
+halmos-cheatcodes/=dependencies/openzeppelin-contracts/lib/halmos-cheatcodes/src/
+openzeppelin-contracts/=dependencies/openzeppelin-contracts/
+solmate/=dependencies/solmate/src/

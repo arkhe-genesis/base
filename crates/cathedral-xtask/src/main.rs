@@ -1,8 +1,11 @@
-use anyhow::{anyhow, Result};
+use std::{
+    process::{Command, Stdio},
+    time::Instant,
+};
+
+use anyhow::{Result, anyhow};
 use clap::{Parser, Subcommand};
 use colored::*;
-use std::process::{Command, Stdio};
-use std::time::Instant;
 use which::which;
 
 #[derive(Parser)]
@@ -40,9 +43,17 @@ fn main() -> Result<()> {
 fn check_tools() -> Result<()> {
     step("🔧 Verificando ferramentas instaladas");
     let tools = [
-        "cargo", "cargo-fmt", "cargo-clippy", "cargo-deny", "cargo-audit",
-        "cargo-semver-checks", "cargo-llvm-cov", "cargo-insta", "cargo-deadlinks",
-        "cargo-sbom", "cargo-ndk",
+        "cargo",
+        "cargo-fmt",
+        "cargo-clippy",
+        "cargo-deny",
+        "cargo-audit",
+        "cargo-semver-checks",
+        "cargo-llvm-cov",
+        "cargo-insta",
+        "cargo-deadlinks",
+        "cargo-sbom",
+        "cargo-ndk",
     ];
     let mut missing = Vec::new();
     for tool in &tools {

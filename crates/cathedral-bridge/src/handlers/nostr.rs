@@ -1,9 +1,12 @@
 use std::sync::Arc;
+
 use tonic::{Request, Response, Status};
 use tracing::info;
 
-use crate::proto::{NostrPublishRequest, NostrPublishResponse};
-use crate::server::BridgeState;
+use crate::{
+    proto::{NostrPublishRequest, NostrPublishResponse},
+    server::BridgeState,
+};
 
 pub struct NostrHandler;
 
@@ -16,7 +19,9 @@ impl NostrHandler {
         info!("📡 PublishNostr: project={}, hash={}", req.project_id, req.design_hash);
 
         // 1. Verifica se o replicator está ativo
-        let replicator = state.nostr_replicator.as_ref()
+        let replicator = state
+            .nostr_replicator
+            .as_ref()
             .ok_or_else(|| Status::unavailable("Nostr replicator não configurado"))?;
 
         // Simplified for mock
@@ -26,7 +31,8 @@ impl NostrHandler {
             req.wormgraph_json,
             vec![],
         )
-        .to_event(&keys).map_err(|e| Status::internal(e.to_string()))?;
+        .to_event(&keys)
+        .map_err(|e| Status::internal(e.to_string()))?;
 
         // 3. Publica nos relays
         let relays = if req.relay_urls.is_empty() {
@@ -35,7 +41,9 @@ impl NostrHandler {
             req.relay_urls
         };
 
-        let published_event_id = replicator.publish_to_relays(&event, &relays).await
+        let published_event_id = replicator
+            .publish_to_relays(&event, &relays)
+            .await
             .map_err(|e| Status::internal(format!("Falha na publicação: {}", e)))?;
 
         info!("✅ Evento publicado: {}", published_event_id.to_hex());

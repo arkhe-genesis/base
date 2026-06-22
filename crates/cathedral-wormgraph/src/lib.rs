@@ -15,5 +15,7 @@ pub struct ProvenanceEntry {
     pub agent_identity: Option<String>,
 }
 impl WormGraph {
-    pub async fn append(&self, _entry: ProvenanceEntry) -> Result<(), String> { Ok(()) }
+    pub async fn append(&self, _entry: ProvenanceEntry) -> Result<(), String> {
+        Ok(())
+    }
 }
