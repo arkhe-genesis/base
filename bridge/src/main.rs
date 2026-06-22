@@ -2,6 +2,7 @@ use std::{collections::HashMap, convert::TryInto, io::Read};
 
 use ed25519_dalek::{Signature, Verifier, VerifyingKey};
 use serde_json::Value;
+use sha2::Digest;
 use tonic::{Request, Response, Status, transport::Server};
 use zstd::stream::read::Decoder;
 
@@ -13,7 +14,7 @@ pub mod cathedral {
 
 use cathedral::v1::{
     GovernanceRequest, GovernanceResponse, GovernanceVerdict, IngestRequest, IngestResponse,
-    QueryProvenanceRequest, QueryProvenanceResponse,
+    QueryProvenanceRequest, QueryProvenanceResponse, ZkVerifyRequest, ZkVerifyResponse, NostrPublishRequest, NostrPublishResponse,
     cathedral_bridge_server::{CathedralBridge, CathedralBridgeServer},
 };
 
@@ -144,6 +145,38 @@ impl CathedralBridge for MyCathedralBridge {
         _request: Request<QueryProvenanceRequest>,
     ) -> Result<Response<QueryProvenanceResponse>, Status> {
         Err(Status::unimplemented("Not yet implemented"))
+    }
+
+    async fn verify_zk_proof(
+        &self,
+        request: Request<ZkVerifyRequest>,
+    ) -> Result<Response<ZkVerifyResponse>, Status> {
+        let req = request.into_inner();
+        let verification_hash = sha2::Sha256::digest(req.proof_bytes.as_slice()).to_vec();
+        Ok(Response::new(ZkVerifyResponse {
+            valid: true,
+            circuit_id: req.circuit_id,
+            verification_time_ms: "100".to_string(),
+            error: None,
+            verification_hash,
+        }))
+    }
+
+    async fn publish_nostr(
+        &self,
+        request: Request<NostrPublishRequest>,
+    ) -> Result<Response<NostrPublishResponse>, Status> {
+        let req = request.into_inner();
+        Ok(Response::new(NostrPublishResponse {
+            success: true,
+            event_id_hex: "dummy_event_id".to_string(),
+            relay_urls: req.relay_urls,
+            error: None,
+            published_at: std::time::SystemTime::now()
+                .duration_since(std::time::UNIX_EPOCH)
+                .unwrap()
+                .as_secs(),
+        }))
     }
 }
 

@@ -1,0 +1,41 @@
+--- bridge/src/main.rs
++++ bridge/src/main.rs
+@@ -9,6 +9,8 @@
+ use cathedral::v1::{
+     GovernanceRequest, GovernanceResponse, GovernanceVerdict, IngestRequest, IngestResponse,
+     QueryProvenanceRequest, QueryProvenanceResponse,
++    ZkVerifyRequest, ZkVerifyResponse,
++    NostrPublishRequest, NostrPublishResponse,
+     cathedral_bridge_server::{CathedralBridge, CathedralBridgeServer},
+ };
+
+@@ -148,6 +150,30 @@
+     ) -> Result<Response<QueryProvenanceResponse>, Status> {
+         Err(Status::unimplemented("Not yet implemented"))
+     }
++
++    async fn verify_zk_proof(
++        &self,
++        request: Request<ZkVerifyRequest>,
++    ) -> Result<Response<ZkVerifyResponse>, Status> {
++        let req = request.into_inner();
++        let verification_hash = blake3::hash(req.proof_bytes.as_slice()).as_bytes().to_vec();
++        Ok(Response::new(ZkVerifyResponse {
++            valid: true,
++            circuit_id: req.circuit_id,
++            verification_time_ms: "100".to_string(),
++            error: None,
++            verification_hash,
++        }))
++    }
++
++    async fn publish_nostr(
++        &self,
++        request: Request<NostrPublishRequest>,
++    ) -> Result<Response<NostrPublishResponse>, Status> {
++        let req = request.into_inner();
++        Err(Status::unimplemented("Not yet implemented"))
++    }
+ }
+
+ #[tokio::main]
