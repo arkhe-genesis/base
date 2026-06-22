@@ -1,0 +1,8 @@
+[package]
+name = "cathedral-nostr"
+version = "1.0.0"
+edition = "2021"
+publish = false
+
+[dependencies]
+nostr-sdk = "0.30"

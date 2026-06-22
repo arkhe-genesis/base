@@ -1,9 +1,11 @@
-use std::collections::HashMap;
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
+
 use tokio::sync::Mutex;
 
-use crate::moe::CognitiveContext;
-use crate::trinity::core::eac::{AlignmentResult, SahooConfig, SahooGuard};
+use crate::{
+    moe::CognitiveContext,
+    trinity::core::eac::{AlignmentResult, SahooConfig, SahooGuard},
+};
 
 #[derive(Debug, Clone)]
 pub struct AlignmentDecision {
@@ -23,10 +25,7 @@ pub struct AdaptiveGDI {
 
 impl AdaptiveGDI {
     pub fn new(base: f64) -> Self {
-        Self {
-            base_threshold: base,
-            current_threshold: base,
-        }
+        Self { base_threshold: base, current_threshold: base }
     }
 
     pub fn adjust(&mut self, context: &CognitiveContext, history: &[AlignmentDecision]) {
@@ -59,11 +58,7 @@ impl RLGuardrail {
     }
 
     pub fn check(&self, text: &str) -> Result<(), String> {
-        if !(self.condition)(text) {
-            Err(self.violation_message.clone())
-        } else {
-            Ok(())
-        }
+        if !(self.condition)(text) { Err(self.violation_message.clone()) } else { Ok(()) }
     }
 }
 
@@ -81,9 +76,7 @@ impl SahooPlus {
             base: SahooGuard::new(SahooConfig {
                 goal_drift_threshold: base_config.goal_drift_threshold,
             }),
-            adaptive_gdi: Arc::new(Mutex::new(AdaptiveGDI::new(
-                base_config.goal_drift_threshold,
-            ))),
+            adaptive_gdi: Arc::new(Mutex::new(AdaptiveGDI::new(base_config.goal_drift_threshold))),
             context_invariants: HashMap::new(),
             rl_guardrails: Vec::new(),
             decision_history: Arc::new(Mutex::new(Vec::with_capacity(1000))),
@@ -109,9 +102,7 @@ impl SahooPlus {
             if let Some(invs) = self.context_invariants.get(&context.prompt) {
                 for inv in invs {
                     if !mutated.contains(inv) {
-                        result
-                            .constraint_violations
-                            .push(format!("Invariante violado: {}", inv));
+                        result.constraint_violations.push(format!("Invariante violado: {}", inv));
                     }
                 }
             }
@@ -119,9 +110,7 @@ impl SahooPlus {
             // RL Guardrails
             for guardrail in &self.rl_guardrails {
                 if let Err(e) = guardrail.check(mutated) {
-                    result
-                        .constraint_violations
-                        .push(format!("RL Guardrail: {}", e));
+                    result.constraint_violations.push(format!("RL Guardrail: {}", e));
                 }
             }
 

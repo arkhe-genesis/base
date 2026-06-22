@@ -1,6 +1,5 @@
 pub mod cca_v2;
 pub use cca_v2::*;
-
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]

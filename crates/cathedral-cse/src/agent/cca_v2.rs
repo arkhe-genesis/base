@@ -1,20 +1,21 @@
 use std::sync::Arc;
+
 use tokenizers::Tokenizer;
 use tracing::{debug, info};
 
-use crate::agent::{AgentMessage, LlmClient};
-use crate::attention::SpatialAttentionEngine;
-use crate::moe::{
-    CognitiveContext, CognitiveOutput, MoeCognitiveOrchestrator, PlanningExpert, ReactiveExpert,
-    SymbolicExpert,
-};
-use crate::mtp::MultiTokenPredictor;
-use crate::sahoo::SahooPlus;
-use crate::thinking::ThinkingEngine;
-use crate::trinity::core::TrinityCore;
-
 pub use crate::trinity::core::SessionManager;
-use crate::trinity::core::eac::SahooConfig;
+use crate::{
+    agent::{AgentMessage, LlmClient},
+    attention::SpatialAttentionEngine,
+    moe::{
+        CognitiveContext, CognitiveOutput, MoeCognitiveOrchestrator, PlanningExpert,
+        ReactiveExpert, SymbolicExpert,
+    },
+    mtp::MultiTokenPredictor,
+    sahoo::SahooPlus,
+    thinking::ThinkingEngine,
+    trinity::core::{TrinityCore, eac::SahooConfig},
+};
 
 // ============================================================================
 // Configuração
@@ -78,15 +79,13 @@ impl CCAgentV2 {
         });
 
         // Thinking Engine
-        let thinking = ThinkingEngine::new(config.thinking_depth)
-            .with_llm_client(llm_client.clone());
+        let thinking =
+            ThinkingEngine::new(config.thinking_depth).with_llm_client(llm_client.clone());
 
         // MoE
         let mut moe = MoeCognitiveOrchestrator::new();
         let reactive = Arc::new(ReactiveExpert::new(llm_client.clone()));
-        let symbolic = Arc::new(SymbolicExpert::new(Arc::new(
-            crate::moe::SymbolicEngine::new(),
-        )));
+        let symbolic = Arc::new(SymbolicExpert::new(Arc::new(crate::moe::SymbolicEngine::new())));
         let planning = Arc::new(PlanningExpert::new(
             Arc::new(crate::moe::MonteCarloTreeSearch::new()),
             Arc::new(crate::moe::MentalSimulator::new()),
@@ -96,21 +95,14 @@ impl CCAgentV2 {
         moe.register_expert(planning, 800);
 
         // Spatial Attention
-        let attention = SpatialAttentionEngine::new(
-            2048,
-            config.attention_blocks,
-            config.temperature,
-        );
+        let attention =
+            SpatialAttentionEngine::new(2048, config.attention_blocks, config.temperature);
 
         // MTP (draft/verifier placeholders)
         let draft_model = Box::new(crate::trinity::core::NgramDraftModel::new());
         let verifier = Box::new(crate::trinity::core::VerifierImpl::new());
-        let mtp = MultiTokenPredictor::new(
-            draft_model,
-            verifier,
-            config.mtp_tokens,
-            tokenizer.clone(),
-        );
+        let mtp =
+            MultiTokenPredictor::new(draft_model, verifier, config.mtp_tokens, tokenizer.clone());
 
         // SAHOO+
         let sahoo_config = SahooConfig::default();
@@ -131,10 +123,7 @@ impl CCAgentV2 {
     }
 
     pub async fn process(&mut self, user_input: &str, session_id: &str) -> Result<String, String> {
-        debug!(
-            "📥 CCA v2: processando '{}' na sessão {}",
-            user_input, session_id
-        );
+        debug!("📥 CCA v2: processando '{}' na sessão {}", user_input, session_id);
 
         let session = self
             .session_manager
@@ -166,9 +155,7 @@ impl CCAgentV2 {
         let final_response = self.mtp.detokenize(&predicted_tokens);
 
         // 6. SAHOO+
-        self.sahoo
-            .check_alignment_with_context(user_input, &final_response, &ctx)
-            .await?;
+        self.sahoo.check_alignment_with_context(user_input, &final_response, &ctx).await?;
 
         // 7. Hot reload se for código Trinity
         if self.detect_trinity_code(&final_response) {

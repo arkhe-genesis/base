@@ -1,9 +1,9 @@
-use std::collections::VecDeque;
-use std::sync::Arc;
-use serde::{Deserialize, Serialize};
-use uuid::Uuid;
+use std::{collections::VecDeque, sync::Arc};
+
 use chrono::{DateTime, Utc};
+use serde::{Deserialize, Serialize};
 use tracing::warn;
+use uuid::Uuid;
 
 use crate::agent::{AgentMessage, LlmClient};
 
@@ -53,9 +53,7 @@ pub enum ThoughtType {
 
 fn thoughts_equal(a: &[Thought], b: &[Thought]) -> bool {
     a.len() == b.len()
-        && a.iter()
-            .zip(b)
-            .all(|(x, y)| x.step_type == y.step_type && x.content == y.content)
+        && a.iter().zip(b).all(|(x, y)| x.step_type == y.step_type && x.content == y.content)
 }
 
 // ============================================================================
@@ -92,10 +90,7 @@ impl ThinkingEngine {
             return Ok(Vec::new());
         }
 
-        let client = self
-            .llm_client
-            .as_ref()
-            .ok_or("ThinkingEngine: LlmClient não configurado")?;
+        let client = self.llm_client.as_ref().ok_or("ThinkingEngine: LlmClient não configurado")?;
 
         // Gera paths em paralelo
         let futures: Vec<_> = (0..num_paths)
@@ -120,9 +115,8 @@ impl ThinkingEngine {
         let mut final_thoughts = most_consistent;
 
         if self.detect_divergence(&all_thoughts) {
-            let reflection = self
-                .generate_reflection(prompt, &final_thoughts, client.clone_arc())
-                .await?;
+            let reflection =
+                self.generate_reflection(prompt, &final_thoughts, client.clone_arc()).await?;
             final_thoughts.push(reflection);
         }
 
@@ -219,10 +213,7 @@ impl ThinkingEngine {
             return false;
         }
         let first = &paths[0];
-        paths
-            .iter()
-            .skip(1)
-            .any(|path| !thoughts_equal(first, path))
+        paths.iter().skip(1).any(|path| !thoughts_equal(first, path))
     }
 
     async fn generate_reflection(
@@ -231,10 +222,8 @@ impl ThinkingEngine {
         thoughts: &[Thought],
         client: Arc<dyn LlmClient + Send + Sync>,
     ) -> Result<Thought, String> {
-        let refl_prompt = format!(
-            "Reflecte sobre o seguinte raciocínio: {:?}\n\nResumo reflexivo:",
-            thoughts
-        );
+        let refl_prompt =
+            format!("Reflecte sobre o seguinte raciocínio: {:?}\n\nResumo reflexivo:", thoughts);
         let messages = vec![AgentMessage {
             role: "user".to_string(),
             content: refl_prompt,
