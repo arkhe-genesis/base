@@ -1,7 +1,6 @@
 use std::{collections::HashMap, convert::TryInto, io::Read};
 
 use ed25519_dalek::{Signature, Verifier, VerifyingKey};
-use serde_json::Value;
 use sha2::Digest;
 use tonic::{Request, Response, Status, transport::Server};
 use zstd::stream::read::Decoder;
@@ -14,7 +13,8 @@ pub mod cathedral {
 
 use cathedral::v1::{
     GovernanceRequest, GovernanceResponse, GovernanceVerdict, IngestRequest, IngestResponse,
-    QueryProvenanceRequest, QueryProvenanceResponse, ZkVerifyRequest, ZkVerifyResponse, NostrPublishRequest, NostrPublishResponse,
+    NostrPublishRequest, NostrPublishResponse, QueryProvenanceRequest, QueryProvenanceResponse,
+    ZkVerifyRequest, ZkVerifyResponse,
     cathedral_bridge_server::{CathedralBridge, CathedralBridgeServer},
 };
 
@@ -26,6 +26,7 @@ pub struct MyCathedralBridge {
 }
 
 impl MyCathedralBridge {
+    #[allow(clippy::result_large_err)]
     pub fn decompress_payload(base64_data: &str) -> Result<Vec<u8>, Status> {
         use base64::{Engine as _, engine::general_purpose::STANDARD};
 
@@ -44,6 +45,7 @@ impl MyCathedralBridge {
         Ok(decompressed)
     }
 
+    #[allow(clippy::result_large_err)]
     pub fn verify_signature(
         &self,
         agent_id: &str,

@@ -2,11 +2,14 @@
 //! Comandos de automação para desenvolvimento e CI/CD.
 //! Selo: CATHEDRAL-ARKHE-XTASK-v1.0.0-2026-06-21
 
-use anyhow::{anyhow, bail, Context, Result};
+use std::{
+    process::{Command, Stdio},
+    time::Instant,
+};
+
+use anyhow::{Context, Result, anyhow};
 use clap::{Parser, Subcommand};
 use colored::*;
-use std::process::{Command, Stdio};
-use std::time::Instant;
 use which::which;
 
 #[derive(Parser)]
