@@ -2,3 +2,8 @@
 src = "src"
 out = "out"
 libs = ["dependencies"]
+
+[profile.ci]
+src = "src"
+out = "out"
+libs = ["dependencies"]
