@@ -21,6 +21,7 @@ members = [
   "crates/cathedral-cse",
   "sdk-rs",
   "zk-circuits",
+  "crates/cathedral-xtask",
 
 
 
@@ -89,6 +90,7 @@ default-members = [
   "crates/cathedral-cse",
   "sdk-rs",
   "zk-circuits",
+  "crates/cathedral-xtask",
 
 
 
@@ -187,7 +189,7 @@ debug = false
 incremental = false
 
 [workspace.dependencies]
-# Base Primitives
+# Ferramentas de desenvolvimento (globais)
 base-bundles = { path = "crates/common/bundles" }
 base-common-signer = { path = "crates/common/signer" }
 base-common-chains = { path = "crates/common/chains" }

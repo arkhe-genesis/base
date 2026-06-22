@@ -7593,12 +7593,14 @@ name = "bridge"
 version = "0.1.0"
 dependencies = [
  "base64 0.22.1",
+ "blake3",
  "ed25519-dalek 2.2.0",
  "hex",
  "prost 0.13.5",
  "prost-types 0.13.5",
  "serde",
  "serde_json",
+ "sha2 0.10.9",
  "tokio",
  "tonic 0.12.3",
  "tonic-build 0.12.3",
