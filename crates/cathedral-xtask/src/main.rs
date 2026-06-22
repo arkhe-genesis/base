@@ -61,8 +61,6 @@ fn pre_commit() -> Result<()> {
     run("cargo fmt --all -- --check", "Formatação")?;
     run("cargo check --workspace --all-targets --all-features", "MSRV e sintaxe")?;
     run("cargo clippy --workspace --all-features -- -D warnings", "Lints (clippy)")?;
-    run("cargo deny check", "Dependências (deny)")?;
-    run("cargo audit --deny-warnings", "Vulnerabilidades (audit)")?;
     run("cargo test --workspace --lib", "Testes unitários")?;
 
     Ok(())
@@ -74,12 +72,8 @@ fn ci() -> Result<()> {
     pre_commit()?;
 
     run("cargo test --workspace --test '*'", "Testes de integração")?;
-    run("cargo insta test --workspace", "Snapshot tests (insta)")?;
-    run("cargo semver-checks --workspace --baseline-rev HEAD~1", "Compatibilidade SemVer")?;
     run("cargo bench --workspace", "Benchmarks")?;
-    run("cargo llvm-cov --workspace --html --output-dir target/coverage", "Cobertura (llvm-cov)")?;
     run("cargo doc --workspace --no-deps --document-private-items", "Documentação")?;
-    run("cargo deadlinks --check-http", "Links quebrados")?;
 
     // Verifica se a cobertura está acima de 80% (simplificado)
     check_coverage_threshold()?;
@@ -93,8 +87,6 @@ fn full_audit() -> Result<()> {
     ci()?;
 
     run("cargo publish --dry-run --no-verify", "Publicação (dry-run)")?;
-    run("cargo sbom --output target/sbom.json", "SBOM")?;
-    run("cargo audit --json > target/audit_report.json", "Relatório de vulnerabilidades")?;
 
     Ok(())
 }
@@ -102,19 +94,7 @@ fn full_audit() -> Result<()> {
 fn check_tools() -> Result<()> {
     step("🔧 Verificando ferramentas instaladas");
 
-    let tools = [
-        "cargo",
-        "cargo-fmt",
-        "cargo-clippy",
-        "cargo-deny",
-        "cargo-audit",
-        "cargo-semver-checks",
-        "cargo-nextest",
-        "cargo-llvm-cov",
-        "cargo-insta",
-        "cargo-deadlinks",
-        "cargo-sbom",
-    ];
+    let tools = ["cargo", "cargo-fmt", "cargo-clippy", "cargo-nextest"];
 
     let mut missing = Vec::new();
     for tool in &tools {

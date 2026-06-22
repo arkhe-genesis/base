@@ -1,10 +1,9 @@
-use std::collections::HashMap;
-use std::sync::Arc;
+use std::{collections::HashMap, sync::Arc};
+
 use async_trait::async_trait;
 use tracing::info;
 
-use crate::agent::AgentMessage;
-use crate::thinking::Thought;
+use crate::{agent::AgentMessage, thinking::Thought};
 
 // Mocked EAC substrate structures
 #[derive(Debug, Clone, PartialEq)]
@@ -202,11 +201,8 @@ impl MoeCognitiveOrchestrator {
         &self,
         ctx: &CognitiveContext,
     ) -> Result<Vec<CognitiveOutput>, String> {
-        let mut scores: Vec<_> = self
-            .experts
-            .iter()
-            .map(|e| (e.id(), e.activation_score(ctx)))
-            .collect();
+        let mut scores: Vec<_> =
+            self.experts.iter().map(|e| (e.id(), e.activation_score(ctx))).collect();
         scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
 
         let k = match ctx.consciousness {

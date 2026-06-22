@@ -178,15 +178,6 @@ incremental = false
 
 [workspace.dependencies]
 # Ferramentas de desenvolvimento (globais)
-cargo-insta = "1.40"
-cargo-llvm-cov = "0.5"
-cargo-deadlinks = "0.9"
-cargo-sbom = "0.4"
-
-# Para o xtask
-colored = "2.1"
-which = "6.0"
-# Base Primitives
 base-bundles = { path = "crates/common/bundles" }
 base-common-signer = { path = "crates/common/signer" }
 base-common-chains = { path = "crates/common/chains" }

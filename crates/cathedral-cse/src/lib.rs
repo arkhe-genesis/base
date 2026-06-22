@@ -10,19 +10,19 @@
 //!
 //! Reutiliza os substratos da v13.1 (Trinity, EAC, Mesh, Tools).
 
-pub mod moe;
-pub mod thinking;
+pub mod agent;
 pub mod attention;
+pub mod moe;
 pub mod mtp;
 pub mod sahoo;
-pub mod agent;
+pub mod thinking;
 pub mod tools;
 pub mod trinity;
 
 // Reexportações para facilitar o uso
-pub use moe::*;
-pub use thinking::*;
+pub use agent::*;
 pub use attention::*;
+pub use moe::*;
 pub use mtp::*;
 pub use sahoo::*;
-pub use agent::*;
+pub use thinking::*;

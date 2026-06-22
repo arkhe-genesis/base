@@ -25,12 +25,7 @@ impl MultiTokenPredictor {
         num_tokens: usize,
         tokenizer: Tokenizer,
     ) -> Self {
-        Self {
-            draft_model,
-            verifier,
-            num_tokens,
-            tokenizer,
-        }
+        Self { draft_model, verifier, num_tokens, tokenizer }
     }
 
     pub async fn predict(&self, prefix: &[u32]) -> Result<Vec<u32>, String> {
@@ -45,10 +40,8 @@ impl MultiTokenPredictor {
                         }
                     } else {
                         // ✅ CSE-HIGH-006: re-sample a partir do token rejeitado
-                        let remaining = self
-                            .draft_model
-                            .draft(&result, self.num_tokens - i)
-                            .await?;
+                        let remaining =
+                            self.draft_model.draft(&result, self.num_tokens - i).await?;
                         for tokens in remaining {
                             result.extend(tokens);
                         }
@@ -69,10 +62,7 @@ impl MultiTokenPredictor {
     }
 
     pub fn tokenize(&self, text: &str) -> Vec<u32> {
-        self.tokenizer
-            .encode(text, false)
-            .map(|enc| enc.get_ids().to_vec())
-            .unwrap_or_default()
+        self.tokenizer.encode(text, false).map(|enc| enc.get_ids().to_vec()).unwrap_or_default()
     }
 
     pub fn detokenize(&self, tokens: &[u32]) -> String {

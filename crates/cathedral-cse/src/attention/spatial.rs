@@ -1,4 +1,4 @@
-use ndarray::{s, Array2, ArrayView2}; // ✅ CSE-CRIT-002
+use ndarray::{Array2, ArrayView2, s}; // ✅ CSE-CRIT-002
 use rayon::prelude::*; // ✅ CSE-CRIT-001
 
 #[derive(Debug, Clone)]
@@ -63,11 +63,7 @@ impl SpatialAttentionEngine {
         let selected: Vec<_> = scores.into_iter().take(k).collect();
 
         // ✅ CSE-CRIT-003: proteção contra partitions vazia
-        let value_dim = self
-            .partitions
-            .first()
-            .map(|p| p.values.shape()[1])
-            .unwrap_or(128);
+        let value_dim = self.partitions.first().map(|p| p.values.shape()[1]).unwrap_or(128);
         let mut output = Array2::<f32>::zeros((query.shape()[0], value_dim));
 
         for (idx, _) in selected {
@@ -107,11 +103,7 @@ impl SpatialAttentionEngine {
             }
         }
 
-        if q_norm > 0.0 && k_norm > 0.0 {
-            dot / (q_norm * k_norm)
-        } else {
-            0.0
-        }
+        if q_norm > 0.0 && k_norm > 0.0 { dot / (q_norm * k_norm) } else { 0.0 }
     }
 
     pub fn compress_kv_cache(&mut self, compression_ratio: f32) {
@@ -125,10 +117,7 @@ impl SpatialAttentionEngine {
                 .collect();
             scores.sort_by(|a, b| b.1.partial_cmp(&a.1).unwrap());
             let keep: Vec<usize> = scores.into_iter().take(target).map(|(i, _)| i).collect();
-            let new_partitions = keep
-                .iter()
-                .map(|&i| self.partitions[i].clone())
-                .collect();
+            let new_partitions = keep.iter().map(|&i| self.partitions[i].clone()).collect();
             self.partitions = new_partitions;
         }
     }
