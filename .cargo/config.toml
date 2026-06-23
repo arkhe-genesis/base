@@ -3,3 +3,6 @@ rustflags = []
 
 [build]
 rustflags = []
+
+[alias]
+xtask = "run --package cathedral-xtask --"

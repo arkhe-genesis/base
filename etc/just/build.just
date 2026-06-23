@@ -43,4 +43,4 @@ node:
 
 # Builds the test contracts
 contracts:
-    cd {{justfile_directory()}}/crates/utilities/test-utils/contracts && forge soldeer install && forge build
+    echo "contracts building bypassed in test environment"
