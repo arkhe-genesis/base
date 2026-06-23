@@ -1,0 +1,13 @@
+[package]
+name = "cathedral-zk"
+version = "0.1.0"
+edition = "2024"
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+sha3.workspace = true
+serde.workspace = true
+thiserror.workspace = true
+chrono.workspace = true
