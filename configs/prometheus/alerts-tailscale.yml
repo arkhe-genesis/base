@@ -1,0 +1,47 @@
+groups:
+  - name: tailscale
+    rules:
+      - alert: HighHandshakeLatency
+        expr: histogram_quantile(0.99, tailscale_handshake_latency_seconds) > 0.5
+        for: 5m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Latência de handshake alta"
+          description: "p99 handshake > 500ms por 5 minutos"
+
+      - alert: DERPOverload
+        expr: rate(tailscale_derp_bytes_relayed_total[5m]) > 1000000000
+        for: 2m
+        labels:
+          severity: critical
+        annotations:
+          summary: "DERP relay sobrecarregado"
+          description: "DERP relay > 1GB/s por 2 minutos"
+
+      - alert: NATTraversalFailure
+        expr: rate(tailscale_nat_traversal_failure_total[5m]) / rate(tailscale_nat_traversal_success_total[5m]) > 0.5
+        for: 10m
+        labels:
+          severity: warning
+        annotations:
+          summary: "Alta taxa de falha NAT traversal"
+          description: ">50% das conexões falhando NAT → DERP"
+
+      - alert: AuthFailureSpike
+        expr: rate(tailscale_auth_failures_total[5m]) > 10
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Spike de falhas de autenticação"
+          description: ">10 auth failures/min — possível ataque"
+
+      - alert: GrantsViolation
+        expr: rate(tailscale_grants_violations_total[5m]) > 1
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "Violação de Grants detectada"
+          description: "Tentativa de acesso não autorizado"

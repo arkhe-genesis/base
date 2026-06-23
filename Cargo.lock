@@ -7953,11 +7953,26 @@ dependencies = [
 ]
 
 [[package]]
+name = "cathedral-identity"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+]
+
+[[package]]
 name = "cathedral-nostr"
 version = "1.0.0"
 dependencies = [
  "nostr-sdk",
 ]
+
+[[package]]
+name = "cathedral-permissions"
+version = "0.1.0"
+
+[[package]]
+name = "cathedral-prometheus"
+version = "0.1.0"
 
 [[package]]
 name = "cathedral-sdk"
@@ -7975,6 +7990,19 @@ dependencies = [
  "tonic-build 0.12.3",
  "tracing",
  "uuid 1.23.3",
+]
+
+[[package]]
+name = "cathedral-tailscale"
+version = "0.1.0"
+dependencies = [
+ "anyhow",
+ "blake3",
+ "cathedral-identity",
+ "cathedral-permissions",
+ "hex",
+ "prometheus",
+ "rand 0.9.4",
 ]
 
 [[package]]
