@@ -28,6 +28,9 @@ jobs:
         with:
           egress-policy: audit
           allowed-endpoints: >
+            api.soldeer.xyz:443
+            soldeer-revisions.s3.amazonaws.com:443
+            soldeer-revisions.s3.us-east-1.amazonaws.com:443
             api.github.com:443
             bun.sh:443
             github.com:443
