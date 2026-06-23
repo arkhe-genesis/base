@@ -43,4 +43,4 @@ node:
 
 # Builds the test contracts
 contracts:
-    cd {{justfile_directory()}}/crates/utilities/test-utils/contracts && forge soldeer install && forge build
+    cd {{justfile_directory()}}/crates/utilities/test-utils/contracts && forge install && forge build
