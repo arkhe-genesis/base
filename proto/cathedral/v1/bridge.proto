@@ -16,6 +16,9 @@ service CathedralBridge {
 
     // Consulta de histórico de proveniência (futuro / opcional)
     rpc QueryProvenance(QueryProvenanceRequest) returns (QueryProvenanceResponse);
+
+    rpc VerifyZkProof(ZkVerifyRequest) returns (ZkVerifyResponse);
+    rpc PublishNostr(NostrPublishRequest) returns (NostrPublishResponse);
 }
 
 // ============================================================
@@ -124,4 +127,36 @@ message ProvenanceEntry {
     string after_state_json = 5;
     optional string rationale = 6;
     google.protobuf.Timestamp timestamp = 7;
+}
+
+message ZkVerifyRequest {
+    string circuit_id = 1;
+    string agent_id = 2;
+    bytes proof_bytes = 3;
+    repeated bytes public_inputs = 4;
+    string design_hash = 5;
+}
+
+message ZkVerifyResponse {
+    bool valid = 1;
+    string circuit_id = 2;
+    string verification_time_ms = 3;
+    optional string error = 4;
+    bytes verification_hash = 5;
+}
+
+message NostrPublishRequest {
+    string project_id = 1;
+    string design_hash = 2;
+    string wormgraph_json = 3;
+    repeated string tags = 4;
+    repeated string relay_urls = 5;
+}
+
+message NostrPublishResponse {
+    bool success = 1;
+    string event_id_hex = 2;
+    repeated string relay_urls = 3;
+    optional string error = 4;
+    uint64 published_at = 5;
 }

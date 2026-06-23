@@ -90,9 +90,7 @@ pub mod eac {
     }
     impl Default for SahooConfig {
         fn default() -> Self {
-            Self {
-                goal_drift_threshold: 0.5,
-            }
+            Self { goal_drift_threshold: 0.5 }
         }
     }
 

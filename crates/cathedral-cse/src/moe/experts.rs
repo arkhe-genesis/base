@@ -1,4 +1,5 @@
 use std::sync::Arc;
+
 use async_trait::async_trait;
 
 use super::{
@@ -82,9 +83,7 @@ pub struct SymbolicExpert {
 
 impl SymbolicExpert {
     pub fn new(engine: Arc<SymbolicEngine>) -> Self {
-        Self {
-            symbolic_engine: engine,
-        }
+        Self { symbolic_engine: engine }
     }
 }
 
@@ -99,11 +98,7 @@ impl CognitiveExpert for SymbolicExpert {
 
     fn activation_score(&self, ctx: &CognitiveContext) -> f64 {
         let dc = ctx.eac_metrics[0];
-        if dc > 0.7 {
-            0.8
-        } else {
-            0.4
-        }
+        if dc > 0.7 { 0.8 } else { 0.4 }
     }
 
     async fn process(&self, ctx: &CognitiveContext) -> Result<CognitiveOutput, String> {
@@ -207,11 +202,7 @@ impl MonteCarloTreeSearch {
         Self
     }
     pub async fn search(&self, _ctx: &CognitiveContext) -> Result<Plan, String> {
-        Ok(Plan {
-            description: String::new(),
-            tool_calls: vec![],
-            confidence: 1.0,
-        })
+        Ok(Plan { description: String::new(), tool_calls: vec![], confidence: 1.0 })
     }
 }
 
@@ -222,9 +213,6 @@ impl MentalSimulator {
         Self
     }
     pub async fn simulate(&self, _plan: &Plan) -> Result<SimulationResult, String> {
-        Ok(SimulationResult {
-            confidence: 1.0,
-            trace: String::new(),
-        })
+        Ok(SimulationResult { confidence: 1.0, trace: String::new() })
     }
 }
