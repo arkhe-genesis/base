@@ -1,0 +1,19 @@
+[package]
+name = "cathedral-identity"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+anyhow.workspace = true
+thiserror.workspace = true
+ed25519-dalek.workspace = true
+rand.workspace = true
+hex.workspace = true
+serde.workspace = true
+pqcrypto-dilithium = { version = "0.5.0", optional = true }
+pqcrypto-traits = { version = "0.3.5", optional = true }
+
+[features]
+mldsa = ["pqcrypto-dilithium", "pqcrypto-traits"]

@@ -1,0 +1,15 @@
+[package]
+name = "cathedral-api"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+
+[dependencies]
+axum.workspace = true
+tokio.workspace = true
+serde.workspace = true
+serde_json.workspace = true
+hex.workspace = true
+tracing.workspace = true
+cathedral-identity = { path = "../cathedral-identity" }
