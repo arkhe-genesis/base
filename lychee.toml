@@ -9,7 +9,8 @@ accept = [200, 403, 429, 502, 503] # 403 is often returned by private repos inst
 exclude_path = [
     "crates/utilities/test-utils/contracts/",
     "README\\.md",
-]
+
+
 exclude = [
     # Internal / placeholder
     'foo.bar',
@@ -51,4 +52,52 @@ exclude = [
     'https://registry\.npmjs\.org',
     'https://opencollective\.com',     # Funding pages; rate-limits and redirects heavily
     'https://api\\.arkhe-cathedral\\.org',
+
+    'https://www.diamondstandard.co',
+    'https://www.gia.edu',
+    'https://www.igi.org',
+    'https://www.mitrade.com',
+    'https://your-endpoint.hype-mainnet.quiknode.pro',
+
+    'https://b3.com.br',
+    'https://docs.osmosis.zone',
+    'https://docs.rs',
+    'https://hedera.com',
+    'https://rwa.xyz',
+    'https://www.rust-lang.org',
+    'https://1inch.com',
+    'https://www.binance.bh',
+    'https://www.apache.org',
+    'https://api.rapaport.com',
+    'https://polygon-rpc.com',
+    'https://api.hyperliquid.xyz',
+    'https://mainnet.infura.io',
+    'https://app.rwa.xyz',
+    'https://www.kucoin.com',
+    'https://docs.lightning.engineering',
+    'https://api.b3.com.br',
+    'https://coinmarketcap.com',
+    'https://docs.hedera.com',
+    'https://www.canton.network',
+    'https://www.exp.science',
+    'https://chain.link',
+    'https://www.bitget.com',
+    'https://lightning.engineering',
+    'https://developers.b3.com.br',
+    'https://www.rwa.io',
+    'https://www.infomoney.com.br',
+    'https://api.igi.org',
+    'https://blog.redstone.finance',
+    'https://x402.agentutility.ai',
+    'https://metamask.io',
+    'https://info.arkm.com',
+    'https://rpc.hyperliquid.xyz',
+    'https://insights4vc.substack.com',
+    'https://library.tradingtechnologies.com',
+    'https://docs.nomic.io',
+    'https://www.bitgetapp.com',
+    'https://www.forbes.com',
+    'https://crates.io',
+    'https://www.bitdeal.net',
+    'https://hyperliquid.gitbook.io',
 ]
