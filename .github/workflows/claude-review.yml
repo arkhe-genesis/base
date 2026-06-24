@@ -28,6 +28,9 @@ jobs:
         with:
           egress-policy: block
           allowed-endpoints: >
+            api.soldeer.xyz:443
+            soldeer-revisions.s3.amazonaws.com:443
+            soldeer-revisions.s3.us-east-1.amazonaws.com:443
             api.anthropic.com:443
             binaries.soliditylang.org:443
             sp1.succinct.xyz:443
