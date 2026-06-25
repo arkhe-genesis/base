@@ -7960,6 +7960,20 @@ dependencies = [
 ]
 
 [[package]]
+name = "cathedral-live-image"
+version = "0.1.0"
+dependencies = [
+ "base64 0.22.1",
+ "blake3",
+ "hex",
+ "serde",
+ "serde_json",
+ "tar",
+ "thiserror 1.0.69",
+ "walkdir",
+]
+
+[[package]]
 name = "cathedral-nostr"
 version = "1.0.0"
 dependencies = [
