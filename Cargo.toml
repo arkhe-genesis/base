@@ -675,5 +675,3 @@ nostr-sdk = "0.30"
 wdk-sdk = "0.1"
 tensorzkp = "0.1"
 inquire = "0.6"
-
-# We are going to patch this file
