@@ -12,9 +12,10 @@ exclude_path = [
 ]
 exclude = [
     # Internal / placeholder
-    'foo.bar',
-    'localhost',
 
+
+
+    "http://www.nongnu.org/libunwind/",
     # Shields.io badges that query live GitHub stats (flaky, not real links)
     'https://img.shields.io/github/commit-activity/w/base/base',
     'https://img.shields.io/github/issues-pr-raw/base/base',
