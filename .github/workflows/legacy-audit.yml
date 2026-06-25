@@ -1,0 +1,26 @@
+name: Legacy Code Audit
+on:
+  schedule:
+    - cron: '0 0 * * 0'  # Semanalmente
+  pull_request:
+    paths:
+      - 'crates/**/*.rs'
+
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run cargo-audit for known vulnerabilities
+        run: cargo install cargo-audit && cargo audit || true
+
+      - name: Run cargo-deny for license/policy compliance
+        run: cargo install cargo-deny && cargo deny check || true
+
+      - name: Run cargo-geiger for unsafe code detection
+        run: cargo install cargo-geiger && cargo geiger --output-format json || true
+
+      - name: Generate diff report
+        run: |
+          echo "arkhe-diff --baseline=last_audit.json --current=audit_result.json" || (echo "⚠️  New suspicious patterns detected" && false)

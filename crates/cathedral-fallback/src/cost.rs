@@ -1,5 +1,6 @@
-use serde::{Deserialize, Serialize};
 use std::collections::VecDeque;
+
+use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct CostRecord {
@@ -62,22 +63,19 @@ impl CostOptimizer {
             return true;
         }
 
-        let avg_latency = self.history.iter()
-            .filter(|r| r.success)
-            .map(|r| r.latency_ms)
-            .take(10)
-            .sum::<u64>() / 10.min(self.history.len()) as u64;
+        let avg_latency =
+            self.history.iter().filter(|r| r.success).map(|r| r.latency_ms).take(10).sum::<u64>()
+                / 10.min(self.history.len()) as u64;
 
         avg_latency < 1000
     }
 
     fn calculate_p95_latency(&self) -> u64 {
-        let mut latencies: Vec<u64> = self.history
-            .iter()
-            .filter(|r| r.success)
-            .map(|r| r.latency_ms)
-            .collect();
-        if latencies.is_empty() { return 0; }
+        let mut latencies: Vec<u64> =
+            self.history.iter().filter(|r| r.success).map(|r| r.latency_ms).collect();
+        if latencies.is_empty() {
+            return 0;
+        }
         latencies.sort_unstable();
         let idx = (latencies.len() as f64 * 0.95) as usize;
         latencies.get(idx.min(latencies.len() - 1)).copied().unwrap_or(0)
@@ -89,10 +87,10 @@ impl CostOptimizer {
         let avg_cost = if total > 0 { total_cost / total as f64 } else { 0.0 };
         let avg_latency = if total > 0 {
             self.history.iter().map(|r| r.latency_ms).sum::<u64>() / total
-        } else { 0 };
-        let depin_count = self.history.iter()
-            .filter(|r| r.cost_usd < 0.001)
-            .count();
+        } else {
+            0
+        };
+        let depin_count = self.history.iter().filter(|r| r.cost_usd < 0.001).count();
         let depin_pct = if total > 0 { (depin_count as f32 / total as f32) * 100.0 } else { 0.0 };
 
         OptimizationStats {

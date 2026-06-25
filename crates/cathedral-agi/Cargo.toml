@@ -13,7 +13,7 @@ tracing = { workspace = true }
 uuid = { workspace = true, features = ["v4"] }
 chrono = { workspace = true, features = ["clock"] }
 rand = { workspace = true }
-reqwest = { workspace = true }
+reqwest = { workspace = true, features = ["json"] }
 blake3 = { workspace = true }
 cathedral-scheduler = { path = "../cathedral-scheduler" }
 cathedral-episodic = { path = "../cathedral-episodic" }

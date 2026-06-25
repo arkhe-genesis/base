@@ -1,0 +1,15 @@
+[package]
+name = "arkhe-security-audit"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+# We'll use cathedral-core since that's what the real crate is called
+cathedral-core = { path = "../cathedral-core" }
+tokio = { workspace = true, features = ["full"] }
+serde = { workspace = true, features = ["derive"] }
+serde_json = { workspace = true }
+tracing = { workspace = true }
+async-trait = { workspace = true }
+thiserror = { workspace = true }
+anyhow.workspace = true

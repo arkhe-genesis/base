@@ -1,8 +1,9 @@
-use crate::types::{WorkerProfile, WorkerTier, SchedulerStats};
+use std::{collections::HashMap, sync::Arc};
+
 use anyhow::Result;
-use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::sync::RwLock;
+
+use crate::types::{SchedulerStats, WorkerProfile, WorkerTier};
 
 pub struct WorkerRegistry {
     workers: Arc<RwLock<HashMap<String, WorkerProfile>>>,
@@ -10,9 +11,7 @@ pub struct WorkerRegistry {
 
 impl WorkerRegistry {
     pub fn new() -> Self {
-        Self {
-            workers: Arc::new(RwLock::new(HashMap::new())),
-        }
+        Self { workers: Arc::new(RwLock::new(HashMap::new())) }
     }
 
     pub async fn register(&self, profile: WorkerProfile) -> Result<()> {
@@ -47,18 +46,12 @@ impl WorkerRegistry {
 
     pub async fn list(&self, tier: Option<WorkerTier>) -> Vec<WorkerProfile> {
         let map = self.workers.read().await;
-        map.values()
-            .filter(|p| tier.as_ref().map_or(true, |t| &p.tier == t))
-            .cloned()
-            .collect()
+        map.values().filter(|p| tier.as_ref().map_or(true, |t| &p.tier == t)).cloned().collect()
     }
 
     pub async fn available(&self) -> Vec<WorkerProfile> {
         let map = self.workers.read().await;
-        map.values()
-            .filter(|p| p.available && p.reputation >= 0.7)
-            .cloned()
-            .collect()
+        map.values().filter(|p| p.available && p.reputation >= 0.7).cloned().collect()
     }
 
     pub async fn stats(&self) -> SchedulerStats {

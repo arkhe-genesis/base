@@ -11,6 +11,8 @@ exclude = [".github/"]
 resolver = "2"
 exclude = ["bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
 members = [
+  "crates/arkhe-security-audit",
+  "crates/cathedral-core",
   "crates/cathedral-bridge",
   "crates/cathedral-identity",
   "crates/cathedral-permissions",
@@ -81,9 +83,11 @@ members = [
   "etc/tools/*",
   "devnet",
   "actions/*", "bridge",
-  "crates/cathedral-cse",
+  "crates/cathedral-cse", "crates/arkhe-security-audit",
 ]
 default-members = [
+  "crates/cathedral-core",
+  "crates/arkhe-security-audit",
   "crates/cathedral-bridge",
   "crates/cathedral-identity",
   "crates/cathedral-permissions",
