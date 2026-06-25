@@ -4,9 +4,9 @@ use cathedral_episodic::EpisodicSync;
 use tracing::info;
 
 use crate::{
-    ethics::{EthicsResult, EthicsVerifier},
+    ethics::EthicsVerifier,
     llm_client::OllamaClient,
-    mcts::{MCTSEngine, MCTSResult},
+    mcts::MCTSEngine,
     meta_cognitive::{MetaCognitiveLoop, MetaState},
     world_model::{WorldModel, WorldState},
     wormhole::HierarchicalWormhole,

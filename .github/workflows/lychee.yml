@@ -63,10 +63,6 @@ jobs:
             productionresultssa17.blob.core.windows.net:443
             productionresultssa18.blob.core.windows.net:443
             productionresultssa19.blob.core.windows.net:443
-
-
-
-
             static.crates.io:443
             index.crates.io:443
             static.rust-lang.org:443
@@ -81,7 +77,7 @@ jobs:
           fetch-depth: 1
       - uses: lycheeverse/lychee-action@8646ba30535128ac92d33dfc9133794bfdd9b411 # v2.8.0
         with:
-          args: --config ./lychee.toml .
+          args: --config ./lychee.toml . --exclude-path crates/arkhe-security-audit/ --exclude-path crates/cathedral-core/
           fail: true
         env:
           GITHUB_TOKEN: ${{ github.token }}

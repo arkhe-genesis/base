@@ -2,7 +2,7 @@ use std::time::{Duration, Instant};
 
 use anyhow::{Result, anyhow};
 use tokio::time::timeout;
-use tracing::{error, info, warn};
+use tracing::info;
 
 use crate::cost::{CostOptimizer, OptimizationStats};
 

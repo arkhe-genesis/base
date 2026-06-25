@@ -1,6 +1,6 @@
 use std::collections::VecDeque;
 
-use anyhow::{Result, anyhow};
+use anyhow::Result;
 
 const MEMORY_SIZE: usize = 1 << 16;
 const REG_COUNT: usize = 10;

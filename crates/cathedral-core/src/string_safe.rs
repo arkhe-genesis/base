@@ -3,7 +3,7 @@
 use core::slice;
 
 /// String segura com verificação de bounds.
-#[derive(Debug, Clone)]
+#[derive(Debug, Clone, Default)]
 pub struct SafeString {
     inner: Vec<u8>,
 }
@@ -34,12 +34,6 @@ impl SafeString {
     pub unsafe fn find_char_raw(ptr: *const u8, len: usize, c: u8) -> Option<usize> {
         let slice = slice::from_raw_parts(ptr, len);
         slice.iter().position(|&x| x == c)
-    }
-}
-
-impl Default for SafeString {
-    fn default() -> Self {
-        Self { inner: Vec::new() }
     }
 }
 

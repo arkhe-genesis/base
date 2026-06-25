@@ -87,8 +87,8 @@ impl SchedulerMetrics {
         &self,
         total: usize,
         gpu: usize,
-        cpu: usize,
-        datacenter: usize,
+        _cpu: usize,
+        _datacenter: usize,
         avg_rep: f32,
     ) {
         self.workers_total.set(total as f64);

@@ -78,7 +78,7 @@ impl EpisodicSync {
         Ok(())
     }
 
-    pub async fn retrieve(&self, query: &str, limit: usize) -> Vec<EpisodicEntry> {
+    pub async fn retrieve(&self, _query: &str, limit: usize) -> Vec<EpisodicEntry> {
         let cache = self.cache.read().await;
         let mut entries: Vec<EpisodicEntry> =
             cache.iter().filter(|e| !e.deleted).cloned().collect();

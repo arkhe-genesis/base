@@ -40,7 +40,7 @@ impl VectorClock {
             }
         }
 
-        for (k, v) in &other.entries {
+        for (k, _v) in &other.entries {
             if !self.entries.contains_key(k) {
                 other_greater = true;
             }

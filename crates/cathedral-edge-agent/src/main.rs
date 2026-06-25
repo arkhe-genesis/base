@@ -29,7 +29,7 @@ async fn main() -> anyhow::Result<()> {
 
     register_workers(&registry).await?;
 
-    let episodic_path = std::path::PathBuf::from("data/episodic.jsonl");
+    let _episodic_path = std::path::PathBuf::from("data/episodic.jsonl");
     std::fs::create_dir_all("data")?;
     let db_path = "sqlite:data/episodic.db?mode=rwc";
     let episodic = Arc::new(EpisodicSync::new("edge-agent".to_string(), db_path).await?);
