@@ -892,8 +892,9 @@ impl ImageSigner {
         // Find the `FF FF FF FF` marker by scanning backwards
         let mut marker_idx = None;
         for i in (0..=tail_buf.len() - 8).rev() {
-            if tail_buf[i..i+4] == [0xFF, 0xFF, 0xFF, 0xFF] {
-                let sig_len = u32::from_le_bytes(tail_buf[i+4..i+8].try_into().unwrap()) as usize;
+            if tail_buf[i..i + 4] == [0xFF, 0xFF, 0xFF, 0xFF] {
+                let sig_len =
+                    u32::from_le_bytes(tail_buf[i + 4..i + 8].try_into().unwrap()) as usize;
                 if i + 8 + sig_len == tail_buf.len() {
                     marker_idx = Some((i, sig_len));
                     break;

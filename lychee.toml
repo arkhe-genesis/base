@@ -9,6 +9,7 @@ accept = [200, 403, 429, 502, 503] # 403 is often returned by private repos inst
 exclude_path = [
     "crates/utilities/test-utils/contracts/",
     "README\\.md",
+]
 
 
 
