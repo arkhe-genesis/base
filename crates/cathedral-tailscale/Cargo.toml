@@ -1,0 +1,13 @@
+[package]
+name = "cathedral-tailscale"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+cathedral-identity = { path = "../cathedral-identity" }
+cathedral-permissions = { path = "../cathedral-permissions" }
+anyhow = "1.0"
+hex = "0.4"
+rand = "0.9"
+blake3 = "1.8"
+prometheus = "0.13"

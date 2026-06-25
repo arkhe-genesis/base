@@ -1,0 +1,48 @@
+# Headscale Configuration v3.0
+# Self-hosted coordination server for Cathedral OS
+
+server_url: https://headscale.cathedral.network:8080
+listen_addr: 0.0.0.0:8080
+metrics_listen_addr: 127.0.0.1:9090
+
+# Database
+db_type: postgres
+db_host: localhost
+db_port: 5432
+db_name: headscale
+db_user: headscale
+db_pass: ${HEADSCALE_DB_PASSWORD}
+
+# TLS (obrigatório)
+tls_cert_path: /etc/headscale/certs/server.crt
+tls_key_path: /etc/headscale/certs/server.key
+
+# OIDC (Keycloak bridge)
+oidc:
+  issuer: "https://keycloak.cathedral.network/realms/cathedral"
+  client_id: "headscale"
+  client_secret: ${HEADSCALE_OIDC_SECRET}
+  scope: ["openid", "profile", "email", "groups"]
+
+# DERP (self-hosted relays)
+derp:
+  server:
+    enabled: true
+    region_id: 999
+    region_code: "cathedral"
+    region_name: "Cathedral Network"
+    stun_listen_addr: "0.0.0.0:3478"
+
+  urls:
+    - https://us-east.cathedral.derp.ts.net/derp
+    - https://eu-west.cathedral.derp.ts.net/derp
+    - https://sa-east.cathedral.derp.ts.net/derp
+    - https://ap-south.cathedral.derp.ts.net/derp
+
+# ACLs (HuJSON format)
+acl_policy_path: /etc/headscale/grants.hujson
+
+# Logging
+log:
+  format: json
+  level: info

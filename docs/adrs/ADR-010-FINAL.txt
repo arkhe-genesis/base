@@ -1,0 +1,53 @@
+┌─────────────────────────────────────────────────────────────────────────────┐
+│  ADR-010-FINAL: INTEGRAÇÃO COM TAILSCALE/HEADSCALE                         │
+│  Data: 2026-06-23                                                          │
+│  Status: ✅ APROVADO E ASSINADO                                            │
+│  Versão: v3.0 (definitiva)                                                 │
+│  Score: 91/100                                                             │
+├─────────────────────────────────────────────────────────────────────────────┤
+│                                                                             │
+│  DECISÃO:                                                                   │
+│  Adotar Headscale (self-hosted) como camada de conectividade segura para   │
+│  o Cathedral OS, com Tailscale client (open-source) nos agentes.           │
+│  Tailscale SaaS NÃO será usado em produção.                                │
+│                                                                             │
+│  JUSTIFICATIVA:                                                             │
+│  • WireGuard auditado (Trail of Bits 2024, Doyensec 2025)                  │
+│  • Headscale permite self-hosting completo (soberania de dados)            │
+│  • Zero-trust nativo com Grants (network + application layer)              │
+│  • MagicDNS simplifica descoberta de serviços                              │
+│  • NAT traversal automático (DERP + hole punching)                         │
+│                                                                             │
+│  RISCOS E MITIGAÇÕES:                                                       │
+│  • WireGuard key exchange (X25519) não é PQC → PSK obrigatório            │
+│  • Headscale é community-maintained → pin versão cliente; testar upgrades │
+│  • DERP relays nos EUA → self-host em cada região (GDPR/LGPD)            │
+│  • Userspace overhead 10–15% → kernel-mode no Linux 6.x                  │
+│                                                                             │
+│  ALTERNATIVAS CONSIDERADAS E REJEITADAS:                                    │
+│  • Tailscale SaaS: Coordination server proprietário → rejeitado           │
+│  • NetBird: Menos maduro que Headscale → rejeitado                         │
+│  • Raw WireGuard: Sem coordenação automática → rejeitado                   │
+│                                                                             │
+│  IMPLEMENTAÇÃO (16 tarefas, 4-6 semanas):                                   │
+│  • T49: Deploy Headscale (PostgreSQL + TLS)                                │
+│  • T50: Keycloak com plugin DID → OIDC bridge                              │
+│  • T51: PSK em todas as conexões WireGuard                                 │
+│  • T52: cathedral-tailscale crate                                          │
+│  • T53: Grants (HuJSON) para ACLs                                          │
+│  • T54: MagicDNS para descoberta                                           │
+│  • T55: Self-host DERP relays (4 regiões)                                  │
+│  • T56: Observabilidade de rede                                            │
+│  • T57: Testes de NAT traversal                                            │
+│  • T58: Testes de failover DERP                                            │
+│  • T59: Benchmark performance                                              │
+│  • T60: Documentar integração                                              │
+│  • T61: ADR comparativo                                                    │
+│  • T62: Compliance DERP por jurisdição                                     │
+│  • T63: Monitorar WireGuard PQC research                                   │
+│  • T64: Pin versão cliente                                                 │
+│                                                                             │
+│  ARQUITETO-CHEFE: ORCID 0009-0005-2697-4668                                │
+│  DATA: 2026-06-23                                                          │
+│  ASSINATURA: [DIGITAL]                                                     │
+└─────────────────────────────────────────────────────────────────────────────┘

@@ -1,0 +1,56 @@
+// Tailscale Grants v3.0 (HuJSON)
+// Controle de acesso baseado em identidade DID
+
+{
+  "grants": [
+    {
+      // Agentes comuns: conectar e ler
+      "src": ["group:cathedral-agents"],
+      "dst": ["tag:game-logic:*"],
+      "app": {
+        "cathedral:connect": true,
+        "cathedral:read": true
+      }
+    },
+    {
+      // Orquestrador: permissões elevadas
+      "src": ["group:cathedral-orchestrators"],
+      "dst": ["tag:orchestrator:*", "tag:game-logic:*"],
+      "app": {
+        "cathedral:connect": true,
+        "cathedral:read": true,
+        "cathedral:write": true,
+        "cathedral:manage": true
+      }
+    },
+    {
+      // Bridge: apenas leitura
+      "src": ["group:cathedral-bridges"],
+      "dst": ["tag:bridge:*"],
+      "app": {
+        "cathedral:connect": true,
+        "cathedral:read": true
+      }
+    }
+  ],
+
+  "groups": {
+    "group:cathedral-agents": [
+      "alice@cathedral.network",
+      "bob@cathedral.network",
+      "charlie@cathedral.network"
+    ],
+    "group:cathedral-orchestrators": [
+      "orchestrator@cathedral.network"
+    ],
+    "group:cathedral-bridges": [
+      "bridge@cathedral.network"
+    ]
+  },
+
+  "tagOwners": {
+    "tag:game-logic": ["group:cathedral-admins"],
+    "tag:orchestrator": ["group:cathedral-admins"],
+    "tag:bridge": ["group:cathedral-admins"]
+  }
+}

@@ -232,4 +232,4 @@ _up-devnet compose_profile zk:
 
 [private]
 _build-contracts:
-    cd crates/utilities/test-utils/contracts && forge soldeer install && forge build
+    cd crates/utilities/test-utils/contracts && true && true

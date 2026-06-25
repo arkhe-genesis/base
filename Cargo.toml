@@ -11,8 +11,12 @@ exclude = [".github/"]
 resolver = "2"
 exclude = ["bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
 members = [
-  "crates/cathedral-xtask",
   "crates/cathedral-bridge",
+  "crates/cathedral-identity",
+  "crates/cathedral-permissions",
+  "crates/cathedral-tailscale",
+  "crates/cathedral-prometheus",
+  "crates/cathedral-xtask",
   "crates/cathedral-nostr",
   "crates/cathedral-wormgraph",
   "crates/cathedral-zk-circuits",
@@ -80,8 +84,12 @@ members = [
   "crates/cathedral-cse",
 ]
 default-members = [
-  "crates/cathedral-xtask",
   "crates/cathedral-bridge",
+  "crates/cathedral-identity",
+  "crates/cathedral-permissions",
+  "crates/cathedral-tailscale",
+  "crates/cathedral-prometheus",
+  "crates/cathedral-xtask",
   "crates/cathedral-nostr",
   "crates/cathedral-wormgraph",
   "crates/cathedral-zk-circuits",
