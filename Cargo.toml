@@ -23,6 +23,7 @@ members = [
   "crates/cathedral-zk-risc0",
   "bridge",
   "crates/cathedral-cse",
+  "crates/cathedral-live-image",
   "sdk-rs",
   "zk-circuits",
   "crates/cathedral-xtask",
@@ -82,6 +83,7 @@ members = [
   "devnet",
   "actions/*", "bridge",
   "crates/cathedral-cse",
+  "crates/cathedral-live-image",
 ]
 default-members = [
   "crates/cathedral-bridge",
@@ -96,6 +98,7 @@ default-members = [
   "crates/cathedral-zk-risc0",
   "bridge",
   "crates/cathedral-cse",
+  "crates/cathedral-live-image",
   "sdk-rs",
   "zk-circuits",
   "crates/cathedral-xtask",
