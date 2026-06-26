@@ -1,0 +1,6 @@
+[package]
+name = "arkhe-metacognition"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

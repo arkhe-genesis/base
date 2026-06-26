@@ -1,0 +1,115 @@
+[workspace]
+resolver = "3"
+members = [
+    "crates/arkhe-core",
+    "crates/arkhe-identity",
+    "crates/arkhe-asset",
+    "crates/arkhe-bridge",
+    "crates/arkhe-payment",
+    "crates/arkhe-agents",
+    "crates/arkhe-llm",
+    "crates/arkhe-neural",
+    "crates/arkhe-symbolic",
+    "crates/arkhe-metacognition",
+    "crates/arkhe-apex",
+    "crates/arkhe-agi",
+    "crates/arkhe-consensus-tpm",
+    "crates/arkhe-bootmaker",
+    "crates/arkhe-ventoy-adapter",
+    "crates/arkhe-openwrt-adapter",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Arkhe OS Architects <arkhe@arkhe-os.org>"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/arkhe-os/arkhe-os"
+rust-version = "1.85.0"
+
+[workspace.dependencies]
+# Runtime
+tokio = { version = "1.40", features = ["full"] }
+async-trait = "0.1"
+
+# Serialization
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+bincode = "1.3"
+
+# Error
+thiserror = "2.0"
+anyhow = "1.0"
+
+# Logging
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["env-filter"] }
+
+# Crypto
+blake3 = "1.8"
+sha2 = "0.10"
+rand = "0.8"
+rand_chacha = "0.3"
+
+# PQC
+ml-dsa = "0.1"
+ml-kem = "0.3.2"
+svalinn = "0.1"
+dcrypt = "1.2"
+
+# ZK
+ark-groth16 = "0.6"
+ark-ff = "0.5"
+ark-ec = "0.5"
+ark-poly = "0.5"
+ark-serialize = "0.5"
+ark-relations = "0.5"
+ark-bn254 = "0.5"
+halo2_proofs = "0.3"
+sp1-sdk = "6.2"
+risc0-zkvm = "3.0.5"
+
+# Web3
+alloy = { version = "0.9", features = ["full"] }
+cosmrs = "0.20"
+ethers = { version = "2.0", features = ["ws", "rustls"] }
+
+# Graph
+petgraph = "0.6"
+
+# Database
+sqlx = { version = "0.8", features = ["runtime-tokio", "sqlite"] }
+sled = "0.34"
+
+# Utils
+chrono = { version = "0.4", features = ["serde"] }
+uuid = { version = "1.12", features = ["v4", "serde"] }
+hex = "0.4"
+base64 = "0.22"
+url = "2.5"
+once_cell = "1.20"
+dashmap = "6.1"
+
+# LLM
+llama-cpp-2 = "0.1.150"
+candle-core = "0.10.2"
+candle-transformers = "0.10.2"
+tokenizers = "0.19"
+hf-hub = "0.3"
+
+# System
+nix = { version = "0.29", features = ["fs", "mount"] }
+sysinfo = "0.32"
+
+# Filesystem
+fatfs = "0.5"
+iso9660 = "0.5"
+
+# WASM
+wasmtime = "26.0"
+
+[profile.release]
+opt-level = 3
+lto = true
+codegen-units = 1
+strip = true

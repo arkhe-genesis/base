@@ -1,0 +1,6 @@
+[package]
+name = "arkhe-openwrt-adapter"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
