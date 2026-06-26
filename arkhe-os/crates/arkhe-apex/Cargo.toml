@@ -1,0 +1,6 @@
+[package]
+name = "arkhe-apex"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

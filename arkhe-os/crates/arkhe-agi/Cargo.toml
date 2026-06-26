@@ -1,0 +1,13 @@
+[package]
+name = "arkhe-agi"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+tokio.workspace = true
+arkhe-agents = { path = "../arkhe-agents" }
+arkhe-llm = { path = "../arkhe-llm" }
+arkhe-identity = { path = "../arkhe-identity" }
+[[bin]]
+name = "arkhe-agi"
+path = "src/main.rs"

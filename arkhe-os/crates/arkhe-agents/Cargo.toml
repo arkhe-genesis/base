@@ -1,0 +1,7 @@
+[package]
+name = "arkhe-agents"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+arkhe-core = { path = "../arkhe-core" }

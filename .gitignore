@@ -1,5 +1,33 @@
 target/
-Cargo.lock
-**/*.rs.bk
-arkhe-os/
-/tmp/
+.claude/
+.idea/
+.DS_Store
+.devnet/
+.sisyphus/
+eif*.bin
+*.log
+.vscode/
+*.env
+# SP1 ELF binaries are built on demand and not committed.
+crates/proof/succinct/elf/range-elf-embedded
+crates/proof/succinct/elf/aggregation-elf
+crates/proof/succinct/elf/*.bin
+/etc/scripts/local/__pycache__/
+*/__pycache__
+__pycache__/
+arkhe-os/target/
+arkhe-os/target/
+target
+arkhe-os/target/
+target
+arkhe-os/target/
+
+# Ignores
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
+arkhe-os/target/
