@@ -17,6 +17,10 @@ members = [
   "crates/cathedral-tailscale",
   "crates/cathedral-prometheus",
   "crates/cathedral-xtask",
+  "crates/arkhe-flock",
+  "crates/arkhe-governance",
+  "crates/arkhe-nexus-governance",
+  "crates/arkhe-parsing",
   "crates/cathedral-nostr",
   "crates/cathedral-wormgraph",
   "crates/cathedral-zk-circuits",
@@ -27,6 +31,10 @@ members = [
   "sdk-rs",
   "zk-circuits",
   "crates/cathedral-xtask",
+  "crates/arkhe-flock",
+  "crates/arkhe-governance",
+  "crates/arkhe-nexus-governance",
+  "crates/arkhe-parsing",
 
 
 
@@ -92,6 +100,10 @@ default-members = [
   "crates/cathedral-tailscale",
   "crates/cathedral-prometheus",
   "crates/cathedral-xtask",
+  "crates/arkhe-flock",
+  "crates/arkhe-governance",
+  "crates/arkhe-nexus-governance",
+  "crates/arkhe-parsing",
   "crates/cathedral-nostr",
   "crates/cathedral-wormgraph",
   "crates/cathedral-zk-circuits",
@@ -102,6 +114,10 @@ default-members = [
   "sdk-rs",
   "zk-circuits",
   "crates/cathedral-xtask",
+  "crates/arkhe-flock",
+  "crates/arkhe-governance",
+  "crates/arkhe-nexus-governance",
+  "crates/arkhe-parsing",
 
 
 
@@ -452,7 +468,7 @@ tokio-tungstenite = "0.28.0"
 
 # async
 futures = "0.3.31"
-reqwest = "0.13.1"
+reqwest = { version = "0.13.1", features = ["json"] }
 async-trait = "0.1.83"
 
 # grpc
