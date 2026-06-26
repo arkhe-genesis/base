@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum TeeType {
     SGX,
-    SEV_SNP,
+    SevSnp,
     IoNet,
     None,
 }

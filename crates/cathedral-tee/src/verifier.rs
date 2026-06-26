@@ -1,5 +1,6 @@
-use crate::types::{AttestationReport, AttestationResult, TeeType};
 use std::collections::HashMap;
+
+use crate::types::{AttestationReport, AttestationResult, TeeType};
 
 pub struct Verifier {
     trusted_hashes: HashMap<String, String>,
@@ -18,7 +19,7 @@ impl Verifier {
         let hash_match = if let Some(expected) = self.trusted_hashes.get(&report.worker_id) {
             &report.binary_hash == expected
         } else {
-            matches!(report.tee_type, TeeType::SGX | TeeType::SEV_SNP)
+            matches!(report.tee_type, TeeType::SGX | TeeType::SevSnp)
         };
 
         if !hash_match {
@@ -31,7 +32,7 @@ impl Verifier {
         }
 
         let tee_verified = match report.tee_type {
-            TeeType::SGX | TeeType::SEV_SNP | TeeType::IoNet => true,
+            TeeType::SGX | TeeType::SevSnp | TeeType::IoNet => true,
             TeeType::None => false,
         };
 
