@@ -4,8 +4,8 @@ exclude_all_private = false
 max_concurrency = 16
 max_retries = 3
 retry_wait_time = 5
-cache_exclude_status = [429]
-accept = [200, 403, 429, 502, 503] # 403 is often returned by private repos instead of 404; 429 is rate limiting; 502/503 is transient GitHub unavailability
+cache_exclude_status = ["429"]
+accept = ["200", "403", "429", "502", "503"] # 403 is often returned by private repos instead of 404; 429 is rate limiting; 502/503 is transient GitHub unavailability
 exclude_path = [
 
 
@@ -59,9 +59,10 @@ exclude = [
     "https://github.com/paradigmxyz/reth/tree/main/crates/primitives",
 
     # Internal / placeholder
-    'foo.bar',
-    'localhost',
 
+
+
+    "http://www.nongnu.org/libunwind/",
     # Shields.io badges that query live GitHub stats (flaky, not real links)
     'https://img.shields.io/github/commit-activity/w/base/base',
     'https://img.shields.io/github/issues-pr-raw/base/base',

@@ -1,3 +1,7 @@
+pub mod model;
+
+pub use model::{LlamaEngine, ModelConfig};
+
 #[derive(Clone, Debug, PartialEq, Eq, Hash)]
 pub enum ModelTier { Pro, Plus, Standard, Lite }
 
