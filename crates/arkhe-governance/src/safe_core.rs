@@ -30,7 +30,7 @@ impl BusinessHoursHook {
     }
 
     pub fn is_allowed_at(&self, now: chrono::DateTime<chrono::Local>) -> bool {
-        use chrono::{Timelike, Datelike};
+        use chrono::{Datelike, Timelike};
         let hour = now.hour();
         let weekday = now.weekday().num_days_from_monday();
 
@@ -50,7 +50,9 @@ impl SafeCoreHook for BusinessHoursHook {
         if !self.is_allowed_at(now) {
             return Err(HookError::Blocked(format!(
                 "Fora do horário de expediente ({}h, precisa {}h-{}h)",
-                now.format("%H"), self.start_hour, self.end_hour
+                now.format("%H"),
+                self.start_hour,
+                self.end_hour
             )));
         }
         Ok(())
@@ -66,7 +68,7 @@ impl SafeCoreHook for BusinessHoursHook {
 #[cfg(test)]
 mod tests {
     use super::*;
-    use chrono::{Local, TimeZone, Datelike, Timelike};
+    use chrono::{Datelike, Local, TimeZone, Timelike};
 
     #[test]
     fn test_business_hours_allows_weekday_10h() {

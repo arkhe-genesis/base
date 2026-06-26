@@ -1,12 +1,12 @@
 //! EpisodicSync — CRDT-lite com vector clock
 //! Selo: CATHEDRAL-ARKHE-EPISODIC-v1.0.0-2026-06-19
 
-mod sync;
-mod storage;
-mod types;
 mod sqlite_storage;
+mod storage;
+mod sync;
+mod types;
 
-pub use sync::EpisodicSync;
-pub use storage::{JsonlStorage, Storage};
 pub use sqlite_storage::SqliteStorage;
-pub use types::{EpisodicEntry, VectorClock, Ordering};
+pub use storage::{JsonlStorage, Storage};
+pub use sync::EpisodicSync;
+pub use types::{EpisodicEntry, Ordering, VectorClock};

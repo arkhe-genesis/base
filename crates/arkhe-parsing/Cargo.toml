@@ -16,8 +16,8 @@ sha3 = { version = "0.10", optional = true }
 hex = { version = "0.4", optional = true }
 
 [features]
-default = ["ethereum"]
-ethereum = ["dep:sha3", "dep:hex"]
+default = [ "ethereum" ]
+ethereum = [ "dep:hex", "dep:sha3" ]
 
 [dev-dependencies]
 proptest = "1.4"

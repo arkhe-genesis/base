@@ -1,6 +1,6 @@
-use chrono::{DateTime, Utc, Duration};
-use std::collections::HashSet;
+use chrono::{DateTime, Duration, Utc};
 use serde::{Deserialize, Serialize};
+use std::collections::HashSet;
 
 #[derive(Debug, Clone, PartialEq, Eq, Serialize, Deserialize)]
 pub enum ActionClass {
@@ -41,15 +41,14 @@ pub struct GovernanceProposal {
 }
 
 impl GovernanceProposal {
-    pub fn new(id: String, description: String, action: AdministrativeAction, total_voters: u64, requested_delay: Duration) -> Self {
-        Self {
-            id,
-            description,
-            action,
-            total_voters,
-            requested_delay,
-            votes: HashSet::new(),
-        }
+    pub fn new(
+        id: String,
+        description: String,
+        action: AdministrativeAction,
+        total_voters: u64,
+        requested_delay: Duration,
+    ) -> Self {
+        Self { id, description, action, total_voters, requested_delay, votes: HashSet::new() }
     }
 
     pub fn vote_for(&mut self, did: String) {
@@ -131,8 +130,8 @@ impl GovernanceAction {
     }
 
     pub fn earliest_execution(&self) -> DateTime<Utc> {
-        let chrono_delay = Duration::from_std(self.requested_delay)
-            .expect("Delay must fit in i64 nanoseconds");
+        let chrono_delay =
+            Duration::from_std(self.requested_delay).expect("Delay must fit in i64 nanoseconds");
         self.created_at + chrono_delay
     }
 }
@@ -154,22 +153,19 @@ pub struct GovernanceInvariantChecker {
 
 impl Default for GovernanceInvariantChecker {
     fn default() -> Self {
-        Self {
-            revocation_window: std::time::Duration::from_secs(24 * 3600),
-        }
+        Self { revocation_window: std::time::Duration::from_secs(24 * 3600) }
     }
 }
 
 impl GovernanceInvariantChecker {
     pub fn check(&self, _action: &GovernanceAction) -> CheckResult {
-        CheckResult {
-            satisfied: true,
-            summary: "Satisfied".to_string(),
-        }
+        CheckResult { satisfied: true, summary: "Satisfied".to_string() }
     }
 
     pub fn check_revocation(&self, target: &GovernanceAction) -> Result<(), String> {
-        let elapsed = std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs() - target.created_at.timestamp() as u64;
+        let elapsed =
+            std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap().as_secs()
+                - target.created_at.timestamp() as u64;
         if elapsed > self.revocation_window.as_secs() {
             return Err("Revocation window expired".to_string());
         }

@@ -7,9 +7,7 @@ pub struct AsyncGovernanceGuard {
 
 impl AsyncGovernanceGuard {
     pub fn new() -> Self {
-        Self {
-            inner: tokio::sync::Mutex::new(GovernanceGuard::new()),
-        }
+        Self { inner: tokio::sync::Mutex::new(GovernanceGuard::new()) }
     }
 
     pub async fn submit(&self, action: GovernanceAction) -> Result<String, GuardError> {
@@ -17,11 +15,7 @@ impl AsyncGovernanceGuard {
         guard.submit_action(action)
     }
 
-    pub async fn execute<F, R>(
-        &self,
-        proposal_id: &str,
-        action: F,
-    ) -> Result<R, GuardError>
+    pub async fn execute<F, R>(&self, proposal_id: &str, action: F) -> Result<R, GuardError>
     where
         F: FnOnce(&GovernanceAction) -> Result<R, String>,
     {

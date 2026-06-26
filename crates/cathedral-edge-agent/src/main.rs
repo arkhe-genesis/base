@@ -1,12 +1,14 @@
-use axum::{Router, routing::get, Json};
-use cathedral_scheduler::{HybridScheduler, WorkerRegistry, WorkerProfile, WorkerTier, TaskType, TeeType};
+use axum::{Json, Router, routing::get};
 use cathedral_agi::{AGICore, OllamaClient};
 use cathedral_episodic::EpisodicSync;
 use cathedral_fallback::FallbackChain;
+use cathedral_scheduler::{
+    HybridScheduler, TaskType, TeeType, WorkerProfile, WorkerRegistry, WorkerTier,
+};
 use std::sync::Arc;
 use std::time::Duration;
 use tokio::signal;
-use tracing::{info, warn, error};
+use tracing::{error, info, warn};
 
 async fn healthcheck() -> Json<serde_json::Value> {
     Json(serde_json::json!({
@@ -22,12 +24,7 @@ async fn main() -> anyhow::Result<()> {
     info!("🏛️ Cathedral Edge Agent v3.0.0 (Hybrid Mode) starting...");
 
     let registry = Arc::new(WorkerRegistry::new());
-    let scheduler = Arc::new(HybridScheduler::new(
-        registry.clone(),
-        15000,
-        0.7,
-        100_000,
-    ));
+    let scheduler = Arc::new(HybridScheduler::new(registry.clone(), 15000, 0.7, 100_000));
     let fallback = Arc::new(FallbackChain::new(8000));
 
     register_workers(&registry).await?;
@@ -40,25 +37,27 @@ async fn main() -> anyhow::Result<()> {
     let llm = Arc::new(OllamaClient::new("llama3.1:8b"));
     info!("🔍 Checking Ollama health...");
     if !llm.healthcheck().await {
-        warn!("⚠️ Ollama not reachable at http://localhost:11434. AGI Core will use simulation fallback.");
+        warn!(
+            "⚠️ Ollama not reachable at http://localhost:11434. AGI Core will use simulation fallback."
+        );
     } else {
         info!("✅ Ollama is reachable");
     }
 
-    let agi_core = Arc::new(tokio::sync::Mutex::new(
-        AGICore::new(llm.clone(), Some(episodic.clone()))
-    ));
+    let agi_core =
+        Arc::new(tokio::sync::Mutex::new(AGICore::new(llm.clone(), Some(episodic.clone()))));
 
     let scheduler_clone = scheduler.clone();
-    let app = Router::new()
-        .route("/health", get(healthcheck))
-        .route("/metrics", get(move || async move {
+    let app = Router::new().route("/health", get(healthcheck)).route(
+        "/metrics",
+        get(move || async move {
             let stats = scheduler_clone.stats().await;
             Json(serde_json::json!({
                 "workers": stats,
                 "agi_confidence": { "confidence": 0.5 },
             }))
-        }));
+        }),
+    );
 
     let server_handle = tokio::spawn(async {
         let listener = tokio::net::TcpListener::bind("0.0.0.0:9898").await.unwrap();

@@ -19,10 +19,7 @@ pub struct HierarchicalWormhole {
 
 impl HierarchicalWormhole {
     pub fn new(max_level: u32) -> Self {
-        Self {
-            cache: HashMap::new(),
-            max_level,
-        }
+        Self { cache: HashMap::new(), max_level }
     }
 
     pub fn compress(&mut self, text: &str) -> String {
@@ -39,11 +36,8 @@ impl HierarchicalWormhole {
     fn build_abstraction(&self, segments: &[&str], level: u32) -> Abstraction {
         if level >= self.max_level || segments.len() <= 2 {
             let content = segments.join(". ");
-            let truncated = if content.len() > 200 {
-                format!("{}...", &content[..197])
-            } else {
-                content
-            };
+            let truncated =
+                if content.len() > 200 { format!("{}...", &content[..197]) } else { content };
             Abstraction {
                 id: format!("abs-{}-{}", level, segments.len()),
                 content: truncated.clone(),
@@ -58,11 +52,8 @@ impl HierarchicalWormhole {
             let left = self.build_abstraction(&segments[..half], level + 1);
             let right = self.build_abstraction(&segments[half..], level + 1);
             let content = format!("{} | {}", left.content, right.content);
-            let truncated = if content.len() > 200 {
-                format!("{}...", &content[..197])
-            } else {
-                content
-            };
+            let truncated =
+                if content.len() > 200 { format!("{}...", &content[..197]) } else { content };
             Abstraction {
                 id: format!("abs-{}-{}", level, segments.len()),
                 content: truncated.clone(),
@@ -79,9 +70,8 @@ impl HierarchicalWormhole {
         if abs.children.is_empty() {
             format!("[{}]", abs.content)
         } else {
-            let children_str: Vec<String> = abs.children.iter()
-                .map(|c| self.serialize_abstraction(c))
-                .collect();
+            let children_str: Vec<String> =
+                abs.children.iter().map(|c| self.serialize_abstraction(c)).collect();
             format!("({})", children_str.join(","))
         }
     }

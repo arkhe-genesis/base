@@ -10,9 +10,5 @@ pub const STUBS_TO_REPLACE: &[&str] = &[
 ];
 
 pub fn check_migration_status(code: &str) -> Vec<&'static str> {
-    STUBS_TO_REPLACE
-        .iter()
-        .filter(|stub| code.contains(*stub))
-        .copied()
-        .collect()
+    STUBS_TO_REPLACE.iter().filter(|stub| code.contains(*stub)).copied().collect()
 }

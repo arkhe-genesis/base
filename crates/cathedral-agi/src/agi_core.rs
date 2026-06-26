@@ -1,9 +1,9 @@
-use crate::world_model::{WorldModel, WorldState};
+use crate::ethics::{EthicsResult, EthicsVerifier};
+use crate::llm_client::OllamaClient;
 use crate::mcts::{MCTSEngine, MCTSResult};
 use crate::meta_cognitive::{MetaCognitiveLoop, MetaState};
+use crate::world_model::{WorldModel, WorldState};
 use crate::wormhole::HierarchicalWormhole;
-use crate::ethics::{EthicsVerifier, EthicsResult};
-use crate::llm_client::OllamaClient;
 use cathedral_episodic::EpisodicSync;
 use std::sync::Arc;
 use tracing::info;
@@ -18,10 +18,7 @@ pub struct AGICore {
 }
 
 impl AGICore {
-    pub fn new(
-        llm: Arc<OllamaClient>,
-        episodic_memory: Option<Arc<EpisodicSync>>,
-    ) -> Self {
+    pub fn new(llm: Arc<OllamaClient>, episodic_memory: Option<Arc<EpisodicSync>>) -> Self {
         let mut meta_loop = MetaCognitiveLoop::new(5);
         if let Some(mem) = episodic_memory {
             meta_loop = meta_loop.with_memory(mem);

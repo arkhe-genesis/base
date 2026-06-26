@@ -1,0 +1,223 @@
+--- a/crates/cathedral-scheduler/src/metrics.rs
++++ b/crates/cathedral-scheduler/src/metrics.rs
+@@ -23,12 +23,26 @@ impl SchedulerMetrics {
+         let registry = prometheus::default_registry();
+
+         let workers_total = register_gauge!("scheduler_workers_total", "Total workers registered")
+-            .unwrap_or_else(|_| Gauge::new("scheduler_workers_total", "Total workers registered").unwrap());
+-        let workers_by_tier = register_gauge!("scheduler_workers_by_tier", "Workers by tier").unwrap_or_else(|_| Gauge::new("scheduler_workers_by_tier", "Workers by tier").unwrap());
+-        let avg_reputation = register_gauge!("scheduler_avg_reputation", "Average reputation").unwrap_or_else(|_| Gauge::new("scheduler_avg_reputation", "Average reputation").unwrap());
+-        let tasks_scheduled = register_counter!("scheduler_tasks_scheduled_total", "Total tasks scheduled").unwrap_or_else(|_| Counter::new("scheduler_tasks_scheduled_total", "Total tasks scheduled").unwrap());
+-        let tasks_failed = register_counter!("scheduler_tasks_failed_total", "Total tasks failed").unwrap_or_else(|_| Counter::new("scheduler_tasks_failed_total", "Total tasks failed").unwrap());
++            .unwrap_or_else(|_| {
++                Gauge::new("scheduler_workers_total", "Total workers registered").unwrap()
++            });
++        let workers_by_tier = register_gauge!("scheduler_workers_by_tier", "Workers by tier")
++            .unwrap_or_else(|_| {
++                Gauge::new("scheduler_workers_by_tier", "Workers by tier").unwrap()
++            });
++        let avg_reputation = register_gauge!("scheduler_avg_reputation", "Average reputation")
++            .unwrap_or_else(|_| {
++                Gauge::new("scheduler_avg_reputation", "Average reputation").unwrap()
++            });
++        let tasks_scheduled =
++            register_counter!("scheduler_tasks_scheduled_total", "Total tasks scheduled")
++                .unwrap_or_else(|_| {
++                    Counter::new("scheduler_tasks_scheduled_total", "Total tasks scheduled")
++                        .unwrap()
++                });
++        let tasks_failed = register_counter!("scheduler_tasks_failed_total", "Total tasks failed")
++            .unwrap_or_else(|_| {
++                Counter::new("scheduler_tasks_failed_total", "Total tasks failed").unwrap()
++            });
+         let duration_seconds = register_histogram!(
+             HistogramOpts::new("scheduler_duration_seconds", "Scheduler decision duration")
+                 .buckets(vec![0.001, 0.005, 0.01, 0.05, 0.1, 0.5])
+-        ).unwrap_or_else(|_| Histogram::with_opts(HistogramOpts::new("scheduler_duration_seconds", "Scheduler decision duration").buckets(vec![0.001, 0.005, 0.01, 0.05, 0.1, 0.5])).unwrap());
+-        let estimated_cost = register_gauge!("scheduler_estimated_cost_usd", "Estimated cost per task").unwrap_or_else(|_| Gauge::new("scheduler_estimated_cost_usd", "Estimated cost per task").unwrap());
++        )
++        .unwrap_or_else(|_| {
++            Histogram::with_opts(
++                HistogramOpts::new("scheduler_duration_seconds", "Scheduler decision duration")
++                    .buckets(vec![0.001, 0.005, 0.01, 0.05, 0.1, 0.5]),
++            )
++            .unwrap()
++        });
++        let estimated_cost =
++            register_gauge!("scheduler_estimated_cost_usd", "Estimated cost per task")
++                .unwrap_or_else(|_| {
++                    Gauge::new("scheduler_estimated_cost_usd", "Estimated cost per task").unwrap()
++                });
+
+         Self {
+             workers_total,
+@@ -54,7 +68,14 @@ impl SchedulerMetrics {
+         self.tasks_failed.inc();
+     }
+
+-    pub fn update_registry_stats(&self, total: usize, gpu: usize, cpu: usize, datacenter: usize, avg_rep: f32) {
++    pub fn update_registry_stats(
++        &self,
++        total: usize,
++        gpu: usize,
++        cpu: usize,
++        datacenter: usize,
++        avg_rep: f32,
++    ) {
+         self.workers_total.set(total as f64);
+         self.workers_by_tier.set(gpu as f64);
+         self.avg_reputation.set(avg_rep as f64);
+--- a/crates/cathedral-scheduler/src/registry.rs
++++ b/crates/cathedral-scheduler/src/registry.rs
+@@ -1,4 +1,4 @@
+-use crate::types::{WorkerProfile, WorkerTier, SchedulerStats};
++use crate::types::{SchedulerStats, WorkerProfile, WorkerTier};
+ use anyhow::Result;
+ use std::collections::HashMap;
+ use std::sync::Arc;
+@@ -10,9 +10,7 @@ pub struct WorkerRegistry {
+
+ impl WorkerRegistry {
+     pub fn new() -> Self {
+-        Self {
+-            workers: Arc::new(RwLock::new(HashMap::new())),
+-        }
++        Self { workers: Arc::new(RwLock::new(HashMap::new())) }
+     }
+
+     pub async fn register(&self, profile: WorkerProfile) -> Result<()> {
+@@ -47,18 +45,12 @@ impl WorkerRegistry {
+
+     pub async fn list(&self, tier: Option<WorkerTier>) -> Vec<WorkerProfile> {
+         let map = self.workers.read().await;
+-        map.values()
+-            .filter(|p| tier.as_ref().map_or(true, |t| &p.tier == t))
+-            .cloned()
+-            .collect()
++        map.values().filter(|p| tier.as_ref().map_or(true, |t| &p.tier == t)).cloned().collect()
+     }
+
+     pub async fn available(&self) -> Vec<WorkerProfile> {
+         let map = self.workers.read().await;
+-        map.values()
+-            .filter(|p| p.available && p.reputation >= 0.7)
+-            .cloned()
+-            .collect()
++        map.values().filter(|p| p.available && p.reputation >= 0.7).cloned().collect()
+     }
+
+     pub async fn stats(&self) -> SchedulerStats {
+--- a/crates/cathedral-scheduler/src/scheduler.rs
++++ b/crates/cathedral-scheduler/src/scheduler.rs
+@@ -1,6 +1,6 @@
+-use crate::types::{TaskType, WorkerTier, SchedulingDecision, SchedulerStats};
+-use crate::registry::WorkerRegistry;
+ use crate::metrics::SchedulerMetrics;
++use crate::registry::WorkerRegistry;
++use crate::types::{SchedulerStats, SchedulingDecision, TaskType, WorkerTier};
+ use anyhow::Result;
+ use std::collections::HashMap;
+ use std::sync::Arc;
+@@ -81,7 +81,8 @@ impl HybridScheduler {
+             let score = cost_weight * cost_normalized + latency_weight * latency_normalized;
+
+             let latency_penalty = if worker.latency_p95_ms > self.max_latency_ms {
+-                ((worker.latency_p95_ms - self.max_latency_ms) as f32 / self.max_latency_ms as f32) * 0.5
++                ((worker.latency_p95_ms - self.max_latency_ms) as f32 / self.max_latency_ms as f32)
++                    * 0.5
+             } else {
+                 0.0
+             };
+--- a/crates/cathedral-scheduler/tests/integration.rs
++++ b/crates/cathedral-scheduler/tests/integration.rs
+@@ -1,4 +1,6 @@
+-use cathedral_scheduler::{HybridScheduler, WorkerRegistry, WorkerProfile, WorkerTier, TaskType, TeeType};
++use cathedral_scheduler::{
++    HybridScheduler, TaskType, TeeType, WorkerProfile, WorkerRegistry, WorkerTier,
++};
+ use std::sync::Arc;
+
+ #[tokio::test]
+--- a/crates/cathedral-tee/src/bridge.rs
++++ b/crates/cathedral-tee/src/bridge.rs
+@@ -1,8 +1,8 @@
++use crate::secure_vm::SecureVmExecutor;
+ use crate::types::{AttestationReport, AttestationResult, TeeType};
+ use crate::verifier::Verifier;
+-use uuid::Uuid;
+-use crate::secure_vm::SecureVmExecutor;
+ use anyhow::Result;
++use uuid::Uuid;
+
+ pub struct TEEBridge {
+     verifier: Verifier,
+@@ -29,7 +29,12 @@ impl TEEBridge {
+         TeeType::None
+     }
+
+-    pub async fn verify_or_secure_execute(&self, worker_id: &str, binary: &[u16], input: &str) -> Result<String> {
++    pub async fn verify_or_secure_execute(
++        &self,
++        worker_id: &str,
++        binary: &[u16],
++        input: &str,
++    ) -> Result<String> {
+         let tee_type = self.get_tee_type(worker_id);
+         if tee_type == TeeType::None {
+             // Usar software VM como TEE
+--- a/crates/cathedral-tee/src/lib.rs
++++ b/crates/cathedral-tee/src/lib.rs
+@@ -2,10 +2,10 @@
+ //! Selo: CATHEDRAL-ARKHE-TEE-v1.0.0-2026-06-19
+
+ mod bridge;
++pub mod secure_vm;
+ mod types;
+ mod verifier;
+-pub mod secure_vm;
+
+ pub use bridge::TEEBridge;
+-pub use types::{TeeType, AttestationReport, AttestationResult};
+ pub use secure_vm::SecureVmExecutor;
++pub use types::{AttestationReport, AttestationResult, TeeType};
+--- a/crates/cathedral-tee/src/secure_vm.rs
++++ b/crates/cathedral-tee/src/secure_vm.rs
+@@ -1,5 +1,5 @@
+-use cathedral_lc3_vm::Lc3Vm;
+ use anyhow::Result;
++use cathedral_lc3_vm::Lc3Vm;
+ use std::sync::Arc;
+ use tokio::sync::Mutex;
+
+@@ -11,11 +11,7 @@ pub struct SecureVmExecutor {
+
+ impl SecureVmExecutor {
+     pub fn new(max_instructions: u64, memory_limit: usize) -> Self {
+-        Self {
+-            vm: Arc::new(Mutex::new(Lc3Vm::new())),
+-            max_instructions,
+-            memory_limit,
+-        }
++        Self { vm: Arc::new(Mutex::new(Lc3Vm::new())), max_instructions, memory_limit }
+     }
+
+     pub async fn execute_secure(&self, binary: &[u16], input: &str) -> Result<String> {
+@@ -32,7 +28,8 @@ impl SecureVmExecutor {
+                     vm_clone.run()?;
+                     Ok::<String, anyhow::Error>(vm_clone.get_output().to_string())
+                 }
+-            })
+-        ).await??
++            }),
++        )
++        .await??
+     }
+ }
+--- a/crates/cathedral-tee/tests/integration.rs
++++ b/crates/cathedral-tee/tests/integration.rs
+@@ -1,4 +1,4 @@
+-use cathedral_tee::{TEEBridge, AttestationReport, TeeType};
++use cathedral_tee::{AttestationReport, TEEBridge, TeeType};
+ use chrono::Utc;
+
+ #[test]

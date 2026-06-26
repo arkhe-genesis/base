@@ -1,9 +1,9 @@
-use std::sync::{Mutex, MutexGuard};
 use crate::invariants::{
-    GovernanceAction, GovernanceProposal, GovernanceInvariantChecker, GovernanceError,
-    GovernanceViolation, ExecutionResult, ExecutedAction, ExecutedProposal
+    ExecutedAction, ExecutedProposal, ExecutionResult, GovernanceAction, GovernanceError,
+    GovernanceInvariantChecker, GovernanceProposal, GovernanceViolation,
 };
 use crate::safe_core::SafeCoreHook;
+use std::sync::{Mutex, MutexGuard};
 
 #[derive(Debug, thiserror::Error)]
 pub enum GuardError {
@@ -62,12 +62,18 @@ impl GovernanceGuard {
         Ok(hex::encode(action.id))
     }
 
-    pub fn execute<F>(&self, proposal_id: &str, action: F) -> Result<ExecutionResult, GovernanceError>
+    pub fn execute<F>(
+        &self,
+        proposal_id: &str,
+        action: F,
+    ) -> Result<ExecutionResult, GovernanceError>
     where
         F: FnOnce(&GovernanceProposal) -> Result<(), Box<dyn std::error::Error + Send + Sync>>,
     {
         let pending = self.pending_proposals.lock().unwrap();
-        let proposal = pending.iter().find(|p| p.id == proposal_id)
+        let proposal = pending
+            .iter()
+            .find(|p| p.id == proposal_id)
             .cloned()
             .ok_or_else(|| GovernanceError::Error("Proposal not found".to_string()))?;
         drop(pending);
@@ -94,7 +100,9 @@ impl GovernanceGuard {
         F: FnOnce(&GovernanceAction) -> Result<R, String>,
     {
         let mut pending = self.pending.lock().unwrap();
-        let pos = pending.iter().position(|p| hex::encode(p.id) == proposal_id)
+        let pos = pending
+            .iter()
+            .position(|p| hex::encode(p.id) == proposal_id)
             .ok_or_else(|| GuardError::NotFound(proposal_id.to_string()))?;
 
         let proposal = pending.remove(pos);
@@ -124,22 +132,34 @@ impl GovernanceGuard {
         action_result.map_err(|e| GuardError::ExecutionFailed(e.into()))
     }
 
-    pub fn cancel(&self, proposal_id: &str, _cancellation: &GovernanceProposal) -> Result<(), GovernanceError> {
+    pub fn cancel(
+        &self,
+        proposal_id: &str,
+        _cancellation: &GovernanceProposal,
+    ) -> Result<(), GovernanceError> {
         let mut pending = self.pending_proposals.lock().unwrap();
-        let pos = pending.iter().position(|p| p.id == proposal_id)
+        let pos = pending
+            .iter()
+            .position(|p| p.id == proposal_id)
             .ok_or_else(|| GovernanceError::Error("Proposal not found".to_string()))?;
         pending.remove(pos);
         Ok(())
     }
 
-    pub fn cancel_action(&self, proposal_id: &str, cancellation: &GovernanceAction) -> Result<(), GuardError> {
+    pub fn cancel_action(
+        &self,
+        proposal_id: &str,
+        cancellation: &GovernanceAction,
+    ) -> Result<(), GuardError> {
         let check = self.checker.lock().unwrap().check(cancellation);
         if !check.satisfied {
             return Err(GuardError::CancellationDenied(check.summary()));
         }
 
         let mut pending = self.pending.lock().unwrap();
-        let pos = pending.iter().position(|p| hex::encode(p.id) == proposal_id)
+        let pos = pending
+            .iter()
+            .position(|p| hex::encode(p.id) == proposal_id)
             .ok_or_else(|| GuardError::NotFound(proposal_id.to_string()))?;
 
         let target = &pending[pos];

@@ -17,11 +17,7 @@ pub struct FlockConfig {
 
 impl Default for FlockConfig {
     fn default() -> Self {
-        Self {
-            flock_bin: None,
-            hash_function: "blake3".into(),
-            steps: 256,
-        }
+        Self { flock_bin: None, hash_function: "blake3".into(), steps: 256 }
     }
 }
 

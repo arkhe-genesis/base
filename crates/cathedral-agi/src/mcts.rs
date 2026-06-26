@@ -1,11 +1,11 @@
-use crate::world_model::WorldState;
-use crate::llm_client::OllamaClient;
 use crate::ethics::EthicsResult;
+use crate::llm_client::OllamaClient;
+use crate::world_model::WorldState;
 use rand::Rng;
+use serde_json::json;
 use std::collections::HashMap;
 use std::sync::Arc;
 use tracing::info;
-use serde_json::json;
 
 #[derive(Debug, Clone)]
 pub struct MCTSNode {
@@ -41,7 +41,12 @@ pub struct MCTSEngine {
 }
 
 impl MCTSEngine {
-    pub fn new(llm: Arc<OllamaClient>, exploration_constant: f32, max_iterations: usize, max_depth: usize) -> Self {
+    pub fn new(
+        llm: Arc<OllamaClient>,
+        exploration_constant: f32,
+        max_iterations: usize,
+        max_depth: usize,
+    ) -> Self {
         Self {
             llm,
             exploration_constant,
@@ -130,11 +135,14 @@ impl MCTSEngine {
         let best_path = self.extract_best_path(&tree);
         let total_value = best_path.iter().map(|n| n.value).sum::<f32>() / best_path.len() as f32;
         let verification_passed = best_path.iter().all(|n| n.step_verified);
-        let action_history: Vec<String> = best_path.iter()
-            .filter_map(|n| n.action.clone())
-            .collect();
+        let action_history: Vec<String> =
+            best_path.iter().filter_map(|n| n.action.clone()).collect();
 
-        info!("✅ MCTS complete: {} nodes explored, {} actions in best path", node_count, action_history.len());
+        info!(
+            "✅ MCTS complete: {} nodes explored, {} actions in best path",
+            node_count,
+            action_history.len()
+        );
 
         MCTSResult {
             best_path,
@@ -147,12 +155,14 @@ impl MCTSEngine {
     }
 
     async fn generate_actions(&self, abstraction: &str) -> anyhow::Result<Vec<String>> {
-        let prompt = format!("{}\n\nProblem/context: {}\n\nGenerate actions:", self.system_prompt, abstraction);
+        let prompt = format!(
+            "{}\n\nProblem/context: {}\n\nGenerate actions:",
+            self.system_prompt, abstraction
+        );
         let response = self.llm.generate(&prompt, 200, 0.3).await?;
 
-        let parsed: serde_json::Value = serde_json::from_str(&response).unwrap_or_else(|_| {
-            json!({ "actions": [response] })
-        });
+        let parsed: serde_json::Value =
+            serde_json::from_str(&response).unwrap_or_else(|_| json!({ "actions": [response] }));
 
         let actions: Vec<String> = parsed["actions"]
             .as_array()
@@ -176,7 +186,8 @@ impl MCTSEngine {
     }
 
     async fn rollout_action(&self, _state: &WorldState) -> String {
-        let possible = vec!["aprofundar".to_string(), "concluir".to_string(), "questionar".to_string()];
+        let possible =
+            vec!["aprofundar".to_string(), "concluir".to_string(), "questionar".to_string()];
         let idx = rand::rng().random_range(0..possible.len());
         possible[idx].clone()
     }
@@ -189,7 +200,8 @@ impl MCTSEngine {
         for &child_id in &parent.children {
             let child = tree.get(&child_id).unwrap();
             let exploitation = child.value / (child.visits as f32 + 1e-6);
-            let exploration = self.exploration_constant * (total_visits.ln() / (child.visits as f32 + 1e-6)).sqrt();
+            let exploration = self.exploration_constant
+                * (total_visits.ln() / (child.visits as f32 + 1e-6)).sqrt();
             let ucb = exploitation + exploration;
             if ucb > best_ucb {
                 best_ucb = ucb;
@@ -204,7 +216,9 @@ impl MCTSEngine {
         let mut current_id = 0;
         while let Some(node) = tree.get(&current_id) {
             path.push(node.clone());
-            if node.children.is_empty() { break; }
+            if node.children.is_empty() {
+                break;
+            }
             let mut best_child_id = current_id;
             let mut best_value = -f32::INFINITY;
             for &child_id in &node.children {
@@ -214,7 +228,9 @@ impl MCTSEngine {
                     best_child_id = child_id;
                 }
             }
-            if best_child_id == current_id { break; }
+            if best_child_id == current_id {
+                break;
+            }
             current_id = best_child_id;
         }
         path

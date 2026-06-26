@@ -31,8 +31,12 @@ impl VectorClock {
 
         for (k, v) in &self.entries {
             let other_v = other.entries.get(k).unwrap_or(&0);
-            if v > other_v { self_greater = true; }
-            if v < other_v { other_greater = true; }
+            if v > other_v {
+                self_greater = true;
+            }
+            if v < other_v {
+                other_greater = true;
+            }
         }
 
         for (k, v) in &other.entries {

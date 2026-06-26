@@ -1,6 +1,6 @@
+use crate::error::{ParseError, ParseResult};
 use regex::Regex;
 use std::time::{Duration, Instant};
-use crate::error::{ParseError, ParseResult};
 
 #[derive(Debug, Clone)]
 pub struct SafeRegex {
@@ -17,12 +17,16 @@ impl SafeRegex {
         Self::with_config(pattern, Self::DEFAULT_TIMEOUT, Self::DEFAULT_MAX_INPUT_LEN)
     }
 
-    pub fn with_config(pattern: &str, timeout: Duration, max_input_len: usize) -> ParseResult<Self> {
+    pub fn with_config(
+        pattern: &str,
+        timeout: Duration,
+        max_input_len: usize,
+    ) -> ParseResult<Self> {
         if Self::is_dangerous_pattern(pattern) {
             return Err(ParseError::DangerousPattern(pattern.to_string()));
         }
-        let regex = Regex::new(pattern)
-            .map_err(|e| ParseError::RegexCompilationFailed(e.to_string()))?;
+        let regex =
+            Regex::new(pattern).map_err(|e| ParseError::RegexCompilationFailed(e.to_string()))?;
         Ok(Self { regex, timeout, max_input_len })
     }
 
@@ -64,13 +68,7 @@ impl SafeRegex {
     }
 
     fn is_dangerous_pattern(pattern: &str) -> bool {
-        let dangerous = [
-            r"(\w+\+)+",
-            r"(\w*\*)\*",
-            r"(\w+\?)\?",
-            r"(\w+\+)\*",
-            r"(\w*\*)\+",
-        ];
+        let dangerous = [r"(\w+\+)+", r"(\w*\*)\*", r"(\w+\?)\?", r"(\w+\+)\*", r"(\w*\*)\+"];
         for d in &dangerous {
             let re = Regex::new(d).unwrap();
             if re.is_match(pattern) {

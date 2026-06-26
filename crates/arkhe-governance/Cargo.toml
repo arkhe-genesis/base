@@ -16,4 +16,4 @@ arkhe-flock = { path = "../arkhe-flock", optional = true }
 
 [features]
 default = []
-flock = ["dep:arkhe-flock"]
+flock = [ "dep:arkhe-flock" ]

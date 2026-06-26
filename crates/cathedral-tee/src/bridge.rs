@@ -1,8 +1,8 @@
+use crate::secure_vm::SecureVmExecutor;
 use crate::types::{AttestationReport, AttestationResult, TeeType};
 use crate::verifier::Verifier;
-use uuid::Uuid;
-use crate::secure_vm::SecureVmExecutor;
 use anyhow::Result;
+use uuid::Uuid;
 
 pub struct TEEBridge {
     verifier: Verifier,
@@ -29,7 +29,12 @@ impl TEEBridge {
         TeeType::None
     }
 
-    pub async fn verify_or_secure_execute(&self, worker_id: &str, binary: &[u16], input: &str) -> Result<String> {
+    pub async fn verify_or_secure_execute(
+        &self,
+        worker_id: &str,
+        binary: &[u16],
+        input: &str,
+    ) -> Result<String> {
         let tee_type = self.get_tee_type(worker_id);
         if tee_type == TeeType::None {
             // Usar software VM como TEE
