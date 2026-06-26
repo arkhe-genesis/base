@@ -10,3 +10,6 @@ cathedral-tee = { path = "../cathedral-tee" }
 cathedral-fallback = { path = "../cathedral-fallback" }
 cathedral-agi = { path = "../cathedral-agi" }
 cathedral-edge-agent = { path = "../cathedral-edge-agent" }
+
+[dev-dependencies]
+regex = "1.10"

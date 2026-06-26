@@ -1,0 +1,33 @@
+name: TLA+ Verification (Apalache)
+
+on:
+  push:
+    paths:
+      - 'specs/**/*.tla'
+      - 'specs/**/*.cfg'
+  pull_request:
+    paths:
+      - 'specs/**/*.tla'
+      - 'specs/**/*.cfg'
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Apalache
+        run: |
+          wget https://github.com/informalsystems/apalache/releases/download/v0.49.0/apalache.zip
+          unzip apalache.zip
+          chmod +x apalache/bin/apalache
+
+      - name: Check TLA+ modules
+        run: |
+          ./apalache/bin/apalache typecheck specs/squidbleed_detection.tla
+          ./apalache/bin/apalache check --invariant=Invariant specs/squidbleed_detection.tla
+          ./apalache/bin/apalache check --invariant=SafetyProperty specs/squidbleed_detection.tla
+
+      - name: Generate trace report
+        run: |
+          ./apalache/bin/apalache trace --out report.json specs/squidbleed_detection.tla || (echo "❌ TLA+ verification failed!" && false)

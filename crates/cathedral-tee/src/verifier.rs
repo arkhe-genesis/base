@@ -1,5 +1,6 @@
-use crate::types::{AttestationReport, AttestationResult, TeeType};
 use std::collections::HashMap;
+
+use crate::types::{AttestationReport, AttestationResult, TeeType};
 
 pub struct Verifier {
     trusted_hashes: HashMap<String, String>,

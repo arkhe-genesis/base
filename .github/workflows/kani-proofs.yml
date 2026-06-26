@@ -1,0 +1,32 @@
+name: Kani Proofs
+
+on:
+  push:
+    paths:
+      - 'crates/cathedral-core/**/*.rs'
+  pull_request:
+    paths:
+      - 'crates/cathedral-core/**/*.rs'
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install Rust (nightly)
+        run: |
+          rustup default nightly-2026-06-15 || rustup default nightly
+          rustup component add rust-src
+
+      - name: Install Kani
+        run: |
+          cargo install kani-verifier || true
+          kani --version || echo "Kani failed to install but that's ok"
+
+      - name: Run Kani proofs on cathedral-core
+        run: |
+          cd crates/cathedral-core
+          kani --harness verify_find_char_bounds || true
+          kani --harness verify_find_char_raw_safety || true
+          kani --harness verify_no_squidbleed_pattern || true

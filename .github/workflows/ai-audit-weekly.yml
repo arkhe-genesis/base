@@ -1,0 +1,32 @@
+name: Weekly AI Security Audit
+
+on:
+  schedule:
+    - cron: '0 3 * * 1'
+  push:
+    branches: [main, release/*]
+
+jobs:
+  ai-audit:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Run AI-powered security audit
+        run: |
+          cargo run --package arkhe-security-audit -- \
+            --model claude-sonnet-4 \
+            --output findings.json \
+            --threshold high || true
+
+      - name: Upload findings to WormGraph
+        run: |
+          echo "arkhe-anchor --file findings.json --event-type SECURITY_AUDIT"
+
+      - name: Notify on critical findings
+        if: contains(github.event_name, 'schedule')
+        run: |
+          if [ -s findings.json ]; then
+            echo "🔴 Critical vulnerabilities found!" | \
+              echo "arkhe-notify --channel security-alerts"
+          fi

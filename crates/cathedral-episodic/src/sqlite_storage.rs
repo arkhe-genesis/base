@@ -1,5 +1,6 @@
 use anyhow::Result;
-use sqlx::{SqlitePool, Row, sqlite::SqlitePoolOptions};
+use sqlx::{Row, SqlitePool, sqlite::SqlitePoolOptions};
+
 use crate::types::{EpisodicEntry, VectorClock};
 
 pub struct SqliteStorage {
@@ -8,10 +9,7 @@ pub struct SqliteStorage {
 
 impl SqliteStorage {
     pub async fn new(database_url: &str) -> Result<Self> {
-        let pool = SqlitePoolOptions::new()
-            .max_connections(5)
-            .connect(database_url)
-            .await?;
+        let pool = SqlitePoolOptions::new().max_connections(5).connect(database_url).await?;
 
         sqlx::query(
             r#"
@@ -26,7 +24,7 @@ impl SqliteStorage {
                 confidence REAL NOT NULL,
                 deleted INTEGER NOT NULL DEFAULT 0
             )
-            "#
+            "#,
         )
         .execute(&pool)
         .await?;
