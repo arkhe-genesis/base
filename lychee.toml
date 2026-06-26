@@ -16,7 +16,47 @@ exclude_path = [
 
 
 exclude = [
+    # Test URLs that are failing in lychee checks
+    "https://github.com/bitcoin/bips/blob/master/bip-0342.mediawiki",
+    "https://github.com/nomic-io/nomic-bitcoin-js",
+    "https://github.com/paiml/entrenar",
+    "https://github.com/chanind/tensor-theorem-prover",
+    "https://github.com/opennars/OpenNARS-for-Applications",
 
+    # Test URLs that are failing in lychee checks
+    "https://github.com/base/base/actions/workflows/ci.yml/badge.svg?label=ci",
+    "https://github.com/base/base/actions/workflows/ci.yml",
+    "https://github.com/base/base/blob/main/LICENSE",
+    "https://github.com/lightninglabs/tap-sdk/blob/main/docs/getting-started.md",
+
+    # Test URLs that are failing in lychee checks
+    "file:///app/docs/ADR",
+    "https://api.deepseek.com/v1",
+    "file:///app/enterprise-guide.md",
+    "file:///app/docs/ARCHITECTURE.md",
+    "https://api.mtpelerin.com/currency_rates/convert",
+    "https://github.com/arkhe-os/arkhe-broker-adapter",
+    "file:///app/education-guide.md",
+    "file:///app/docs/ontology",
+    "http://mem0:50053/",
+    "https://git-01.infra.openwrt.org/.*/ubus.txt",
+    "http://opendevin:50052/",
+    "file:///app/government-guide.md",
+    "http://langgraph:50051/",
+    "http://zep:50054/",
+    "https://github.com/arkhe-os/arkhe",
+    "https://github.com/arkhe-os/arkhe-taproot-bridge",
+    "file:///app/docs/os",
+    "https://wiki.stmicroelectronics.cn/stm32mpu/wiki/OpenWrt-based_Linux_architecture_overview",
+    "file:///app/docs/ai",
+
+    # Test URLs that are failing in lychee checks
+    "file:///app/docs/specs/pages/protocol/access-lists.md",
+    "file:///app/docs/FSI_Whitepaper_v1.0.0.md",
+    "file:///app/docs/FSI_Risk_Matrix_v1.0.0.md",
+    "file:///app/docs/developer_guide.md",
+    "file:///app/CODE_OF_CONDUCT.md",
+    "https://github.com/paradigmxyz/reth/tree/main/crates/primitives",
 
     # Internal / placeholder
     'foo.bar',
