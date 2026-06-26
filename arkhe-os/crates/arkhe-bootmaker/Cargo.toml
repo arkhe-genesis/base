@@ -1,0 +1,6 @@
+[package]
+name = "arkhe-bootmaker"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

@@ -1,0 +1,13 @@
+[package]
+name = "arkhe-identity"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+ml-dsa.workspace = true
+ml-kem.workspace = true
+rand.workspace = true
+arkhe-core = { path = "../arkhe-core" }
+blake3.workspace = true
+signature = { version = "3.0.0", features = ["rand_core"] }
+kem = "0.3.0"

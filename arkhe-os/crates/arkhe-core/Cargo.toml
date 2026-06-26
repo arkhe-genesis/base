@@ -1,0 +1,9 @@
+[package]
+name = "arkhe-core"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+thiserror.workspace = true
+serde.workspace = true
+uuid.workspace = true

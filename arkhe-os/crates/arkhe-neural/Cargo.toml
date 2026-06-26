@@ -1,0 +1,6 @@
+[package]
+name = "arkhe-neural"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]

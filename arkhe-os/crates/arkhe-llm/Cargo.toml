@@ -1,0 +1,8 @@
+[package]
+name = "arkhe-llm"
+version.workspace = true
+edition.workspace = true
+
+[dependencies]
+async-trait.workspace = true
+llama-cpp-2.workspace = true
