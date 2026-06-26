@@ -1,6 +1,8 @@
-use crate::error::{ParseError, ParseResult};
-use regex::Regex;
 use std::time::{Duration, Instant};
+
+use regex::Regex;
+
+use crate::error::{ParseError, ParseResult};
 
 #[derive(Debug, Clone)]
 pub struct SafeRegex {

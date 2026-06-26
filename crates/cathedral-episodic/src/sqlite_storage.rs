@@ -1,6 +1,7 @@
-use crate::types::{EpisodicEntry, VectorClock};
 use anyhow::Result;
 use sqlx::{Row, SqlitePool, sqlite::SqlitePoolOptions};
+
+use crate::types::{EpisodicEntry, VectorClock};
 
 pub struct SqliteStorage {
     pool: SqlitePool,

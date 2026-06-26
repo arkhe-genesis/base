@@ -1,5 +1,6 @@
-use crate::error::{ParseError, ParseResult};
 use nom::{IResult, bytes::complete::take_while_m_n, combinator::map, sequence::tuple};
+
+use crate::error::{ParseError, ParseResult};
 
 #[derive(Debug, Clone, PartialEq)]
 pub struct Iban {

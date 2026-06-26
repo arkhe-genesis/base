@@ -1,9 +1,12 @@
-use crate::invariants::{
-    ExecutedAction, ExecutedProposal, ExecutionResult, GovernanceAction, GovernanceError,
-    GovernanceInvariantChecker, GovernanceProposal, GovernanceViolation,
-};
-use crate::safe_core::SafeCoreHook;
 use std::sync::{Mutex, MutexGuard};
+
+use crate::{
+    invariants::{
+        ExecutedAction, ExecutedProposal, ExecutionResult, GovernanceAction, GovernanceError,
+        GovernanceInvariantChecker, GovernanceProposal, GovernanceViolation,
+    },
+    safe_core::SafeCoreHook,
+};
 
 #[derive(Debug, thiserror::Error)]
 pub enum GuardError {
@@ -47,7 +50,7 @@ impl GovernanceGuard {
         }
     }
 
-    pub fn checker(&self) -> MutexGuard<GovernanceInvariantChecker> {
+    pub fn checker(&self) -> MutexGuard<'_, GovernanceInvariantChecker> {
         self.checker.lock().unwrap()
     }
 

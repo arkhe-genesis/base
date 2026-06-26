@@ -1,8 +1,9 @@
-use crate::types::{SchedulerStats, WorkerProfile, WorkerTier};
+use std::{collections::HashMap, sync::Arc};
+
 use anyhow::Result;
-use std::collections::HashMap;
-use std::sync::Arc;
 use tokio::sync::RwLock;
+
+use crate::types::{SchedulerStats, WorkerProfile, WorkerTier};
 
 pub struct WorkerRegistry {
     workers: Arc<RwLock<HashMap<String, WorkerProfile>>>,
@@ -56,8 +57,8 @@ impl WorkerRegistry {
     pub async fn stats(&self) -> SchedulerStats {
         let map = self.workers.read().await;
         let total = map.len();
-        let depin_gpu = map.values().filter(|p| p.tier == WorkerTier::DePIN_GPU).count();
-        let depin_cpu = map.values().filter(|p| p.tier == WorkerTier::DePIN_CPU).count();
+        let depin_gpu = map.values().filter(|p| p.tier == WorkerTier::DePinGpu).count();
+        let depin_cpu = map.values().filter(|p| p.tier == WorkerTier::DePinCpu).count();
         let datacenter = map.values().filter(|p| p.tier == WorkerTier::Datacenter).count();
         let avg_reputation = if total > 0 {
             map.values().map(|p| p.reputation).sum::<f32>() / total as f32

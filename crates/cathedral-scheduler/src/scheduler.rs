@@ -1,10 +1,13 @@
-use crate::metrics::SchedulerMetrics;
-use crate::registry::WorkerRegistry;
-use crate::types::{SchedulerStats, SchedulingDecision, TaskType, WorkerTier};
+use std::{collections::HashMap, sync::Arc};
+
 use anyhow::Result;
-use std::collections::HashMap;
-use std::sync::Arc;
 use uuid::Uuid;
+
+use crate::{
+    metrics::SchedulerMetrics,
+    registry::WorkerRegistry,
+    types::{SchedulerStats, SchedulingDecision, TaskType, WorkerTier},
+};
 
 pub struct HybridScheduler {
     registry: Arc<WorkerRegistry>,

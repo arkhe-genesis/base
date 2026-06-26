@@ -13,14 +13,14 @@ pub enum TaskType {
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum WorkerTier {
     Datacenter,
-    DePIN_GPU,
-    DePIN_CPU,
+    DePinGpu,
+    DePinCpu,
 }
 
 #[derive(Debug, Clone, PartialEq, Eq, Hash, Serialize, Deserialize)]
 pub enum TeeType {
     SGX,
-    SEV_SNP,
+    SevSnp,
     IoNet,
     None,
 }

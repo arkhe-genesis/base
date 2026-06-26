@@ -1,3 +1,5 @@
+use std::{sync::Arc, time::Duration};
+
 use axum::{Json, Router, routing::get};
 use cathedral_agi::{AGICore, OllamaClient};
 use cathedral_episodic::EpisodicSync;
@@ -5,8 +7,6 @@ use cathedral_fallback::FallbackChain;
 use cathedral_scheduler::{
     HybridScheduler, TaskType, TeeType, WorkerProfile, WorkerRegistry, WorkerTier,
 };
-use std::sync::Arc;
-use std::time::Duration;
 use tokio::signal;
 use tracing::{error, info, warn};
 

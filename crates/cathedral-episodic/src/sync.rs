@@ -1,10 +1,14 @@
-use crate::sqlite_storage::SqliteStorage;
-use crate::types::{EpisodicEntry, Ordering, VectorClock};
+use std::sync::Arc;
+
 use anyhow::Result;
 use chrono::Utc;
-use std::sync::Arc;
 use tokio::sync::RwLock;
 use uuid::Uuid;
+
+use crate::{
+    sqlite_storage::SqliteStorage,
+    types::{EpisodicEntry, Ordering, VectorClock},
+};
 
 pub struct EpisodicSync {
     storage: Arc<SqliteStorage>,
@@ -74,7 +78,7 @@ impl EpisodicSync {
         Ok(())
     }
 
-    pub async fn retrieve(&self, query: &str, limit: usize) -> Vec<EpisodicEntry> {
+    pub async fn retrieve(&self, _query: &str, limit: usize) -> Vec<EpisodicEntry> {
         let cache = self.cache.read().await;
         let mut entries: Vec<EpisodicEntry> =
             cache.iter().filter(|e| !e.deleted).cloned().collect();

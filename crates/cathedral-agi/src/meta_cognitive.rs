@@ -1,10 +1,10 @@
-use crate::ethics::EthicsResult;
-use crate::mcts::MCTSResult;
+use std::{collections::VecDeque, sync::Arc};
+
 use cathedral_episodic::EpisodicSync;
 use serde::{Deserialize, Serialize};
-use std::collections::VecDeque;
-use std::sync::Arc;
 use tracing::info;
+
+use crate::{ethics::EthicsResult, mcts::MCTSResult};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct MetaState {

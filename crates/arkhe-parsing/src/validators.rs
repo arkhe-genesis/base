@@ -1,5 +1,7 @@
-use crate::error::{ParseError, ParseResult};
-use crate::regex::SafeRegex;
+use crate::{
+    error::{ParseError, ParseResult},
+    regex::SafeRegex,
+};
 
 pub fn validate_did(did: &str) -> ParseResult<()> {
     let re = SafeRegex::new(r"^did:arkhe:[a-zA-Z0-9]{43,44}$")?;

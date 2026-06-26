@@ -67,8 +67,9 @@ impl SafeCoreHook for BusinessHoursHook {
 
 #[cfg(test)]
 mod tests {
-    use super::*;
     use chrono::{Datelike, Local, TimeZone, Timelike};
+
+    use super::*;
 
     #[test]
     fn test_business_hours_allows_weekday_10h() {

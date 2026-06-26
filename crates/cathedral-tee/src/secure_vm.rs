@@ -1,6 +1,7 @@
+use std::sync::Arc;
+
 use anyhow::Result;
 use cathedral_lc3_vm::Lc3Vm;
-use std::sync::Arc;
 use tokio::sync::Mutex;
 
 pub struct SecureVmExecutor {

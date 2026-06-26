@@ -1,7 +1,8 @@
-use crate::types::SchedulingDecision;
 use prometheus::{
     Counter, Gauge, Histogram, HistogramOpts, register_counter, register_gauge, register_histogram,
 };
+
+use crate::types::SchedulingDecision;
 
 pub struct SchedulerMetrics {
     pub workers_total: Gauge,
@@ -86,8 +87,8 @@ impl SchedulerMetrics {
         &self,
         total: usize,
         gpu: usize,
-        cpu: usize,
-        datacenter: usize,
+        _cpu: usize,
+        _datacenter: usize,
         avg_rep: f32,
     ) {
         self.workers_total.set(total as f64);

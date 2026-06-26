@@ -1,8 +1,11 @@
-use crate::secure_vm::SecureVmExecutor;
-use crate::types::{AttestationReport, AttestationResult, TeeType};
-use crate::verifier::Verifier;
 use anyhow::Result;
 use uuid::Uuid;
+
+use crate::{
+    secure_vm::SecureVmExecutor,
+    types::{AttestationReport, AttestationResult, TeeType},
+    verifier::Verifier,
+};
 
 pub struct TEEBridge {
     verifier: Verifier,

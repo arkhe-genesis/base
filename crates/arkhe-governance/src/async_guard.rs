@@ -1,5 +1,7 @@
-use crate::guard::{GovernanceGuard, GuardError};
-use crate::invariants::GovernanceAction;
+use crate::{
+    guard::{GovernanceGuard, GuardError},
+    invariants::GovernanceAction,
+};
 
 pub struct AsyncGovernanceGuard {
     inner: tokio::sync::Mutex<GovernanceGuard>,

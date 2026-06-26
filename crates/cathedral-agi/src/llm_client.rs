@@ -1,7 +1,8 @@
+use std::time::Duration;
+
 use anyhow::Result;
 use reqwest::Client;
 use serde_json::json;
-use std::time::Duration;
 
 pub struct OllamaClient {
     client: Client,

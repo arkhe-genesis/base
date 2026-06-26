@@ -1,11 +1,10 @@
-use crate::ethics::EthicsResult;
-use crate::llm_client::OllamaClient;
-use crate::world_model::WorldState;
+use std::{collections::HashMap, sync::Arc};
+
 use rand::Rng;
 use serde_json::json;
-use std::collections::HashMap;
-use std::sync::Arc;
 use tracing::info;
+
+use crate::{ethics::EthicsResult, llm_client::OllamaClient, world_model::WorldState};
 
 #[derive(Debug, Clone)]
 pub struct MCTSNode {
@@ -117,9 +116,9 @@ impl MCTSEngine {
 
             let mut reward = 0.0;
             let mut depth = 0;
-            let mut current_state = tree.get(&current_id).unwrap().state.clone();
+            let current_state = tree.get(&current_id).unwrap().state.clone();
             while depth < self.max_depth {
-                let action = self.rollout_action(&current_state).await;
+                let _action = self.rollout_action(&current_state).await;
                 reward += 0.5;
                 depth += 1;
             }

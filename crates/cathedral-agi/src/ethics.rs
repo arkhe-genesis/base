@@ -1,7 +1,8 @@
-use crate::mcts::MCTSResult;
-use crate::world_model::WorldState;
-use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
+
+use serde::{Deserialize, Serialize};
+
+use crate::{mcts::MCTSResult, world_model::WorldState};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct EthicsResult {
