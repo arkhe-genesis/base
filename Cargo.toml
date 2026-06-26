@@ -5,11 +5,11 @@ rust-version = "1.93"
 license = "MIT"
 homepage = "https://github.com/base/base"
 repository = "https://github.com/base/base"
-exclude = [".github/"]
+exclude = ["arkhe-os", ".github/"]
 
 [workspace]
 resolver = "2"
-exclude = ["bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
+exclude = ["arkhe-os", "bin/prover", "crates/proof/succinct/programs", "actions/fixtures"]
 members = [
   "crates/arkhe-security-audit",
   "crates/cathedral-core",
