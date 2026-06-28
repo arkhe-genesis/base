@@ -1,0 +1,53 @@
+[workspace]
+name = "safe-core"
+version = "0.1.0"
+resolver = "3"
+members = [
+    "crates/*",
+]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2024"
+authors = ["Arkhe(n) Research Group"]
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/arkhe-research/safe-core"
+rust-version = "1.85.0"  # MSRV
+
+[workspace.dependencies]
+# Criptografia
+blake3 = "1.5"
+sha3 = "0.10"
+
+# Temporarily mock out these
+kyberlib = "0.1.0"
+# lattice-safe-threshold-ml-dsa = { git = "https://github.com/lattice-safe/threshold-ml-dsa" }
+
+# Serialização
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+postcard = "1.0"                    # Binary serialization (no_std compatible)
+
+# Async
+tokio = { version = "1.40", features = ["full"] }
+
+# Logging / Tracing
+tracing = "0.1"
+
+# Erros
+thiserror = "1.0"
+anyhow = "1.0"
+
+# Testes
+mockall = "0.13"
+proptest = "1.5"
+
+# Verificação formal (dev-dependencies)
+kani = { version = "0.1" }
+
+[profile.release]
+opt-level = 3
+lto = "thin"
+
+[profile.dev]
+opt-level = 0

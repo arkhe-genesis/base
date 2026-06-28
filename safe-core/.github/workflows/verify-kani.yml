@@ -1,0 +1,17 @@
+name: Kani Verification
+
+on:
+  schedule:
+    - cron: '0 0 * * *' # Run nightly
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    - name: Install Kani
+      uses: model-checking/kani-github-action@v1.2
+      with:
+        enable-stubbing: true
+    - name: Run Kani Proofs
+      run: cargo kani
