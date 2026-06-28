@@ -1,0 +1,21 @@
+[advisories]
+vulnerability = "deny"
+unmaintained = "deny"
+notice = "warn"
+ignore = [
+    # IDs de vulnerabilidades conhecidas que foram verificadas
+    # e não afetam o Safe-Core
+]
+
+[licenses]
+unlicensed = "deny"
+allow = [
+    "MIT",
+    "Apache-2.0",
+    "BSD-3-Clause",
+    "ISC",
+]
+default = "deny"
+
+[bans]
+multiple-versions = "warn"

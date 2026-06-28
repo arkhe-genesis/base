@@ -1,0 +1,11 @@
+# Lints de segurança
+warn-on-all-wildcard-imports = true
+allow-print-in-tests = false
+cargo-allow-unused-dependencies = false
+
+# Lints customizadas
+[lints]
+clippy::unwrap_used = "warn"
+clippy::expect_used = "warn"
+clippy::panic = "warn"
+clippy::indexing_slicing = "warn"

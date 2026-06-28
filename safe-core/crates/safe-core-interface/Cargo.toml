@@ -1,0 +1,21 @@
+[package]
+name = "safe-core-interface"
+version.workspace = true
+edition.workspace = true
+authors.workspace = true
+license.workspace = true
+repository.workspace = true
+
+[dependencies]
+safe-core-consensus = { path = "../safe-core-consensus" }
+safe-core-policy = { path = "../safe-core-policy" }
+safe-core-memory = { path = "../safe-core-memory" }
+serde.workspace = true
+serde_json.workspace = true
+thiserror.workspace = true
+anyhow.workspace = true
+tokio.workspace = true
+
+[dev-dependencies]
+mockall.workspace = true
+proptest.workspace = true
