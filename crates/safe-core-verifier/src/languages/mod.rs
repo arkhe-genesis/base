@@ -38,15 +38,7 @@ impl Language {
             Self::Rust,
             Self::Python,
             Self::JavaScript,
-            Self::TypeScript,
             Self::Go,
-            Self::Ruby,
-            Self::PHP,
-            Self::Cpp,
-            Self::CSharp,
-            Self::Java,
-            Self::Kotlin,
-            Self::Swift,
         ]
     }
 
