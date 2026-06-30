@@ -28,7 +28,8 @@ members = [
   "crates/cathedral-live-image",
   "sdk-rs",
   "zk-circuits",
-  "crates/cathedral-xtask",
+  "crates/safe-core-utils",
+  "crates/safe-core-verifier",
 
 
 
@@ -105,7 +106,8 @@ default-members = [
   "crates/cathedral-live-image",
   "sdk-rs",
   "zk-circuits",
-  "crates/cathedral-xtask",
+  "crates/safe-core-utils",
+  "crates/safe-core-verifier",
 
 
 

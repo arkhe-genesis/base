@@ -1,0 +1,28 @@
+
+[package]
+name = "safe-core-verifier"
+version = "2.0.0"
+edition = "2021"
+
+[dependencies]
+tree-sitter = "0.23.0"
+tree-sitter-rust = "0.23.0"
+tree-sitter-python = "0.23.0"
+tree-sitter-javascript = "0.23.0"
+tree-sitter-go = "0.23.0"
+
+safe-core-utils = { path = "../safe-core-utils", features = ["cgf", "anti-vibe"] }
+
+serde = { version = "1.0", features = ["derive"] }
+serde_json = "1.0"
+anyhow = "1.0"
+walkdir = "2.5"
+clap = { version = "4.5", features = ["derive"] }
+thiserror = "2.0"
+tokio = { version = "1", features = ["rt", "macros", "rt-multi-thread"] }
+async-trait = "0.1.83"
+tracing = "0.1"
+
+[[bin]]
+name = "safe-core-verify"
+path = "src/main.rs"
