@@ -1,4 +1,3 @@
-
 use crate::languages::Language;
 use tree_sitter::Tree;
 
@@ -40,25 +39,26 @@ impl CodeStructureAnalyzer {
             }
             metrics.total_nodes += 1;
 
-            if !walker.goto_next_sibling() {
-                if !walker.goto_parent() {
-                    break;
-                }
+            if !walker.goto_next_sibling() && !walker.goto_parent() {
+                break;
             }
         }
 
         if !fn_lengths.is_empty() {
-            metrics.avg_function_bytes = fn_lengths.iter().sum::<usize>() as f64 / fn_lengths.len() as f64;
+            metrics.avg_function_bytes =
+                fn_lengths.iter().sum::<usize>() as f64 / fn_lengths.len() as f64;
             metrics.max_function_bytes = *fn_lengths.iter().max().unwrap_or(&0);
-            metrics.functions_over_200_lines = fn_lengths.iter()
-                .filter(|&&len| len > 8000)
-                .count();
+            metrics.functions_over_200_lines = fn_lengths.iter().filter(|&&len| len > 8000).count();
         }
 
         metrics
     }
 
-    fn check_convention_x_in_node(node: tree_sitter::Node, code: &str, metrics: &mut StructureMetrics) {
+    fn check_convention_x_in_node(
+        node: tree_sitter::Node,
+        code: &str,
+        metrics: &mut StructureMetrics,
+    ) {
         let name = node.child_by_field_name("name");
         if let Some(name_node) = name {
             let name_str = &code[name_node.byte_range()];
@@ -100,6 +100,6 @@ impl StructureMetrics {
             }
         }
 
-        score.max(0.0).min(1.0)
+        score.clamp(0.0, 1.0)
     }
 }

@@ -83,7 +83,8 @@ impl PromptSelector {
          3. Lifelong Learning (SOLAR) — meta-aprendizado, capability-preserving\n\
          4. Neuro-Symbolic Reasoning (ARIA) — AtomSpace, inferência causal\n\
          5. Multi-Agent Orchestration (VMAO) — DAG, replanejamento verificado\n\n\
-         Explique como esses pilares se integram.".to_string()
+         Explique como esses pilares se integram."
+            .to_string()
     }
 
     fn medium_prompt(&self) -> String {
@@ -91,7 +92,8 @@ impl PromptSelector {
          - A hierarquia: Safety Kernel → Hardware ROT → Lifelong Learning → \
          Neuro-Symbolic → Orchestration\n\
          - Como a Convenção X (x_ prefixo, _x sufixo) garante fronteiras de confiança\n\
-         - Que desafios de implementação em Rust você antecipa?".to_string()
+         - Que desafios de implementação em Rust você antecipa?"
+            .to_string()
     }
 
     fn deep_prompt(&self) -> String {
@@ -99,7 +101,8 @@ impl PromptSelector {
          - Destaque as provas formais em Lean 4 (barreira unfireable)\n\
          - Explique a integração TPM 2.0 + PTV Protocol com Groth16\n\
          - Compare com arquiteturas concorrentes (OpenCog, ARIA standalone)\n\
-         - Inclua snippets de código da Convenção X".to_string()
+         - Inclua snippets de código da Convenção X"
+            .to_string()
     }
 
     fn expert_prompt(&self) -> String {
@@ -110,7 +113,8 @@ impl PromptSelector {
          Para cada domínio, descreva:\n\
          1. Como cada pilar se adapta\n\
          2. Que novos riscos surgem\n\
-         3. Como a Convenção X evita vulnerabilidades".to_string()
+         3. Como a Convenção X evita vulnerabilidades"
+            .to_string()
     }
 }
 

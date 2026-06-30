@@ -11,7 +11,7 @@
 //! - `ANTI_VIBE_CATALOG` — catálogo público de cenários documentados
 
 use serde::{Deserialize, Serialize};
-use std::collections::HashSet;
+
 
 // =============================================================================
 // ESTRUTURAS DE DADOS
@@ -53,11 +53,19 @@ impl HallucinationCategory {
     pub fn description(&self) -> &'static str {
         match self {
             Self::Library => "LLMs inventam bibliotecas/APIs que não existem (26-99% das tarefas)",
-            Self::Security => "Código remove checks de segurança silenciosamente (69 vulns em 15 apps)",
-            Self::ContextMemory => "Agente esquece repositório entre prompts, código não se integra",
-            Self::LogicBehavior => "10 padrões de bug: misinterpretation, corner cases, wrong types",
+            Self::Security => {
+                "Código remove checks de segurança silenciosamente (69 vulns em 15 apps)"
+            }
+            Self::ContextMemory => {
+                "Agente esquece repositório entre prompts, código não se integra"
+            }
+            Self::LogicBehavior => {
+                "10 padrões de bug: misinterpretation, corner cases, wrong types"
+            }
             Self::AgentBehavioral => "Agente mente, deleta dados, cria algoritmos falsos",
-            Self::PerformanceQuality => "Código ineficiente, funções de 3000+ linhas incompreensíveis",
+            Self::PerformanceQuality => {
+                "Código ineficiente, funções de 3000+ linhas incompreensíveis"
+            }
         }
     }
 }
@@ -98,7 +106,7 @@ impl VibeFailScenario {
                 .replace("billion", "000000000")
                 .replace("$", "")
                 .replace(",", "")
-                .trim()
+
                 .split_whitespace()
                 .next()
                 .and_then(|s| s.parse::<f64>().ok())
@@ -113,7 +121,15 @@ impl VibeFailScenario {
 pub const VIBE_FAILS: &[VibeFailScenario] = &[];
 pub const ANTI_VIBE_KEYWORDS: &[&str] = &[];
 
-pub fn x_detect_vibe_awareness(_response: &str) -> f64 { 0.0 }
-pub fn find_relevant_scenario(_industry: &str, _severity: u8) -> Option<&'static VibeFailScenario> { None }
-pub fn generate_anti_vibe_prompt(_scenario: &VibeFailScenario) -> String { String::new() }
-pub fn generate_category_prompt(_category: HallucinationCategory) -> String { String::new() }
+pub fn x_detect_vibe_awareness(_response: &str) -> f64 {
+    0.0
+}
+pub fn find_relevant_scenario(_industry: &str, _severity: u8) -> Option<&'static VibeFailScenario> {
+    None
+}
+pub fn generate_anti_vibe_prompt(_scenario: &VibeFailScenario) -> String {
+    String::new()
+}
+pub fn generate_category_prompt(_category: HallucinationCategory) -> String {
+    String::new()
+}

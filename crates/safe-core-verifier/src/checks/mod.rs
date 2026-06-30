@@ -1,4 +1,3 @@
-
 use crate::FileContext;
 use async_trait::async_trait;
 
@@ -37,12 +36,7 @@ pub struct CheckResult {
 
 impl Default for CheckResult {
     fn default() -> Self {
-        Self {
-            passed: true,
-            issues: Vec::new(),
-            suggestions: Vec::new(),
-            score: 1.0,
-        }
+        Self { passed: true, issues: Vec::new(), suggestions: Vec::new(), score: 1.0 }
     }
 }
 
@@ -57,8 +51,12 @@ pub struct AllChecks(pub Vec<Box<dyn Check>>);
 
 #[async_trait]
 impl Check for AllChecks {
-    fn name(&self) -> &str { "all-checks" }
-    fn category(&self) -> IssueCategory { IssueCategory::Other }
+    fn name(&self) -> &str {
+        "all-checks"
+    }
+    fn category(&self) -> IssueCategory {
+        IssueCategory::Other
+    }
 
     async fn execute(&self, ctx: &FileContext) -> anyhow::Result<CheckResult> {
         let mut all_issues = Vec::new();
@@ -84,5 +82,5 @@ impl Check for AllChecks {
 }
 
 pub mod convention_x;
-pub mod safety;
 pub mod dependency;
+pub mod safety;

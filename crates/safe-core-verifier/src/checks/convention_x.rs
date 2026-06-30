@@ -1,4 +1,3 @@
-
 use super::{Check, CheckResult, Issue, IssueCategory, Severity};
 use crate::{FileContext, languages::Language};
 use async_trait::async_trait;
@@ -8,12 +7,17 @@ pub struct ConventionXCheck;
 
 #[async_trait]
 impl Check for ConventionXCheck {
-    fn name(&self) -> &str { "convention-x" }
-    fn category(&self) -> IssueCategory { IssueCategory::ConventionX }
+    fn name(&self) -> &str {
+        "convention-x"
+    }
+    fn category(&self) -> IssueCategory {
+        IssueCategory::ConventionX
+    }
 
     async fn execute(&self, ctx: &FileContext) -> anyhow::Result<CheckResult> {
         let query_source = match ctx.language {
-            Language::Rust => r#"
+            Language::Rust => {
+                r#"
                 (
                     function_item
                     name: (identifier) @fn_name
@@ -25,8 +29,10 @@ impl Check for ConventionXCheck {
                     (#not-match? @fn_name "^x_")
                     (#match? @param "String|Vec<|HashMap<|&\\[")
                 )
-            "#,
-            Language::Python => r#"
+            "#
+            }
+            Language::Python => {
+                r#"
                 (
                     function_definition
                     name: (identifier) @fn_name
@@ -38,16 +44,20 @@ impl Check for ConventionXCheck {
                     (#not-match? @fn_name "^x_")
                     (#match? @param "str|list|dict|Any")
                 )
-            "#,
-            Language::JavaScript | Language::TypeScript => r#"
+            "#
+            }
+            Language::JavaScript | Language::TypeScript => {
+                r#"
                 (
                     function_declaration
                     name: (identifier) @fn_name
                     parameters: (formal_parameters) @params
                     (#not-match? @fn_name "^x_")
                 )
-            "#,
-            Language::Go => r#"
+            "#
+            }
+            Language::Go => {
+                r#"
                 (
                     function_declaration
                     name: (identifier) @fn_name
@@ -60,7 +70,8 @@ impl Check for ConventionXCheck {
                     (#not-match? @fn_name "^X_")
                     (#match? @param "string|\\[\\]|map\\[")
                 )
-            "#,
+            "#
+            }
             _ => return Ok(CheckResult::default()),
         };
 
@@ -73,9 +84,8 @@ impl Check for ConventionXCheck {
         };
 
         let mut cursor = QueryCursor::new();
-        let matches: Vec<_> = cursor
-            .matches(&query, ctx.tree.root_node(), ctx.code.as_bytes())
-            .collect();
+        let matches: Vec<_> =
+            cursor.matches(&query, ctx.tree.root_node(), ctx.code.as_bytes()).collect();
 
         let issues: Vec<Issue> = matches
             .iter()
@@ -100,10 +110,15 @@ impl Check for ConventionXCheck {
         Ok(CheckResult {
             passed,
             issues: issues.clone(),
-            suggestions: issues.iter().map(|i| {
-                format!("Renomeie '{}' para marcar fronteira de confiança (prefixo x_)",
-                    i.message.split('\'').nth(1).unwrap_or("?"))
-            }).collect(),
+            suggestions: issues
+                .iter()
+                .map(|i| {
+                    format!(
+                        "Renomeie '{}' para marcar fronteira de confiança (prefixo x_)",
+                        i.message.split('\'').nth(1).unwrap_or("?")
+                    )
+                })
+                .collect(),
             score,
         })
     }

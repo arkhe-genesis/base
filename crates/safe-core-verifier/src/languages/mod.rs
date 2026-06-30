@@ -1,4 +1,3 @@
-
 //! 🌍 Suporte a 12 Linguagens de Programação
 //!
 //! Cada linguagem tem:
@@ -34,17 +33,13 @@ pub enum Language {
 impl Language {
     /// Retorna todas as linguagens suportadas.
     pub fn all() -> Vec<Self> {
-        vec![
-            Self::Rust,
-            Self::Python,
-            Self::JavaScript,
-            Self::Go,
-        ]
+        vec![Self::Rust, Self::Python, Self::JavaScript, Self::Go]
     }
 
     /// Detecta a linguagem baseada na extensão do arquivo.
     pub fn detect(path: &Path) -> Result<Self> {
-        let ext = path.extension()
+        let ext = path
+            .extension()
             .and_then(|e| e.to_str())
             .ok_or_else(|| anyhow::anyhow!("Arquivo sem extensão: {:?}", path))?;
 
@@ -121,47 +116,78 @@ impl Language {
     pub fn known_dependencies(&self) -> Vec<&'static str> {
         match self {
             Self::Rust => vec![
-                "serde", "tokio", "anyhow", "thiserror", "tracing",
-                "clap", "rayon", "regex", "chrono", "uuid", "blake3",
+                "serde",
+                "tokio",
+                "anyhow",
+                "thiserror",
+                "tracing",
+                "clap",
+                "rayon",
+                "regex",
+                "chrono",
+                "uuid",
+                "blake3",
             ],
             Self::Python => vec![
-                "requests", "flask", "django", "fastapi", "numpy", "pandas",
-                "torch", "tensorflow", "scikit-learn", "matplotlib", "pytest",
+                "requests",
+                "flask",
+                "django",
+                "fastapi",
+                "numpy",
+                "pandas",
+                "torch",
+                "tensorflow",
+                "scikit-learn",
+                "matplotlib",
+                "pytest",
             ],
             Self::JavaScript | Self::TypeScript => vec![
-                "express", "react", "vue", "angular", "next", "nuxt",
-                "lodash", "axios", "mongoose", "sequelize", "jest",
+                "express",
+                "react",
+                "vue",
+                "angular",
+                "next",
+                "nuxt",
+                "lodash",
+                "axios",
+                "mongoose",
+                "sequelize",
+                "jest",
             ],
             Self::Go => vec![
-                "fmt", "net/http", "encoding/json", "context", "sync",
-                "github.com/gin-gonic/gin", "github.com/gorilla/mux",
+                "fmt",
+                "net/http",
+                "encoding/json",
+                "context",
+                "sync",
+                "github.com/gin-gonic/gin",
+                "github.com/gorilla/mux",
             ],
-            Self::Ruby => vec![
-                "rails", "sinatra", "rspec", "nokogiri", "puma", "sidekiq",
-            ],
-            Self::PHP => vec![
-                "laravel", "symfony", "guzzle", "phpunit", "monolog",
-            ],
-            Self::Cpp => vec![
-                "iostream", "vector", "string", "memory", "algorithm",
-                "boost", "qt", "opencv",
-            ],
+            Self::Ruby => vec!["rails", "sinatra", "rspec", "nokogiri", "puma", "sidekiq"],
+            Self::PHP => vec!["laravel", "symfony", "guzzle", "phpunit", "monolog"],
+            Self::Cpp => {
+                vec!["iostream", "vector", "string", "memory", "algorithm", "boost", "qt", "opencv"]
+            }
             Self::CSharp => vec![
-                "System", "System.Collections", "System.Linq", "System.Threading",
-                "Microsoft.Extensions", "Newtonsoft.Json",
+                "System",
+                "System.Collections",
+                "System.Linq",
+                "System.Threading",
+                "Microsoft.Extensions",
+                "Newtonsoft.Json",
             ],
             Self::Java => vec![
-                "java.util", "java.io", "java.net", "java.sql",
-                "org.springframework", "com.google.gson",
+                "java.util",
+                "java.io",
+                "java.net",
+                "java.sql",
+                "org.springframework",
+                "com.google.gson",
             ],
-            Self::Kotlin => vec![
-                "kotlin", "kotlinx.coroutines", "android",
-                "org.jetbrains", "com.squareup",
-            ],
-            Self::Swift => vec![
-                "Foundation", "UIKit", "SwiftUI", "Combine",
-                "Alamofire", "Realm",
-            ],
+            Self::Kotlin => {
+                vec!["kotlin", "kotlinx.coroutines", "android", "org.jetbrains", "com.squareup"]
+            }
+            Self::Swift => vec!["Foundation", "UIKit", "SwiftUI", "Combine", "Alamofire", "Realm"],
         }
     }
 

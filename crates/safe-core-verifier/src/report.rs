@@ -1,5 +1,3 @@
-
-use std::path::{Path, PathBuf};
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
@@ -24,11 +22,6 @@ impl GlobalReport {
     pub fn from_file_reports(files: Vec<FileReport>) -> Self {
         let total = files.len();
         let passed = files.iter().filter(|f| f.passed).count();
-        Self {
-            total_files: total,
-            passed_files: passed,
-            failed_files: total - passed,
-            files,
-        }
+        Self { total_files: total, passed_files: passed, failed_files: total - passed, files }
     }
 }

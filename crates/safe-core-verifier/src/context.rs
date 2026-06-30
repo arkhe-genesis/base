@@ -1,6 +1,5 @@
-
-use std::path::PathBuf;
 use crate::languages::Language;
+use std::path::PathBuf;
 use tree_sitter::Tree;
 
 pub struct FileContext {

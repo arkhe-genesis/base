@@ -1,24 +1,26 @@
-
-pub mod languages;
-pub mod checks;
-pub mod report;
-pub mod context;
 pub mod cgf;
+pub mod checks;
+pub mod context;
+pub mod languages;
+pub mod report;
 
-use anyhow::{Result, Context as AnyhowContext};
-use std::path::Path;
+use anyhow::{Context as AnyhowContext, Result};
 use std::collections::HashMap;
+use std::path::Path;
 use tree_sitter::Parser;
 
-use languages::Language;
-use checks::{convention_x::ConventionXCheck, dependency::DependencyCheck, safety::SafetyCheck, AllChecks, Check};
-use report::{FileReport, GlobalReport};
+use checks::{
+    AllChecks, Check, convention_x::ConventionXCheck, dependency::DependencyCheck,
+    safety::SafetyCheck,
+};
 use context::FileContext;
-use safe_core_utils::CgfEngine;
+use languages::Language;
+use report::{FileReport, GlobalReport};
+
 
 pub struct PolyglotVerifier {
     engines: HashMap<Language, Parser>,
-    cgf: CgfEngine,
+
     check_runner: AllChecks,
 }
 
@@ -38,11 +40,7 @@ impl PolyglotVerifier {
             Box::new(SafetyCheck),
         ];
 
-        Ok(Self {
-            engines,
-            cgf: CgfEngine::new(100),
-            check_runner: AllChecks(checks),
-        })
+        Ok(Self { engines, check_runner: AllChecks(checks) })
     }
 
     pub async fn verify_file(&mut self, path: &Path) -> Result<FileReport> {
@@ -51,10 +49,13 @@ impl PolyglotVerifier {
 
         let lang = Language::detect(path)?;
 
-        let parser = self.engines.get_mut(&lang)
+        let parser = self
+            .engines
+            .get_mut(&lang)
             .ok_or_else(|| anyhow::anyhow!("Nenhum parser registrado para linguagem {:?}", lang))?;
 
-        let tree = parser.parse(&code, None)
+        let tree = parser
+            .parse(&code, None)
             .ok_or_else(|| anyhow::anyhow!("Falha ao parsear {}", path.display()))?;
 
         // Análise de estrutura (Alpha proxy)

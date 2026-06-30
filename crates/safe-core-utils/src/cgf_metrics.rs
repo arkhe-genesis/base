@@ -16,45 +16,100 @@ use std::collections::{HashMap, HashSet, VecDeque};
 /// Conceitos-chave do Safe-Core organizados por pilar.
 pub const SAFE_CORE_CONCEPTS: &[&str] = &[
     // Pilar 1: Unfireable Safety Kernel
-    "unfireable", "safety kernel", "barreira imutável", "fail-closed",
-    "arya", "restrição arquitetural", "evidência assinada",
+    "unfireable",
+    "safety kernel",
+    "barreira imutável",
+    "fail-closed",
+    "arya",
+    "restrição arquitetural",
+    "evidência assinada",
     // Pilar 2: Hardware Root of Trust
-    "tpm 2.0", "ptv protocol", "zero-knowledge", "groth16",
-    "secure enclave", "intel tdx", "amd sev", "arm trustzone",
-    "atestação remota", "hardware root of trust",
+    "tpm 2.0",
+    "ptv protocol",
+    "zero-knowledge",
+    "groth16",
+    "secure enclave",
+    "intel tdx",
+    "amd sev",
+    "arm trustzone",
+    "atestação remota",
+    "hardware root of trust",
     // Pilar 3: Lifelong Learning
-    "solar", "meta-aprendizado", "capability-preserving",
-    "goal drift", "aprendizagem contínua", "plasticidade",
+    "solar",
+    "meta-aprendizado",
+    "capability-preserving",
+    "goal drift",
+    "aprendizagem contínua",
+    "plasticidade",
     // Pilar 4: Neuro-Symbolic
-    "atomspace", "inferência causal", "do-calculus",
-    "knowledge graph", "raciocínio neuro-simbólico", "aria",
+    "atomspace",
+    "inferência causal",
+    "do-calculus",
+    "knowledge graph",
+    "raciocínio neuro-simbólico",
+    "aria",
     // Pilar 5: Multi-Agent Orchestration
-    "dag", "orquestração", "vmao", "replanejamento",
-    "sovereign mesh", "ibc",
+    "dag",
+    "orquestração",
+    "vmao",
+    "replanejamento",
+    "sovereign mesh",
+    "ibc",
     // Princípios transversais
-    "d-vector", "s-measure", "loop reentrante", "decomposição-integração",
-    "convenção x", "hermenêutica", "soberania",
+    "d-vector",
+    "s-measure",
+    "loop reentrante",
+    "decomposição-integração",
+    "convenção x",
+    "hermenêutica",
+    "soberania",
 ];
 
 /// Peso de cada conceito na métrica α̂.
 /// Conceitos centrais (unfireable, safety kernel) pesam mais que transversais.
 pub const CONCEPT_WEIGHTS: &[(&str, f64)] = &[
-    ("unfireable", 1.5), ("safety kernel", 1.5), ("fail-closed", 1.3),
-    ("arya", 1.2), ("barreira imutável", 1.2), ("restrição arquitetural", 1.0),
+    ("unfireable", 1.5),
+    ("safety kernel", 1.5),
+    ("fail-closed", 1.3),
+    ("arya", 1.2),
+    ("barreira imutável", 1.2),
+    ("restrição arquitetural", 1.0),
     ("evidência assinada", 1.0),
-    ("ptv protocol", 1.2), ("tpm 2.0", 1.0), ("hardware root of trust", 1.1),
-    ("zero-knowledge", 1.0), ("groth16", 0.9), ("secure enclave", 0.9),
-    ("intel tdx", 0.8), ("amd sev", 0.8), ("arm trustzone", 0.8),
+    ("ptv protocol", 1.2),
+    ("tpm 2.0", 1.0),
+    ("hardware root of trust", 1.1),
+    ("zero-knowledge", 1.0),
+    ("groth16", 0.9),
+    ("secure enclave", 0.9),
+    ("intel tdx", 0.8),
+    ("amd sev", 0.8),
+    ("arm trustzone", 0.8),
     ("atestação remota", 0.9),
-    ("solar", 1.0), ("meta-aprendizado", 0.9), ("capability-preserving", 0.9),
-    ("goal drift", 0.9), ("aprendizagem contínua", 0.8), ("plasticidade", 0.8),
-    ("atomspace", 0.9), ("inferência causal", 0.9), ("do-calculus", 0.9),
-    ("knowledge graph", 0.8), ("raciocínio neuro-simbólico", 0.9), ("aria", 0.8),
-    ("dag", 0.8), ("orquestração", 0.8), ("vmao", 0.8),
-    ("replanejamento", 0.8), ("sovereign mesh", 0.9), ("ibc", 0.8),
-    ("d-vector", 1.1), ("s-measure", 1.1), ("loop reentrante", 1.0),
-    ("decomposição-integração", 0.9), ("convenção x", 0.8),
-    ("hermenêutica", 0.8), ("soberania", 0.7),
+    ("solar", 1.0),
+    ("meta-aprendizado", 0.9),
+    ("capability-preserving", 0.9),
+    ("goal drift", 0.9),
+    ("aprendizagem contínua", 0.8),
+    ("plasticidade", 0.8),
+    ("atomspace", 0.9),
+    ("inferência causal", 0.9),
+    ("do-calculus", 0.9),
+    ("knowledge graph", 0.8),
+    ("raciocínio neuro-simbólico", 0.9),
+    ("aria", 0.8),
+    ("dag", 0.8),
+    ("orquestração", 0.8),
+    ("vmao", 0.8),
+    ("replanejamento", 0.8),
+    ("sovereign mesh", 0.9),
+    ("ibc", 0.8),
+    ("d-vector", 1.1),
+    ("s-measure", 1.1),
+    ("loop reentrante", 1.0),
+    ("decomposição-integração", 0.9),
+    ("convenção x", 0.8),
+    ("hermenêutica", 0.8),
+    ("soberania", 0.7),
 ];
 
 pub const DEFAULT_CONCEPT_WEIGHT: f64 = 0.5;
@@ -62,17 +117,56 @@ pub const DEFAULT_CONCEPT_WEIGHT: f64 = 0.5;
 /// Mapeia conceitos para seus pilares (1-5).
 /// CORREÇÃO: matching exato por lista, não contains("hardware").
 const PILLAR_KEYWORDS: &[(&[&str], usize)] = &[
-    (&["unfireable", "safety kernel", "fail-closed", "barreira imutável",
-       "restrição arquitetural", "evidência assinada", "arya"], 1),
-    (&["tpm 2.0", "ptv protocol", "zero-knowledge", "groth16",
-       "secure enclave", "intel tdx", "amd sev", "arm trustzone",
-       "atestação remota", "hardware root of trust"], 2),
-    (&["solar", "meta-aprendizado", "capability-preserving",
-       "goal drift", "aprendizagem contínua", "plasticidade"], 3),
-    (&["atomspace", "inferência causal", "do-calculus",
-       "knowledge graph", "raciocínio neuro-simbólico", "aria"], 4),
-    (&["dag", "orquestração", "vmao", "replanejamento",
-       "sovereign mesh", "ibc"], 5),
+    (
+        &[
+            "unfireable",
+            "safety kernel",
+            "fail-closed",
+            "barreira imutável",
+            "restrição arquitetural",
+            "evidência assinada",
+            "arya",
+        ],
+        1,
+    ),
+    (
+        &[
+            "tpm 2.0",
+            "ptv protocol",
+            "zero-knowledge",
+            "groth16",
+            "secure enclave",
+            "intel tdx",
+            "amd sev",
+            "arm trustzone",
+            "atestação remota",
+            "hardware root of trust",
+        ],
+        2,
+    ),
+    (
+        &[
+            "solar",
+            "meta-aprendizado",
+            "capability-preserving",
+            "goal drift",
+            "aprendizagem contínua",
+            "plasticidade",
+        ],
+        3,
+    ),
+    (
+        &[
+            "atomspace",
+            "inferência causal",
+            "do-calculus",
+            "knowledge graph",
+            "raciocínio neuro-simbólico",
+            "aria",
+        ],
+        4,
+    ),
+    (&["dag", "orquestração", "vmao", "replanejamento", "sovereign mesh", "ibc"], 5),
 ];
 
 // =============================================================================
@@ -144,10 +238,7 @@ pub struct CgfEngine {
 
 impl CgfEngine {
     pub fn new(max_history: usize) -> Self {
-        Self {
-            session_history: VecDeque::with_capacity(max_history),
-            max_history,
-        }
+        Self { session_history: VecDeque::with_capacity(max_history), max_history }
     }
 
     /// [FRONTEIRA] Analisa uma resposta de LLM e retorna métricas CGF.
@@ -196,10 +287,7 @@ impl CgfEngine {
 
     fn x_count_citations(&self, text: &str, concepts: &[String]) -> usize {
         let text_lower = text.to_lowercase();
-        concepts
-            .iter()
-            .map(|c| text_lower.matches(&c.to_lowercase()).count())
-            .sum()
+        concepts.iter().map(|c| text_lower.matches(&c.to_lowercase()).count()).sum()
     }
 
     fn x_compute_semantic_depth(&self, text: &str, concepts: &[String]) -> f64 {
@@ -251,15 +339,10 @@ impl CgfEngine {
         citation_count: usize,
         semantic_depth: f64,
     ) -> f64 {
-        let weight_map: HashMap<&str, f64> = CONCEPT_WEIGHTS
-            .iter()
-            .map(|(c, w)| (*c, *w))
-            .collect();
+        let weight_map: HashMap<&str, f64> =
+            CONCEPT_WEIGHTS.iter().map(|(c, w)| (*c, *w)).collect();
 
-        let detected_lower: HashSet<String> = concepts
-            .iter()
-            .map(|c| c.to_lowercase())
-            .collect();
+        let detected_lower: HashSet<String> = concepts.iter().map(|c| c.to_lowercase()).collect();
 
         let mut total_weight = 0.0;
         let mut weighted_coverage = 0.0;
@@ -272,11 +355,8 @@ impl CgfEngine {
             }
         }
 
-        let coverage_score = if total_weight > 0.0 {
-            weighted_coverage / total_weight
-        } else {
-            0.0
-        };
+        let coverage_score =
+            if total_weight > 0.0 { weighted_coverage / total_weight } else { 0.0 };
 
         let citation_score = (citation_count as f64 / 10.0).min(1.0);
         let alpha = coverage_score * 0.45 + semantic_depth * 0.35 + citation_score * 0.20;
@@ -356,9 +436,8 @@ impl CgfEngine {
             return 1.0;
         }
         let mean: f64 = sessions.iter().map(|s| s.alpha_hat).sum::<f64>() / sessions.len() as f64;
-        let variance: f64 = sessions.iter()
-            .map(|s| (s.alpha_hat - mean).powi(2))
-            .sum::<f64>() / sessions.len() as f64;
+        let variance: f64 = sessions.iter().map(|s| (s.alpha_hat - mean).powi(2)).sum::<f64>()
+            / sessions.len() as f64;
         (1.0 - variance.sqrt()).max(0.0)
     }
 
@@ -370,8 +449,11 @@ impl CgfEngine {
         let sessions: Vec<&SessionReport> = self.session_history.iter().collect();
         let start = sessions.len().saturating_sub(n);
         let recent = &sessions[start..];
-        if recent.is_empty() { 0.0 }
-        else { recent.iter().map(|s| s.alpha_hat).sum::<f64>() / recent.len() as f64 }
+        if recent.is_empty() {
+            0.0
+        } else {
+            recent.iter().map(|s| s.alpha_hat).sum::<f64>() / recent.len() as f64
+        }
     }
 
     // =========================================================================
@@ -387,14 +469,13 @@ impl CgfEngine {
         }
 
         let n = history.len() as f64;
-        let (weighted_sum, weight_sum) = history.iter().enumerate()
-            .fold((0.0, 0.0), |(ws, wsm), (i, r)| {
+        let (weighted_sum, weight_sum) =
+            history.iter().enumerate().fold((0.0, 0.0), |(ws, wsm), (i, r)| {
                 let weight = (-decay_factor * (n - i as f64 - 1.0)).exp();
                 (ws + r.alpha_hat * weight, wsm + weight)
             });
 
-        if weight_sum.abs() < 1e-10 { 0.0 }
-        else { (weighted_sum / weight_sum).min(1.0) }
+        if weight_sum.abs() < 1e-10 { 0.0 } else { (weighted_sum / weight_sum).min(1.0) }
     }
 
     /// Resistência R = Δα / Δexposição.
@@ -410,8 +491,7 @@ impl CgfEngine {
             return 0.0;
         }
 
-        let delta_alpha = history.last().unwrap().alpha_hat
-            - history.first().unwrap().alpha_hat;
+        let delta_alpha = history.last().unwrap().alpha_hat - history.first().unwrap().alpha_hat;
         let delta_exposure = (history.len() - 1) as f64;
 
         delta_alpha / delta_exposure
@@ -435,18 +515,12 @@ impl CgfEngine {
         for i in 0..variations {
             let prompt = variation_fn(base_prompt, i);
             let response = response_fn(&prompt);
-            let report = self.x_measure_session(
-                &format!("robust-{}", i),
-                "test",
-                &response,
-            );
+            let report = self.x_measure_session(&format!("robust-{}", i), "test", &response);
             alphas.push(report.alpha_hat);
         }
 
         let mean = alphas.iter().sum::<f64>() / alphas.len() as f64;
-        let variance = alphas.iter()
-            .map(|a| (a - mean).powi(2))
-            .sum::<f64>() / alphas.len() as f64;
+        let variance = alphas.iter().map(|a| (a - mean).powi(2)).sum::<f64>() / alphas.len() as f64;
 
         // Variância máxima teórica para [0,1] é 0.25 (distribuição bernoulli p=0.5).
         // Normaliza: robustez = 1 - (variância / 0.25)
@@ -461,10 +535,7 @@ impl Default for CgfEngine {
 }
 
 fn now_ts() -> u64 {
-    std::time::SystemTime::now()
-        .duration_since(std::time::UNIX_EPOCH)
-        .unwrap_or_default()
-        .as_secs()
+    std::time::SystemTime::now().duration_since(std::time::UNIX_EPOCH).unwrap_or_default().as_secs()
 }
 
 #[cfg(test)]

@@ -56,8 +56,11 @@ impl Default for CgfOrchestratorConfig {
             max_iterations: 5,
             convergence_threshold: 0.75,
             models: vec![
-                LlmModel::Claude4, LlmModel::Gpt45, LlmModel::GeminiUltra,
-                LlmModel::Llama4, LlmModel::MistralLarge,
+                LlmModel::Claude4,
+                LlmModel::Gpt45,
+                LlmModel::GeminiUltra,
+                LlmModel::Llama4,
+                LlmModel::MistralLarge,
             ],
             diversity_weight: 0.3,
         }
@@ -84,11 +87,7 @@ pub struct CgfOrchestrator {
 
 impl CgfOrchestrator {
     pub fn new(config: CgfOrchestratorConfig) -> Self {
-        Self {
-            config,
-            engine: CgfEngine::new(100),
-            round_history: Vec::new(),
-        }
+        Self { config, engine: CgfEngine::new(100), round_history: Vec::new() }
     }
 
     /// [FRONTEIRA] Executa uma rodada de orquestração CGF.
@@ -131,9 +130,8 @@ impl CgfOrchestrator {
             alpha_per_model.values().sum::<f64>() / alpha_per_model.len() as f64;
         let dominant_level = EpistemicLevel::from_alpha(global_alpha);
 
-        let progress = self.round_history.last()
-            .map(|prev| global_alpha - prev.global_alpha)
-            .unwrap_or(0.0);
+        let progress =
+            self.round_history.last().map(|prev| global_alpha - prev.global_alpha).unwrap_or(0.0);
 
         let beta_hat = self.compute_beta_hat();
 
@@ -156,10 +154,8 @@ impl CgfOrchestrator {
         if self.round_history.len() < 2 {
             return 0.0;
         }
-        let slopes: Vec<f64> = self.round_history
-            .windows(2)
-            .map(|w| w[1].global_alpha - w[0].global_alpha)
-            .collect();
+        let slopes: Vec<f64> =
+            self.round_history.windows(2).map(|w| w[1].global_alpha - w[0].global_alpha).collect();
         slopes.iter().sum::<f64>() / slopes.len() as f64
     }
 

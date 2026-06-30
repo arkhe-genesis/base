@@ -1,4 +1,3 @@
-
 use anyhow::Result;
 use clap::{Parser, Subcommand};
 use safe_core_verifier::PolyglotVerifier;

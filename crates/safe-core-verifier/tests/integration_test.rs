@@ -1,12 +1,12 @@
-
-use safe_core_verifier::{PolyglotVerifier, checks::convention_x::ConventionXCheck, context::FileContext, checks::Check};
 use safe_core_verifier::languages::Language;
+use safe_core_verifier::{
+    PolyglotVerifier, checks::Check, checks::convention_x::ConventionXCheck, context::FileContext,
+};
 
 fn parse_code(lang: Language, code: &str) -> anyhow::Result<(tree_sitter::Tree, String)> {
     let mut parser = tree_sitter::Parser::new();
     parser.set_language(&lang.tree_sitter_language())?;
-    let tree = parser.parse(code, None)
-        .ok_or_else(|| anyhow::anyhow!("Parse falhou"))?;
+    let tree = parser.parse(code, None).ok_or_else(|| anyhow::anyhow!("Parse falhou"))?;
     Ok((tree, code.to_string()))
 }
 
@@ -99,14 +99,16 @@ fn x_validate_input(x_input: &str) -> Result<usize, ParseError> {
         content_hash: 0,
     };
 
-    let checks: Vec<Box<dyn safe_core_verifier::checks::Check>> = vec![
-        Box::new(ConventionXCheck),
-        Box::new(safe_core_verifier::checks::safety::SafetyCheck),
-    ];
+    let checks: Vec<Box<dyn safe_core_verifier::checks::Check>> =
+        vec![Box::new(ConventionXCheck), Box::new(safe_core_verifier::checks::safety::SafetyCheck)];
 
     for check in &checks {
         let result = check.execute(&ctx).await.unwrap();
-        assert!(result.passed, "Check '{}' falhou em código limpo: {:?}",
-            check.name(), result.issues);
+        assert!(
+            result.passed,
+            "Check '{}' falhou em código limpo: {:?}",
+            check.name(),
+            result.issues
+        );
     }
 }

@@ -1,35 +1,31 @@
-
-use super::{Check, CheckResult, Issue, IssueCategory, Severity};
-use crate::{FileContext, languages::Language};
+use super::{Check, CheckResult, FileContext, Issue, IssueCategory, Severity};
+use crate::languages::Language;
 use async_trait::async_trait;
 use std::collections::HashSet;
 use tree_sitter::{Query, QueryCursor};
 
+#[derive(Debug, Clone)]
 struct Import {
     name: String,
-    raw: String,
     line: u32,
     column: u32,
 }
 
 pub struct DependencyCheck {
     known_packages: HashSet<String>,
-    offline_mode: bool,
 }
 
 impl DependencyCheck {
     pub fn new() -> Self {
         let mut known = HashSet::new();
-        // Fallback fast list
-        known.insert("serde".into());
-        known.insert("tokio".into());
-        known.insert("anyhow".into());
-        known.insert("thiserror".into());
-        known.insert("tree-sitter".into());
-        Self {
-            known_packages: known,
-            offline_mode: true,
-        }
+        known.insert("serde".to_string());
+        known.insert("tokio".to_string());
+        known.insert("anyhow".to_string());
+        known.insert("requests".to_string());
+        known.insert("express".to_string());
+        known.insert("react".to_string());
+
+        Self { known_packages: known }
     }
 }
 
@@ -41,8 +37,12 @@ impl Default for DependencyCheck {
 
 #[async_trait]
 impl Check for DependencyCheck {
-    fn name(&self) -> &str { "dependency-provenance" }
-    fn category(&self) -> IssueCategory { IssueCategory::Dependency }
+    fn name(&self) -> &str {
+        "dependency-provenance"
+    }
+    fn category(&self) -> IssueCategory {
+        IssueCategory::Dependency
+    }
 
     async fn execute(&self, ctx: &FileContext) -> anyhow::Result<CheckResult> {
         let imports = self.extract_imports(ctx)?;
@@ -59,7 +59,7 @@ impl Check for DependencyCheck {
                     column: imp.column,
                     severity: Severity::Warning,
                     message: format!(
-                        "Dependência '{}' parece ser alucinação (offline, sem confirmação)",
+                        "Dependência '{}' parece ser alucinação (offline, sem confirmação do registry)",
                         imp.name
                     ),
                     category: IssueCategory::Dependency,
@@ -67,7 +67,9 @@ impl Check for DependencyCheck {
             }
         }
 
-        let score = if imports.is_empty() { 1.0 } else {
+        let score = if imports.is_empty() {
+            1.0
+        } else {
             1.0 - (issues.len() as f64 / imports.len() as f64)
         };
 
@@ -87,7 +89,9 @@ impl DependencyCheck {
 
         let too_perfect = match lang {
             Language::Python => name.starts_with("python-") && name.len() > 8,
-            Language::JavaScript | Language::TypeScript => (name.ends_with("-js") || name.starts_with("js-")) && name.len() > 5,
+            Language::JavaScript => {
+                (name.ends_with("-js") || name.starts_with("js-")) && name.len() > 5
+            }
             _ => false,
         };
 
@@ -96,22 +100,30 @@ impl DependencyCheck {
 
     fn extract_imports(&self, ctx: &FileContext) -> anyhow::Result<Vec<Import>> {
         let query_src = match ctx.language {
-            Language::Rust => r#"
+            Language::Rust => {
+                r#"
                 (use_declaration argument: (scoped_use_path path:(_) @path))
-            "#,
-            Language::Python => r#"
+            "#
+            }
+            Language::Python => {
+                r#"
                 (import_statement name: (dotted_name) @path)
                 (import_from_statement module_name: (dotted_name) @path)
-            "#,
-            Language::JavaScript | Language::TypeScript => r#"
+            "#
+            }
+            Language::JavaScript | Language::TypeScript => {
+                r#"
                 (import_statement source: (string) @path)
                 (call_expression function: (identifier) @fn (#eq? @fn "require")
                     arguments: (arguments (string) @path))
-            "#,
-            Language::Go => r#"
+            "#
+            }
+            Language::Go => {
+                r#"
                 (import_declaration
                     (import_spec path: (interpreted_string_literal) @path))
-            "#,
+            "#
+            }
             _ => return Ok(vec![]),
         };
 
@@ -129,7 +141,6 @@ impl DependencyCheck {
                 let name = self.extract_package_name(raw, ctx.language)?;
                 Some(Import {
                     name,
-                    raw: raw.to_string(),
                     line: node.start_position().row as u32 + 1,
                     column: node.start_position().column as u32,
                 })
@@ -149,9 +160,9 @@ impl DependencyCheck {
             }
             Language::Go => {
                 let cleaned = raw.trim_matches('"');
-                cleaned.split('/').last().map(|s| s.to_string())
+                cleaned.split('/').next_back().map(|s| s.to_string())
             }
-            _ => Some(raw.to_string()),
+            _ => None,
         }
     }
 }
