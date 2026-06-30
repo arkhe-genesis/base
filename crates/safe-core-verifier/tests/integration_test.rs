@@ -1,6 +1,6 @@
 use safe_core_verifier::languages::Language;
 use safe_core_verifier::{
-    PolyglotVerifier, checks::Check, checks::convention_x::ConventionXCheck, context::FileContext,
+    checks::Check, checks::convention_x::ConventionXCheck, context::FileContext,
 };
 
 fn parse_code(lang: Language, code: &str) -> anyhow::Result<(tree_sitter::Tree, String)> {
@@ -30,7 +30,7 @@ fn process_user(input: String, data: Vec<u8>) -> bool {
     let result = check.execute(&ctx).await.unwrap();
 
     assert!(!result.passed, "Deve falhar: função recebe String/Vec sem x_");
-    assert!(result.issues.len() >= 1);
+    assert!(!result.issues.is_empty());
     assert!(result.issues[0].message.contains("process_user"));
 }
 
