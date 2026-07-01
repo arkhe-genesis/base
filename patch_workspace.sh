@@ -1,0 +1,1 @@
+sed -i '/"crates\/safe-core-verifier",/a \  "crates/safe-core-ethics",\n  "crates/safe-core-persistence",\n  "crates/safe-core-audit",\n  "crates/safe-core-governance",\n  "crates/safe-core-bridge",' Cargo.toml
